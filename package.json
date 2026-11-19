@@ -1,0 +1,76 @@
+{
+  "name": "dsh-nai5-studio",
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "module",
+  "description": "NovelAI Diffusion V5 direct generation studio, floating workbench, masonry gallery, and MCP server for DeepSeek Harness (DSH).",
+  "main": "./index.js",
+  "bin": {
+    "dsh-nai5-studio-mcp": "./mcp_server.mjs"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./mcp": "./mcp_server.mjs",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    },
+    "compatibility": {
+      "dsh": ">=0.2.0-rc.1 <0.3.0-0"
+    }
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "mcp_server.mjs",
+    "cordis.patch.yml",
+    "persona.md",
+    "skills",
+    "lib",
+    "workers",
+    "data",
+    "examples",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "os": [
+    "win32",
+    "darwin",
+    "linux"
+  ],
+  "engines": {
+    "node": ">=22.2.0"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "novelai",
+    "nai5",
+    "mcp",
+    "image-generation",
+    "client-plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taizaizhi747-dotcom/dsh-nai5-studio.git"
+  },
+  "homepage": "https://github.com/taizaizhi747-dotcom/dsh-nai5-studio#readme",
+  "bugs": {
+    "url": "https://github.com/taizaizhi747-dotcom/dsh-nai5-studio/issues"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/build.mjs --check-only",
+    "test": "node --test tests/*.test.mjs",
+    "verify": "node scripts/build.mjs && node --test tests/*.test.mjs",
+    "prepack": "node scripts/build.mjs"
+  }
+}

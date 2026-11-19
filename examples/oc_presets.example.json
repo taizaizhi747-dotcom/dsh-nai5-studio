@@ -1,0 +1,14 @@
+[
+  {
+    "id": "example-oc-1",
+    "name": "Alice (Academy Explorer)",
+    "group": "Example Characters",
+    "prompt": "1girl, silver bob hair, amber eyes, navy tailored blazer, pleated plaid skirt, leather satchel, cheerful expression"
+  },
+  {
+    "id": "example-oc-2",
+    "name": "Ren (Cyber Courier)",
+    "group": "Example Characters",
+    "prompt": "1boy, short dark hair, cyan visor glasses, hooded techwear jacket, glowing accents, confident smirk"
+  }
+]

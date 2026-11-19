@@ -1,0 +1,1700 @@
+/* ============================================================
+   NAI5 Studio — 浮世落樱毛玻璃主题 (Ukiyo Sakura Glassmorphism)
+   支持跟随系统/DSH亮暗色调自动切换 (Dark: 绯夜玄冬 / Light: 雪昼和纸)
+   支持自定义背景壁纸 (--nai5-wallpaper) + 浮世绘青海波暗纹 + 飘落绯樱 + 磨砂毛玻璃
+   ============================================================ */
+
+/* ---------- 1. 主题色板变量：默认深色「绯夜 · 玄冬残雪」 ---------- */
+.nai5-theme-dark {
+  --fx-window-tint: rgba(14, 13, 19, 0.58);
+  --fx-window-overlay:
+    linear-gradient(105deg, rgba(12, 12, 18, 0.86) 0%, rgba(15, 14, 22, 0.68) 48%, rgba(18, 12, 20, 0.38) 100%),
+    linear-gradient(180deg, rgba(10, 10, 16, 0.72) 0%, rgba(12, 11, 18, 0.35) 55%, rgba(28, 10, 18, 0.55) 100%);
+  --fx-art-opacity: 0.78;
+  --fx-art-filter: saturate(1.08) contrast(1.04) brightness(0.92);
+
+  --fx-glass-card: rgba(20, 19, 28, 0.56);
+  --fx-glass-card-hover: rgba(28, 25, 38, 0.66);
+  --fx-glass-header: rgba(16, 15, 23, 0.68);
+  --fx-glass-input: rgba(10, 10, 16, 0.58);
+  --fx-glass-popover: rgba(20, 18, 27, 0.90);
+
+  --fx-border-outer: rgba(255, 195, 210, 0.20);
+  --fx-border-card: rgba(255, 215, 225, 0.12);
+  --fx-border-subtle: rgba(255, 215, 225, 0.08);
+  --fx-border-focus: rgba(230, 46, 82, 0.72);
+  --fx-inner-highlight: rgba(255, 230, 236, 0.12);
+
+  --fx-text-primary: #f7f2f4;
+  --fx-text-secondary: #c4b6be;
+  --fx-text-muted: #8c7d87;
+
+  --fx-crimson: #e0284f;
+  --fx-crimson-soft: #ff5c7c;
+  --fx-crimson-deep: #9e1130;
+  --fx-sakura: #ffb3c6;
+  --fx-gold: #e2b887;
+  --fx-shadow-main: 0 34px 84px -16px rgba(0, 0, 0, 0.88), 0 0 40px -14px rgba(216, 31, 67, 0.35);
+  --fx-ukiyo-stroke: rgba(255, 190, 205, 0.055);
+}
+
+/* ---------- 2. 浅色模式色板：「雪昼 · 绯樱和纸」 ---------- */
+.nai5-theme-light {
+  --fx-window-tint: rgba(252, 247, 249, 0.52);
+  --fx-window-overlay:
+    linear-gradient(105deg, rgba(255, 250, 252, 0.88) 0%, rgba(252, 244, 247, 0.72) 50%, rgba(250, 238, 243, 0.42) 100%),
+    linear-gradient(180deg, rgba(255, 252, 253, 0.76) 0%, rgba(255, 245, 248, 0.38) 55%, rgba(242, 215, 224, 0.56) 100%);
+  --fx-art-opacity: 0.72;
+  --fx-art-filter: saturate(1.06) contrast(1.01) brightness(1.04);
+
+  --fx-glass-card: rgba(255, 255, 255, 0.60);
+  --fx-glass-card-hover: rgba(255, 255, 255, 0.75);
+  --fx-glass-header: rgba(255, 250, 252, 0.74);
+  --fx-glass-input: rgba(255, 255, 255, 0.70);
+  --fx-glass-popover: rgba(255, 250, 252, 0.94);
+
+  --fx-border-outer: rgba(216, 31, 67, 0.24);
+  --fx-border-card: rgba(216, 31, 67, 0.14);
+  --fx-border-subtle: rgba(160, 110, 125, 0.14);
+  --fx-border-focus: rgba(216, 31, 67, 0.68);
+  --fx-inner-highlight: rgba(255, 255, 255, 0.75);
+
+  --fx-text-primary: #22191e;
+  --fx-text-secondary: #5e4b55;
+  --fx-text-muted: #917b86;
+
+  --fx-crimson: #d41c43;
+  --fx-crimson-soft: #e0284f;
+  --fx-crimson-deep: #9e1130;
+  --fx-sakura: #d81f43;
+  --fx-gold: #b5834c;
+  --fx-shadow-main: 0 28px 72px -16px rgba(60, 20, 35, 0.28), 0 0 32px -12px rgba(216, 31, 67, 0.18);
+  --fx-ukiyo-stroke: rgba(216, 31, 67, 0.065);
+}
+
+.nai5-floating-window,
+.nai5-floating-orb,
+.nai5-sidebar-launchpad,
+.nai5-lightbox-overlay,
+.nai5-toast {
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--fx-text-primary);
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+.nai5-floating-window *,
+.nai5-floating-orb *,
+.nai5-sidebar-launchpad *,
+.nai5-lightbox-overlay * {
+  box-sizing: border-box;
+}
+
+/* ---------- 3. 独立悬浮窗主体与背景画卷 ---------- */
+.nai5-floating-window {
+  position: fixed;
+  z-index: 99990;
+  display: flex;
+  flex-direction: column;
+  background: var(--fx-window-tint);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--fx-border-outer);
+  border-radius: 16px;
+  box-shadow: var(--fx-shadow-main), inset 0 1px 0 var(--fx-inner-highlight);
+  overflow: hidden;
+  user-select: none;
+  animation: nai5WinPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes nai5WinPop {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* 最底层：渐变氛围与可选自定义壁纸背景层 */
+.nai5-studio-bg-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: var(--nai5-wallpaper, radial-gradient(900px 600px at 82% 22%, rgba(224, 40, 79, 0.22), transparent 62%), radial-gradient(700px 520px at 18% 82%, rgba(226, 184, 135, 0.14), transparent 60%));
+  background-size: cover;
+  background-position: 68% 28%;
+  background-repeat: no-repeat;
+  opacity: var(--fx-art-opacity);
+  filter: var(--fx-art-filter);
+  transform: scale(1.015);
+  transition: opacity 0.35s ease, filter 0.35s ease, transform 0.5s ease;
+  pointer-events: none;
+}
+
+/* 渐晕柔化层：保持左侧编辑区与卡片温润通透 */
+.nai5-studio-bg-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--fx-window-overlay);
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+/* 浮世绘青海波 (Seigaiha) 与和式云纹装饰层 */
+.nai5-studio-ukiyo-pattern {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.85;
+  background-image: radial-gradient(circle at 100% 100%, transparent 18px, var(--fx-ukiyo-stroke) 19px, var(--fx-ukiyo-stroke) 20px, transparent 21px),
+                    radial-gradient(circle at 0% 100%, transparent 18px, var(--fx-ukiyo-stroke) 19px, var(--fx-ukiyo-stroke) 20px, transparent 21px),
+                    radial-gradient(circle at 50% 100%, transparent 10px, var(--fx-ukiyo-stroke) 11px, transparent 12px);
+  background-size: 48px 24px;
+  pointer-events: none;
+}
+
+/* 赏画模式 (Peeking Mode)：突出自定义壁纸清晰度，卡片化为薄冰晶 */
+.nai5-floating-window.peek-art .nai5-studio-bg-art {
+  opacity: 0.98;
+  filter: saturate(1.12) contrast(1.05) brightness(1.02);
+  transform: scale(1.0);
+}
+.nai5-floating-window.peek-art .nai5-studio-bg-veil {
+  opacity: 0.22;
+}
+.nai5-floating-window.peek-art .nai5-card,
+.nai5-floating-window.peek-art .nai5-col-right {
+  opacity: 0.28;
+  transition: opacity 0.25s ease;
+}
+
+/* 飘落樱花花瓣动画层 */
+.nai5-sakura-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.nai5-petal {
+  position: absolute;
+  top: -24px;
+  color: var(--fx-sakura);
+  opacity: 0.45;
+  animation: nai5SakuraFall linear infinite;
+  filter: drop-shadow(0 2px 6px rgba(216, 31, 67, 0.25));
+}
+
+@keyframes nai5SakuraFall {
+  0% { transform: translate3d(0, -20px, 0) rotate(0deg) scale(0.85); opacity: 0; }
+  15% { opacity: 0.55; }
+  85% { opacity: 0.45; }
+  100% { transform: translate3d(-90px, 780px, 0) rotate(320deg) scale(1.05); opacity: 0; }
+}
+
+/* ---------- 4. 缩放手柄 ---------- */
+.nai5-resize-e { position: absolute; top: 12px; right: 0; bottom: 12px; width: 6px; cursor: ew-resize; z-index: 30; }
+.nai5-resize-w { position: absolute; top: 12px; left: 0; bottom: 12px; width: 6px; cursor: ew-resize; z-index: 30; }
+.nai5-resize-s { position: absolute; left: 12px; right: 12px; bottom: 0; height: 6px; cursor: ns-resize; z-index: 30; }
+.nai5-resize-se { position: absolute; right: 0; bottom: 0; width: 16px; height: 16px; cursor: nwse-resize; z-index: 31; }
+.nai5-resize-sw { position: absolute; left: 0; bottom: 0; width: 16px; height: 16px; cursor: nesw-resize; z-index: 31; }
+
+/* ---------- 5. 顶部和式毛玻璃标题栏与朱印 ---------- */
+.nai5-win-header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 14px;
+  background: var(--fx-glass-header);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border-bottom: 1px solid var(--fx-border-card);
+  box-shadow: 0 1px 0 rgba(216, 31, 67, 0.12);
+  cursor: move;
+  flex: none;
+  gap: 10px;
+}
+
+/* 水引 (Mizuhiki) 底部装饰金红细线 */
+.nai5-win-header::after {
+  content: '';
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--fx-crimson-soft), var(--fx-gold), var(--fx-crimson-soft), transparent);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.nai5-win-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+/* 和式朱印 (Hanko Stamp) 徽章 */
+.nai5-hanko-seal {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #e0284f 0%, #9e1130 100%);
+  border: 1px solid rgba(255, 220, 228, 0.45);
+  box-shadow: 0 3px 12px rgba(216, 31, 67, 0.45), inset 0 0 0 1.5px rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  flex: none;
+}
+
+.nai5-brand-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--fx-text-primary);
+  white-space: nowrap;
+}
+
+.nai5-brand-sub {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1.5px 8px;
+  border-radius: 999px;
+  background: rgba(224, 40, 79, 0.14);
+  border: 1px solid rgba(224, 40, 79, 0.34);
+  color: var(--fx-crimson-soft);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+/* 顶部中段切换器 */
+.nai5-seg-nav {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px;
+  background: var(--fx-glass-input);
+  border: 1px solid var(--fx-border-card);
+  border-radius: 10px;
+  backdrop-filter: blur(12px);
+}
+
+.nai5-seg-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--fx-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  white-space: nowrap;
+}
+
+.nai5-seg-btn:hover {
+  color: var(--fx-text-primary);
+  background: rgba(224, 40, 79, 0.08);
+}
+
+.nai5-seg-btn.active {
+  background: linear-gradient(135deg, #e0284f 0%, #b01537 100%);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4px 12px -4px rgba(216, 31, 67, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.nai5-win-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+}
+
+.nai5-win-ctrl {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--fx-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.nai5-win-ctrl:hover {
+  background: rgba(224, 40, 79, 0.14);
+  border-color: rgba(224, 40, 79, 0.32);
+  color: var(--fx-text-primary);
+}
+
+.nai5-win-ctrl.danger:hover {
+  background: rgba(224, 40, 79, 0.24);
+  color: #ff4d6d;
+}
+
+/* ---------- 6. 落樱毛玻璃桌面悬浮球 (Floating Orb) ---------- */
+.nai5-floating-orb {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px 6px 7px;
+  border-radius: 999px;
+  background: var(--fx-glass-header);
+  backdrop-filter: blur(22px) saturate(165%);
+  -webkit-backdrop-filter: blur(22px) saturate(165%);
+  border: 1px solid var(--fx-border-outer);
+  box-shadow:
+    0 18px 42px -10px rgba(0, 0, 0, 0.65),
+    0 0 26px -6px rgba(216, 31, 67, 0.45),
+    inset 0 1px 0 var(--fx-inner-highlight);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nai5-floating-orb:hover {
+  border-color: var(--fx-crimson-soft);
+  box-shadow:
+    0 22px 48px -10px rgba(0, 0, 0, 0.75),
+    0 0 32px -4px rgba(216, 31, 67, 0.7),
+    inset 0 1px 0 var(--fx-inner-highlight);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.nai5-orb-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-image: radial-gradient(circle at 35% 30%, #ff758f 0%, #e0284f 52%, #7a0c26 100%);
+  background-size: 240%;
+  background-position: 62% 24%;
+  border: 1.5px solid var(--fx-crimson-soft);
+  box-shadow: 0 0 10px rgba(216, 31, 67, 0.55);
+  position: relative;
+  flex: none;
+}
+
+/* ---------- 7. 全局自适应比例双栏工作台与磨砂毛玻璃卡片 ---------- */
+.nai5-floating-window {
+  --fx-pad: clamp(11px, 1.25vw, 20px);
+  --fx-gap: clamp(9px, 1vw, 15px);
+  --fx-card-pad: clamp(10px, 0.95vw, 15px);
+}
+
+.nai5-workbench-body {
+  position: relative;
+  z-index: 5;
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.nai5-col-left {
+  min-width: 360px;
+  overflow-y: auto;
+  padding: var(--fx-pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--fx-gap);
+}
+
+/* 主工作台左右分栏拖拽条 (调节左栏提示词与右栏舞台预览比例) */
+.nai5-main-col-splitter {
+  width: 10px;
+  margin: 0 -2px;
+  flex: none;
+  cursor: col-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  z-index: 12;
+  position: relative;
+  border-left: 1px solid var(--fx-border-subtle);
+}
+
+.nai5-main-col-splitter::after {
+  content: '';
+  width: 3px;
+  height: 48px;
+  border-radius: 999px;
+  background: var(--fx-border-card);
+  transition: background 0.15s ease, height 0.15s ease, box-shadow 0.15s ease;
+}
+
+.nai5-main-col-splitter:hover::after,
+.nai5-main-col-splitter.dragging::after {
+  height: 76px;
+  background: var(--fx-crimson-soft);
+  box-shadow: 0 0 10px rgba(224, 40, 79, 0.7);
+}
+
+.nai5-col-right {
+  flex: 1;
+  min-width: 320px;
+  overflow-y: auto;
+  padding: var(--fx-pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--fx-gap);
+  background: rgba(0, 0, 0, 0.045);
+}
+
+/* 右栏下半部参数自适应双列网格 (宽屏/全屏时自动并排，节省纵向空间给预览舞台) */
+.nai5-params-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
+  gap: var(--fx-gap);
+  flex: none;
+}
+
+/* 磨砂毛玻璃卡片 + 和式花菱纹理细节 */
+.nai5-card {
+  position: relative;
+  background: var(--fx-glass-card);
+  backdrop-filter: blur(16px) saturate(155%);
+  -webkit-backdrop-filter: blur(16px) saturate(155%);
+  border: 1px solid var(--fx-border-card);
+  border-radius: 12px;
+  padding: var(--fx-card-pad);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow:
+    0 10px 28px -18px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 var(--fx-inner-highlight);
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.nai5-card:hover {
+  background: var(--fx-glass-card-hover);
+  border-color: rgba(224, 40, 79, 0.24);
+}
+
+.nai5-label-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--fx-text-secondary);
+}
+
+.nai5-label-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--fx-text-primary);
+}
+
+/* 日式武田菱 (Hishi) 绯红小角标 */
+.nai5-label-title::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  background: linear-gradient(135deg, var(--fx-crimson-soft), var(--fx-crimson-deep));
+  transform: rotate(45deg);
+  box-shadow: 0 0 6px rgba(224, 40, 79, 0.65);
+  flex: none;
+}
+
+.nai5-textarea,
+.nai5-input,
+.nai5-select {
+  width: 100%;
+  background: var(--fx-glass-input);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--fx-border-card);
+  border-radius: 8px;
+  color: var(--fx-text-primary);
+  font-size: 12px;
+  padding: 7px 10px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.nai5-textarea {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 11.5px;
+  line-height: 1.6;
+  resize: vertical;
+  user-select: text;
+}
+
+.nai5-input {
+  user-select: text;
+  padding: 6px 10px;
+}
+
+.nai5-textarea:focus,
+.nai5-input:focus,
+.nai5-select:focus {
+  border-color: var(--fx-border-focus);
+  box-shadow: 0 0 0 3px rgba(224, 40, 79, 0.16);
+}
+
+/* ---------- 8. 按钮体系 ---------- */
+.nai5-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-primary);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.nai5-btn:hover:not(:disabled) {
+  background: rgba(224, 40, 79, 0.14);
+  border-color: rgba(224, 40, 79, 0.45);
+  color: var(--fx-text-primary);
+}
+
+.nai5-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nai5-btn.xs {
+  padding: 3px 7px;
+  font-size: 10.5px;
+  border-radius: 6px;
+}
+
+.nai5-btn.primary {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e62a4f 0%, #a81232 100%);
+  border-color: rgba(255, 220, 228, 0.28);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 6px 18px -6px rgba(216, 31, 67, 0.78), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.nai5-btn.primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ff3d63 0%, #c0163b 100%);
+  color: #ffffff;
+  box-shadow: 0 8px 22px -6px rgba(216, 31, 67, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.36);
+}
+
+.nai5-btn.ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--fx-text-secondary);
+}
+
+.nai5-btn.ghost:hover {
+  background: rgba(224, 40, 79, 0.10);
+  color: var(--fx-text-primary);
+}
+
+/* ---------- 9. 2D 角色坐标画布与 6 角色自适应矩阵 ---------- */
+.nai5-stage2d-wrap {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.nai5-char-cards-grid {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.nai5-stage2d-canvas {
+  position: relative;
+  width: clamp(132px, 10.5cqw, 180px);
+  flex: none;
+  background:
+    linear-gradient(var(--fx-border-subtle) 1px, transparent 1px),
+    linear-gradient(90deg, var(--fx-border-subtle) 1px, transparent 1px),
+    var(--fx-glass-input);
+  background-size: 33.33% 33.33%;
+  border: 1px solid rgba(224, 40, 79, 0.38);
+  border-radius: 10px;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.25);
+  cursor: crosshair;
+  overflow: hidden;
+}
+
+.nai5-stage2d-node {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  margin-top: -12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.65);
+  cursor: grab;
+  transition: transform 0.08s ease;
+  z-index: 5;
+}
+
+.nai5-stage2d-node:hover,
+.nai5-stage2d-node.dragging {
+  transform: scale(1.18);
+  cursor: grabbing;
+  z-index: 10;
+}
+
+/* ---------- 10. 右栏弹性预览舞台与自适应胶片条 ---------- */
+.nai5-card.preview-card {
+  flex: 1;
+  min-height: 290px;
+  display: flex;
+  flex-direction: column;
+}
+
+.nai5-preview-stage {
+  position: relative;
+  flex: 1;
+  min-height: 210px;
+  border-radius: 10px;
+  background: var(--fx-glass-input);
+  border: 1px solid var(--fx-border-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 10px;
+}
+
+.nai5-preview-img {
+  position: absolute;
+  inset: 10px;
+  width: calc(100% - 20px);
+  height: calc(100% - 20px);
+  object-fit: contain;
+  border-radius: 8px;
+  filter: drop-shadow(0 12px 26px rgba(0, 0, 0, 0.45));
+  cursor: zoom-in;
+  display: block;
+  margin: auto;
+  transition: transform 0.18s ease;
+}
+
+.nai5-preview-img:hover {
+  transform: scale(1.012);
+}
+
+.nai5-filmstrip {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 3px 0;
+  flex: none;
+}
+
+.nai5-film-thumb {
+  width: clamp(44px, 3.6cqw, 64px);
+  height: clamp(58px, 4.8cqw, 84px);
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid var(--fx-border-card);
+  cursor: pointer;
+  opacity: 0.72;
+  transition: all 0.14s ease;
+  flex: none;
+}
+
+.nai5-film-thumb:hover,
+.nai5-film-thumb.active {
+  opacity: 1;
+  border-color: var(--fx-crimson);
+  box-shadow: 0 0 0 2px rgba(224, 40, 79, 0.28);
+}
+
+/* ---------- 11. 画幅比例胶囊与滑块 ---------- */
+.nai5-ratio-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+
+.nai5-ratio-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 4px;
+  border-radius: 8px;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-secondary);
+  font-size: 10.5px;
+  cursor: pointer;
+  transition: all 0.14s ease;
+}
+
+.nai5-ratio-pill:hover {
+  border-color: rgba(224, 40, 79, 0.45);
+  color: var(--fx-text-primary);
+}
+
+.nai5-ratio-pill.active {
+  background: rgba(224, 40, 79, 0.16);
+  border-color: var(--fx-crimson);
+  color: var(--fx-text-primary);
+  font-weight: 600;
+}
+
+.nai5-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--fx-crimson) 0%, rgba(224, 40, 79, 0.25) 100%);
+  outline: none;
+  cursor: pointer;
+}
+
+.nai5-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid var(--fx-crimson);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.nai5-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.16);
+}
+
+/* ---------- 12. 预设下拉浮层 ---------- */
+.nai5-popover-container {
+  position: relative;
+  min-width: 0;
+}
+
+.nai5-popover-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: var(--fx-glass-input);
+  border: 1px solid var(--fx-border-card);
+  color: var(--fx-text-primary);
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: all 0.14s ease;
+}
+
+.nai5-popover-trigger:hover,
+.nai5-popover-trigger.active {
+  border-color: var(--fx-border-focus);
+}
+
+.nai5-popover-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  right: 0;
+  min-width: 260px;
+  z-index: 200;
+  background: var(--fx-glass-popover);
+  border: 1px solid var(--fx-border-outer);
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: var(--fx-shadow-main);
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+}
+
+.nai5-popover-scroll {
+  max-height: 270px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+/* ---------- 13. 画廊与灯箱 (全局容器自适应多列) ---------- */
+.nai5-gallery-wrap {
+  position: relative;
+  z-index: 5;
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--fx-pad, 15px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--fx-gap, 12px);
+  container-type: inline-size;
+}
+
+.nai5-gallery-grid {
+  display: grid;
+  gap: 14px;
+  align-items: start;
+}
+
+.nai5-gallery-grid.density-large { grid-template-columns: repeat(auto-fill, minmax(clamp(220px, 16.5cqw, 295px), 1fr)); gap: 16px; }
+.nai5-gallery-grid.density-medium { grid-template-columns: repeat(auto-fill, minmax(clamp(176px, 12.8cqw, 224px), 1fr)); gap: 13px; }
+.nai5-gallery-grid.density-compact { grid-template-columns: repeat(auto-fill, minmax(clamp(136px, 9.5cqw, 166px), 1fr)); gap: 10px; }
+
+.nai5-gallery-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 13px;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-card);
+  overflow: hidden;
+  cursor: pointer;
+  content-visibility: auto;
+  contain-intrinsic-size: 190px 305px;
+  contain: paint layout;
+  transform: translateZ(0);
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.18s ease, box-shadow 0.22s ease;
+}
+
+.nai5-gallery-card:hover {
+  transform: translateY(-3px) translateZ(0);
+  border-color: var(--fx-crimson-soft);
+  box-shadow: 0 16px 32px -12px rgba(216, 31, 67, 0.42);
+}
+
+.nai5-gallery-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 832 / 1216;
+  overflow: hidden;
+  background: rgba(14, 12, 20, 0.14);
+}
+
+.nai5-gallery-thumb {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  object-position: center 14%;
+  display: block;
+  transform: translateZ(0);
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nai5-gallery-card:hover .nai5-gallery-thumb {
+  transform: scale(1.045) translateZ(0);
+}
+
+/* 顶部右上角悬停工具圆钮 (复制图片 / 文件管理器定位) */
+.nai5-gallery-top-tools {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  z-index: 4;
+  display: flex;
+  gap: 5px;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.nai5-gallery-card:hover .nai5-gallery-top-tools {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.nai5-gallery-icon-btn {
+  width: 27px;
+  height: 27px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(16, 14, 24, 0.76);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #f8fafc;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.14s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+
+.nai5-gallery-icon-btn:hover {
+  background: var(--fx-crimson);
+  border-color: #ff8fa3;
+  color: #ffffff;
+  transform: scale(1.06);
+}
+
+/* 画面底部悬停毛玻璃双主按钮坞 (⚡ 精修 | 💬 续写) */
+.nai5-gallery-hover-dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  padding: 26px 8px 8px;
+  background: linear-gradient(to top, rgba(12, 10, 18, 0.90) 0%, rgba(12, 10, 18, 0.56) 58%, transparent 100%);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.nai5-gallery-card:hover .nai5-gallery-hover-dock {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.nai5-gallery-dock-btn {
+  height: 27px;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 0 6px;
+  transition: all 0.14s ease;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(24, 21, 34, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #f8fafc;
+}
+
+.nai5-gallery-dock-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.nai5-gallery-dock-btn.primary {
+  background: linear-gradient(135deg, #e62a4f 0%, #b01435 100%);
+  border-color: rgba(255, 200, 212, 0.45);
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(216, 31, 67, 0.45);
+}
+
+.nai5-gallery-dock-btn.primary:hover {
+  filter: brightness(1.1);
+  border-color: #ffffff;
+}
+
+/* 卡片底部极简元数据单行条 */
+.nai5-gallery-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 7px 10px;
+  border-top: 1px solid var(--fx-border-subtle);
+  background: var(--fx-glass-header);
+  min-height: 31px;
+}
+
+.nai5-gallery-char {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--fx-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.nai5-gallery-char::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--fx-crimson-soft);
+  flex: none;
+}
+
+.nai5-gallery-seed {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 10.5px;
+  color: var(--fx-crimson-soft);
+  opacity: 0.9;
+  white-space: nowrap;
+  flex: none;
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: rgba(224, 40, 79, 0.08);
+  transition: background 0.14s ease, color 0.14s ease;
+}
+
+.nai5-gallery-seed:hover {
+  background: rgba(224, 40, 79, 0.2);
+  color: var(--fx-crimson);
+}
+
+/* ---------- 自适应弹性卡片与可拖拽分割条 (Resizable & Adaptive Cards) ---------- */
+.nai5-card.adaptive-flex {
+  flex: 1;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+}
+
+.nai5-card.adaptive-flex .nai5-textarea {
+  flex: 1;
+  height: 100%;
+  min-height: 96px;
+}
+
+.nai5-split-row {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  min-height: 115px;
+  gap: 0;
+}
+
+.nai5-split-pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+  gap: 5px;
+}
+
+.nai5-split-pane .nai5-textarea {
+  flex: 1;
+  height: 100%;
+  min-height: 96px;
+}
+
+/* 水平分栏拖拽手柄 (左右调节风格串与负面词宽度占比) */
+.nai5-h-splitter {
+  width: 12px;
+  flex: none;
+  cursor: col-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.nai5-h-splitter::after {
+  content: '';
+  width: 3px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--fx-border-card);
+  transition: background 0.15s ease, height 0.15s ease;
+}
+
+.nai5-h-splitter:hover::after,
+.nai5-h-splitter.dragging::after {
+  height: 56px;
+  background: var(--fx-crimson-soft);
+  box-shadow: 0 0 8px rgba(224, 40, 79, 0.6);
+}
+
+/* 垂直分栏拖拽手柄 (上下调节正向词与风格/负面卡高度占比) */
+.nai5-v-splitter {
+  height: 10px;
+  margin: -4px 0;
+  flex: none;
+  cursor: row-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  z-index: 6;
+}
+
+.nai5-v-splitter::after {
+  content: '';
+  width: 44px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--fx-border-card);
+  transition: background 0.15s ease, width 0.15s ease;
+}
+
+.nai5-v-splitter:hover::after,
+.nai5-v-splitter.dragging::after {
+  width: 72px;
+  background: var(--fx-crimson-soft);
+  box-shadow: 0 0 8px rgba(224, 40, 79, 0.6);
+}
+
+/* ---------- 全屏灯箱 (强制深色暗房高对比度按钮，解决浅色系统下看不见按钮问题) ---------- */
+.nai5-lightbox-overlay {
+  position: fixed;
+  top: var(--dsh-frame-chrome-top, var(--dsh-windows-titlebar-height, 36px));
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(900px 500px at 50% 0%, rgba(216, 31, 67, 0.14), transparent 65%),
+    rgba(10, 9, 14, 0.94);
+  backdrop-filter: blur(22px);
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: none;
+  color: #f8fafc;
+}
+
+.nai5-lightbox-overlay .nai5-btn {
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #f8fafc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.nai5-lightbox-overlay .nai5-btn:hover:not(:disabled) {
+  background: rgba(224, 40, 79, 0.28);
+  border-color: #ff5c7c;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(216, 31, 67, 0.5);
+}
+
+.nai5-lightbox-overlay .nai5-btn.primary {
+  background: linear-gradient(135deg, #e62a4f 0%, #a81232 100%);
+  border-color: rgba(255, 220, 228, 0.38);
+  color: #ffffff;
+}
+
+.nai5-lightbox-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 76px;
+  border-radius: 12px;
+  background: rgba(22, 20, 30, 0.82);
+  border: 1px solid rgba(255, 210, 220, 0.28);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 15;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(12px);
+  transition: all 0.16s ease;
+}
+
+.nai5-lightbox-nav-arrow:hover {
+  background: linear-gradient(135deg, rgba(224, 40, 79, 0.85), rgba(158, 17, 48, 0.9));
+  border-color: #ffb3c6;
+  transform: translateY(-50%) scale(1.06);
+  box-shadow: 0 12px 32px rgba(216, 31, 67, 0.65);
+}
+
+.nai5-lightbox-nav-arrow.prev { left: 20px; }
+.nai5-lightbox-nav-arrow.next { right: 20px; }
+
+/* ---------- 14. 滚动条 ---------- */
+.nai5-col-left::-webkit-scrollbar,
+.nai5-col-right::-webkit-scrollbar,
+.nai5-gallery-wrap::-webkit-scrollbar,
+.nai5-popover-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.nai5-col-left::-webkit-scrollbar-track,
+.nai5-col-right::-webkit-scrollbar-track,
+.nai5-gallery-wrap::-webkit-scrollbar-track,
+.nai5-popover-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.nai5-col-left::-webkit-scrollbar-thumb,
+.nai5-col-right::-webkit-scrollbar-thumb,
+.nai5-gallery-wrap::-webkit-scrollbar-thumb,
+.nai5-popover-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(224, 40, 79, 0.35);
+}
+
+.nai5-col-left::-webkit-scrollbar-thumb:hover,
+.nai5-col-right::-webkit-scrollbar-thumb:hover,
+.nai5-gallery-wrap::-webkit-scrollbar-thumb:hover,
+.nai5-popover-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(224, 40, 79, 0.65);
+}
+
+/* ---------- 15. 对话 × 工作台双向共生桥与悬浮球微距胶囊伴侣 (Mini Companion HUD) ---------- */
+.nai5-orb-wrapper {
+  position: fixed;
+  z-index: 99990;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.nai5-orb-wrapper > * {
+  pointer-events: auto;
+}
+
+@keyframes fxHudSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fxOrbPulse {
+  0%, 100% {
+    box-shadow:
+      0 18px 42px -10px rgba(0, 0, 0, 0.65),
+      0 0 22px 2px rgba(224, 40, 79, 0.55),
+      inset 0 1px 0 var(--fx-inner-highlight);
+    border-color: #ff4d6d;
+  }
+  50% {
+    box-shadow:
+      0 18px 48px -8px rgba(0, 0, 0, 0.75),
+      0 0 38px 8px rgba(224, 40, 79, 0.92),
+      inset 0 1px 0 var(--fx-inner-highlight);
+    border-color: #ffb3c6;
+  }
+}
+
+.nai5-floating-orb.agent-generating {
+  animation: fxOrbPulse 1.6s ease-in-out infinite;
+}
+
+.nai5-orb-hud {
+  width: 332px;
+  margin-bottom: 10px;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--fx-glass-popover);
+  backdrop-filter: blur(26px) saturate(180%);
+  -webkit-backdrop-filter: blur(26px) saturate(180%);
+  border: 1px solid var(--fx-border-outer);
+  box-shadow:
+    0 24px 60px -12px rgba(0, 0, 0, 0.68),
+    0 0 36px -8px rgba(216, 31, 67, 0.35),
+    inset 0 1px 0 var(--fx-inner-highlight);
+  color: var(--fx-text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fxHudSlideUp 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.nai5-bridge-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 11px;
+  background: linear-gradient(90deg, rgba(224, 40, 79, 0.11) 0%, var(--fx-glass-card) 60%);
+  border: 1px solid rgba(224, 40, 79, 0.32);
+  box-shadow: inset 0 1px 0 var(--fx-inner-highlight);
+}
+
+.nai5-lock-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 500;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-secondary);
+  cursor: pointer;
+  transition: all 0.14s ease;
+}
+
+.nai5-lock-chip.active {
+  background: rgba(224, 40, 79, 0.18);
+  border-color: var(--fx-crimson-soft);
+  color: var(--fx-text-primary);
+  font-weight: 600;
+}
+
+/* ==================== CODEX EXPLORER & TAG BROWSER ==================== */
+.nai5-codex-categories {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 4px 2px 8px 2px;
+  scrollbar-width: thin;
+}
+.nai5-codex-categories::-webkit-scrollbar {
+  height: 4px;
+}
+.nai5-codex-categories::-webkit-scrollbar-thumb {
+  background: var(--fx-border-card);
+  border-radius: 4px;
+}
+.nai5-codex-cat-pill {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 500;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+.nai5-codex-cat-pill:hover {
+  border-color: var(--fx-crimson-soft);
+  color: var(--fx-text-primary);
+  background: rgba(224, 40, 79, 0.08);
+}
+.nai5-codex-cat-pill.active {
+  border-color: var(--fx-crimson-soft);
+  background: linear-gradient(135deg, rgba(224, 40, 79, 0.28) 0%, rgba(224, 40, 79, 0.12) 100%);
+  color: var(--fx-text-primary);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(224, 40, 79, 0.22);
+}
+.nai5-codex-cat-count {
+  font-size: 10px;
+  opacity: 0.75;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.18);
+}
+.nai5-theme-dark .nai5-codex-cat-count {
+  background: rgba(255, 255, 255, 0.12);
+}
+.nai5-codex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 12px;
+}
+.nai5-codex-card {
+  padding: 12px 14px;
+  border-radius: 11px;
+  background: var(--fx-glass-card);
+  border: 1px solid var(--fx-border-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.nai5-codex-card:hover {
+  border-color: var(--fx-crimson-soft);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+.nai5-codex-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.nai5-codex-badge.crimson {
+  background: rgba(224, 40, 79, 0.16);
+  color: var(--fx-crimson-soft);
+  border: 1px solid rgba(224, 40, 79, 0.32);
+}
+.nai5-codex-badge.cyan {
+  background: rgba(2, 132, 199, 0.16);
+  color: #38bdf8;
+  border: 1px solid rgba(2, 132, 199, 0.32);
+}
+.nai5-codex-badge.emerald {
+  background: rgba(16, 185, 129, 0.16);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.32);
+}
+.nai5-codex-badge.purple {
+  background: rgba(139, 92, 246, 0.16);
+  color: #a78bfa;
+  border: 1px solid rgba(139, 92, 246, 0.32);
+}
+.nai5-codex-badge.amber {
+  background: rgba(245, 158, 11, 0.16);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.32);
+}
+.nai5-codex-snippet {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.45;
+  padding: 7px 9px;
+  border-radius: 7px;
+  background: var(--fx-glass-input);
+  border: 1px solid var(--fx-border-card);
+  color: var(--fx-text-primary);
+  max-height: 85px;
+  overflow-y: auto;
+  word-break: break-all;
+  white-space: pre-wrap;
+  scrollbar-width: thin;
+}
+
+/* ==================== VIRTUALIZED NATURAL-ASPECT MASONRY GALLERY ==================== */
+.nai5-gallery-masonry-host {
+  position: relative;
+  width: 100%;
+  flex: none;
+}
+
+.nai5-gallery-card.masonry-item {
+  position: absolute;
+  margin: 0;
+  content-visibility: visible;
+  contain: layout style paint;
+}
+
+.nai5-gallery-media.natural {
+  aspect-ratio: auto;
+  width: 100%;
+}
+
+.nai5-gallery-ratio-tag {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  z-index: 4;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 9.5px;
+  font-family: monospace;
+  font-weight: 600;
+  color: #f8fafc;
+  background: rgba(16, 14, 24, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+
+.nai5-gallery-card:hover .nai5-gallery-ratio-tag {
+  opacity: 1;
+}
+
+/* ==================== ACCOUNT SWITCHER POPOVER ==================== */
+.nai5-account-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nai5-account-btn {
+  max-width: 158px;
+}
+
+.nai5-account-btn-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nai5-account-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 340px;
+  max-width: calc(100vw - 32px);
+  z-index: 320;
+  cursor: default;
+  background: var(--fx-glass-popover);
+  border: 1px solid var(--fx-border-outer);
+  border-radius: 13px;
+  padding: 10px;
+  box-shadow: var(--fx-shadow-main);
+  backdrop-filter: blur(24px) saturate(175%);
+  -webkit-backdrop-filter: blur(24px) saturate(175%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nai5-account-pop-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 2px 2px 6px;
+  border-bottom: 1px solid var(--fx-border-card);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--fx-text-primary);
+}
+
+.nai5-account-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.nai5-account-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 9px;
+  border-radius: 9px;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-card);
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.nai5-account-item:hover {
+  border-color: rgba(224, 40, 79, 0.45);
+}
+
+.nai5-account-item.active {
+  border-color: var(--fx-crimson-soft);
+  background: rgba(224, 40, 79, 0.12);
+}
+
+.nai5-account-meta {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nai5-account-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.nai5-account-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--fx-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nai5-account-badge {
+  flex: none;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(224, 40, 79, 0.18);
+  color: var(--fx-crimson-soft);
+  border: 1px solid rgba(224, 40, 79, 0.34);
+}
+
+.nai5-account-sub {
+  font-size: 10.5px;
+  color: var(--fx-text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nai5-account-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+}
+
+.nai5-account-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 9px;
+  border: 1px dashed var(--fx-border-card);
+  background: var(--fx-glass-card);
+}
+
+.nai5-account-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  border-radius: 7px;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-primary);
+  font-size: 11.5px;
+  outline: none;
+}
+
+.nai5-account-input:focus {
+  border-color: var(--fx-crimson-soft);
+}
+
+

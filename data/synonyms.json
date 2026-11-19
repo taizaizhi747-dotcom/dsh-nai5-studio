@@ -1,0 +1,39 @@
+{
+  "categories": {
+    "镜头与构图": [
+      ["仰视", "低角度", "低机位", "from below", "low angle", "worm eye view", "looking up"],
+      ["俯视", "高角度", "高机位", "from above", "overhead shot", "bird eye view", "looking down"],
+      ["特写", "面部特写", "近景", "close-up", "face focus", "portrait"],
+      ["半身", "七分身", "牛仔镜头", "cowboy shot", "upper body", "half body"],
+      ["全身", "全幅", "full body", "wide shot", "standing"],
+      ["广角", "鱼眼", "透视", "wide-angle lens", "fisheye", "foreshortening", "perspective"],
+      ["景深", "虚化", "散景", "depth of field", "bokeh", "blurry background", "shallow depth of field"],
+      ["动态构图", "倾斜视角", "dutch angle", "dynamic angle", "action pose"]
+    ],
+    "光影与氛围": [
+      ["逆光", "轮廓光", "背光", "backlighting", "rim light", "silhouette"],
+      ["丁达尔效应", "体积光", "光束", "volumetric lighting", "light rays", "crepuscular rays", "sunbeam"],
+      ["黄昏", "夕阳", "金时刻", "sunset", "golden hour", "dusk", "warm lighting"],
+      ["夜景", "霓虹", "月光", "night", "moonlight", "neon lights", "city lights"],
+      ["雨天", "雨夜", "积水倒影", "rain", "raindrops", "wet pavement", "reflection"],
+      ["樱花", "落樱", "花瓣", "cherry blossoms", "sakura", "falling petals"],
+      ["飘雪", "雪景", "snow", "snowflakes", "winter"]
+    ],
+    "服饰与材质": [
+      ["旗袍", "qipao", "china dress", "cheongsam"],
+      ["汉服", "古风", "襦裙", "hanfu", "chinese clothes", "traditional clothes"],
+      ["和服", "浴衣", "振袖", "kimono", "yukata", "furisode", "japanese clothes"],
+      ["制服", "水手服", "校服", "西装", "sailor uniform", "school uniform", "blazer", "suit"],
+      ["女仆", "女仆装", "maid", "maid headdress", "apron"],
+      ["礼服", "连衣裙", "晚礼服", "dress", "evening gown", "frills", "lace"],
+      ["机能风", "赛博朋克", "未来感", "cyberpunk", "techwear", "scifi"],
+      ["薄纱", "丝绸", "质感", "silk", "satin", "sheer", "chiffon", "ribbon"]
+    ],
+    "画风与质感": [
+      ["赛璐珞", "平涂", "清晰线稿", "cel shading", "clean lineart", "anime coloring"],
+      ["厚涂", "油画", "笔触", "painterly", "oil painting", "impasto", "brushstrokes"],
+      ["水彩", "透明水彩", "淡彩", "watercolor", "watercolor medium", "pastel colors"],
+      ["电影感", "胶片质感", "颗粒感", "cinematic", "film grain", "dramatic shadows"]
+    ]
+  }
+}

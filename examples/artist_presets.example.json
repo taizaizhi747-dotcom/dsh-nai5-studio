@@ -1,0 +1,14 @@
+{
+  "01": {
+    "uiId": "style-cel-clean",
+    "name": "[01] Clean Cel Illustration",
+    "group": "General Styles",
+    "stylePrompt": "<style> year 2025, clean lineart, delicate linework, cel shading, crisp lighting, very aesthetic, masterpiece </style>"
+  },
+  "02": {
+    "uiId": "style-watercolor-soft",
+    "name": "[02] Soft Watercolor Atmosphere",
+    "group": "Painterly & Atmospheric",
+    "stylePrompt": "<style> watercolor medium, soft brushwork, gentle pastel palette, diffused sunlight, expressive atmosphere, very aesthetic, masterpiece </style>"
+  }
+}

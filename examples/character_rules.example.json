@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Alice",
+    "pattern": "\\balice\\b|silver bob hair.*navy tailored blazer"
+  },
+  {
+    "name": "Ren",
+    "pattern": "\\bren\\b|cyan visor glasses.*hooded techwear jacket"
+  }
+]

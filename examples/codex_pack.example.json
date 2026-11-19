@@ -1,0 +1,17 @@
+{
+  "title": "Sample Composition Codex",
+  "entries": [
+    {
+      "title": "Rainy Neon Window Portrait",
+      "chapter": "Composition & Lighting",
+      "prompt": "1girl, sitting by glass window at night, raindrops on windowpane, neon city lights bokeh outside, cool blue and warm magenta rim light, shallow depth of field",
+      "negative": "daylight, flat lighting, harsh shadows"
+    },
+    {
+      "title": "Golden Hour Rooftop Breeze",
+      "chapter": "Outdoor Scenes",
+      "prompt": "school rooftop, chain-link fence, golden hour sunlight, wind blowing hair and skirt, dramatic clouds, warm lens flare, dynamic angle",
+      "negative": "indoor, night, overcast"
+    }
+  ]
+}
