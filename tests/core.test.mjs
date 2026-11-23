@@ -354,6 +354,7 @@ test('api boundary guards and HTTP endpoints handle unconfigured state, presets 
     assert.equal(favJson.isFavorite, true);
     assert.equal(favJson.count, 1);
   } finally {
+    archiveManager.dispose();
     await new Promise(resolve => server.close(resolve));
     fs.rmSync(tmpDir, { recursive: true, force: true });
     fs.rmSync(siblingRoot, { recursive: true, force: true });
@@ -655,14 +656,16 @@ test('v2.0 payload builder, multipart serializer, and ArchiveManager favorites/b
     assert.equal(builtMedium.effectiveNegative, '');
     assert.match(builtMedium.fullPrompt, /transparent background/);
 
-    const dataUri = `data:image/png;base64,${pngBuf.toString('base64')}`;
-    const builtVibe = await client._buildGenerationPayload(sanitizeParams({
-      positivePrompt: '1girl, portrait'
-    }), {
-      vibeReferences: [{ image: dataUri, strength: 0.7, infoExtracted: 0.9 }]
-    });
-    assert.equal(builtVibe.model, 'nai-diffusion-4-5-full');
-    assert.equal(builtVibe.payload.parameters.reference_image_multiple.length, 1);
+    if (checkPythonPillow()) {
+      const dataUri = `data:image/png;base64,${pngBuf.toString('base64')}`;
+      const builtVibe = await client._buildGenerationPayload(sanitizeParams({
+        positivePrompt: '1girl, portrait'
+      }), {
+        vibeReferences: [{ image: dataUri, strength: 0.7, infoExtracted: 0.9 }]
+      });
+      assert.equal(builtVibe.model, 'nai-diffusion-4-5-full');
+      assert.equal(builtVibe.payload.parameters.reference_image_multiple.length, 1);
+    }
 
     const mp = buildMultipartFormBuffer(
       { action: 'generate', model: 'nai-diffusion-4-5-full', parameters: {} },
@@ -686,6 +689,7 @@ test('v2.0 payload builder, multipart serializer, and ArchiveManager favorites/b
     assert.ok(!fs.existsSync(samplePath));
     assert.ok(fs.existsSync(moveRes.moved[0].to));
   } finally {
+    archiveManager.dispose();
     fs.rmSync(tmpRoot, { recursive: true, force: true });
   }
 });
