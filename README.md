@@ -8,17 +8,19 @@
 
 ## 核心特性
 
-- **NovelAI Diffusion V5 原生直连引擎** (`lib/client.js`, `lib/linter.js`)
-  - 直接请求 NovelAI 生成接口并提取 ZIP/PNG，原生支持 V5 最高 **22 个独立角色分框 (`characterPrompts`)** 与 2D `(X, Y)` 坐标站位。
-  - 自动清理损坏语法（多余引号、数字结尾画师权重粘连 `artist:name123, ::`）、3MP 面积自动等比钳位、`0` CFG 保留、本地 Anlas 估算与同 Seed 幂等去重缓存。
+- **NovelAI Diffusion V5 / V4.5 原生直连引擎** (`lib/client.js`, `lib/linter.js`)
+  - 直接请求 NovelAI 生成接口并提取 ZIP/PNG，原生支持 V5 最高 **22 个独立角色分框 (`characterPrompts`)**、2D `(X, Y)` 坐标站位、14 / 28 / 50 步质量档位、Vibe Transfer 与 V4.5 Precise Reference（自动白底填充 `1024×1536` / `1472×1472` / `1536×1024` 与 multipart 编码）。
+  - 完整图生图 (`img2img`)、涂抹局部重绘 (`inpaint`)、2×/4× 原生无损超分 (`upscale`) 与导演工具 (`bg-removal` / `line-art` / `sketch` / `colorize` / `emotion` / `declutter`)。
+  - 自动修复 V5 权重语法 (`repairV5Prompt`)、3MP 面积自动等比钳位、`0` CFG 保留、本地 Anlas 估算与同 Seed 幂等去重缓存。
   - 原生写入 UTF-8 `iTXt` / `tEXt` 元数据块，兼容 NAI 官网拖入识别中文提示词。
-- **自适应毛玻璃悬浮工作台** (`src/*` -> `client.js`)
-  - 自动跟随系统与 DSH 宿主亮暗主题（雪昼浅色 / 绯夜深色），可选配置自定义壁纸与赏画透视模式。
-  - 可拖拽 2D 角色坐标画布、快捷群像排布（双人 / 三人 / 四人 / 六人 / 九人 / 十二人）、提示词权重步进按钮（`1.1::tag::`）。
+- **Canvas-First 枫霜毛玻璃悬浮工作台** (`src/*` -> `client.js`)
+  - 左侧 3 层创建检查器（提示词 / 角色与参考 / 参数与协同）固定底部极速芯片栏与 CTA，右侧宽阔画布舞台内置局部重绘涂抹画笔、A/B 对比滑块与后处理浮动工具栏。
+  - 自适应系统与 DSH 宿主亮暗主题（霜晓浅色 / 玄月深色），内置 4 套纯 CSS 枫霜景致（朔月寒霜 / 霜晓素雪 / 孤枫水墨 / 雪暮金灯）、3 档画卷通透度，以及「赏画」透视模式（支持 ◀ ▶ 切景）与画廊/灯箱一键「设为画卷」及可选自定义壁纸。
+  - 可拖拽 2D 角色坐标画布、快捷群像排布（双人 / 三人 / 四人 / 六人 / 九人 / 十二人）、提示词权重步进按钮（`1.1::tag::`）与可视化词组权重抽屉。
   - 对话参数同步锁与自动镜像：支持将工作台画风、画幅、固定 Seed 与 2D 站位一键锁定同步到 DSH 对话生成流。
-- **虚拟化原比例瀑布流画廊与灯箱** (`lib/archive.js`, `lib/thumb.js`)
-  - 按 `YYYY-MM-DD/<character>/<HHMMSS>_<character>_<topic>_<rating>_<style>_s<seed>.png` 自动归档。
-  - 并发 Python/Pillow WebP 缩略图生成（未安装 Python 或 Pillow 时自动无感降级返回原图），配合 SSE 实时推送刷新。
+- **虚拟化原比例瀑布流画廊、收藏夹与暗房灯箱** (`lib/archive.js`, `lib/thumb.js`)
+  - 按 `YYYY-MM-DD/<character>/<HHMMSS>_<character>_<topic>_<rating>_<style>_s<seed>.png` 自动归档，支持收藏夹标星筛选 (`favorites`) 与批量归类移动 / 物理删除。
+  - 并发 Python/Pillow WebP 缩略图与 `workers/image_helper.py` 图像处理（未安装 Python 或 Pillow 时自动无感降级返回原图或使用纯 JS 后备解析），配合 SSE 实时推送刷新。
 - **可选画风预设 / OC 库 / 双语词库 / 法典检索** (`lib/danbooru.js`, `data/synonyms.json`)
   - 内置干净的中英文构图/光影/服饰/画风同义词映射。
   - 支持在工作台弹窗一键导入 JSON 预设，或放置外部 `artist_presets.json`、`oc_presets.json`、`character_rules.json`、`danbooru-cn.csv`（自动兼容 UTF-8 与 GBK）及自定义法典 JSON。
@@ -50,8 +52,8 @@ cd dsh-nai5-studio
 
 ### 3. 独立 MCP Server 接入（Antigravity / Claude Desktop / Cursor）
 
-本仓库自带标准 Stdio MCP Server [`mcp_server.mjs`](file:///mcp_server.mjs)，提供 12 个原生工具：
-`generate_image`, `estimate_cost`, `get_state`, `list_accounts`, `switch_account`, `list_history`, `read_image_metadata`, `search_danbooru`, `search_codex`, `get_related_tags`, `get_artist_recommendations`, `stitch_comic`。
+本仓库自带标准 Stdio MCP Server [`mcp_server.mjs`](file:///mcp_server.mjs)，提供 16 个原生工具：
+`generate_image`, `img2img`, `inpaint`, `upscale`, `director_tool`, `estimate_cost`, `get_state`, `list_accounts`, `switch_account`, `list_history`, `read_image_metadata`, `search_danbooru`, `search_codex`, `get_related_tags`, `get_artist_recommendations`, `stitch_comic`。
 
 在 MCP 配置文件中添加：
 

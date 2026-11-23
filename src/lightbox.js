@@ -22,6 +22,12 @@ function LightboxOverlay({
   handleDragStart,
   sendToChatComposer,
   handleForkToWorkbench,
+  onToggleFavorite,
+  onSetAsBackdrop,
+  onUpscale,
+  onDirector,
+  onSendToImg2Img,
+  onSendToInpaint,
   copyFullParams,
   copyImageToClipboard,
   handleRevealInExplorer,
@@ -42,8 +48,8 @@ function LightboxOverlay({
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '10px 18px',
-        background: 'rgba(13, 15, 22, 0.94)',
-        borderBottom: '1px solid rgba(255,255,255,0.12)'
+        background: 'rgba(8, 15, 23, 0.94)',
+        borderBottom: '1px solid rgba(214, 182, 124, 0.20)'
       },
       onClick: e => e.stopPropagation()
     },
@@ -52,9 +58,9 @@ function LightboxOverlay({
           style: {
             fontSize: '11px',
             fontWeight: 600,
-            color: '#fda4af',
-            background: 'rgba(209, 43, 74, 0.24)',
-            border: '1px solid rgba(251, 113, 133, 0.4)',
+            color: '#F3D299',
+            background: 'rgba(200, 35, 55, 0.24)',
+            border: '1px solid rgba(214, 182, 124, 0.45)',
             padding: '2px 9px',
             borderRadius: '999px'
           }
@@ -230,20 +236,20 @@ function LightboxOverlay({
           right: 0,
           bottom: 0,
           width: '360px',
-          background: 'rgba(14, 17, 24, 0.96)',
-          borderLeft: '1px solid rgba(255,255,255,0.14)',
+          background: 'rgba(9, 17, 26, 0.96)',
+          borderLeft: '1px solid rgba(214, 182, 124, 0.20)',
           padding: '16px',
           overflowY: 'auto',
           display: 'flex',
           flexDirection: 'column',
           gap: '10px',
           zIndex: 20,
-          color: '#f8fafc'
+          color: '#EFF5FA'
         },
         onClick: e => e.stopPropagation()
       },
-        h('strong', { style: { fontSize: '13px', color: '#ffffff' } }, '完整画面生成元数据'),
-        h('div', { style: { fontSize: '11px', color: '#cbd5e1', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' } },
+        h('strong', { style: { fontSize: '13px', color: '#F3D299' } }, '完整画面生成元数据'),
+        h('div', { style: { fontSize: '11px', color: '#BAC9D8', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' } },
           h('span', null, `尺寸: ${activeItem.width || 832}×${activeItem.height || 1216}`),
           h('span', null, `步数: ${activeItem.steps || 28}`),
           h('span', null, `CFG: ${activeItem.cfg || 5.5}`),
@@ -251,17 +257,17 @@ function LightboxOverlay({
           h('span', null, `采样: ${activeItem.sampler || 'k_euler_ancestral'}`),
           h('span', null, `分框: ${(activeItem.characterPrompts || []).length} 个`)
         ),
-        h('div', { className: 'nai5-card', style: { padding: '8px', background: 'rgba(24, 18, 28, 0.85)', borderColor: 'rgba(255,255,255,0.12)' } },
-          h('span', { style: { fontSize: '10.5px', color: '#fb7185', fontWeight: 600 } }, '正向提示词'),
-          h('div', { style: { fontSize: '11px', fontFamily: 'monospace', color: '#f8fafc', maxHeight: '140px', overflowY: 'auto' } }, activeItem.prompt)
+        h('div', { className: 'nai5-card', style: { padding: '8px', background: 'rgba(13, 24, 36, 0.86)', borderColor: 'rgba(214, 182, 124, 0.16)' } },
+          h('span', { style: { fontSize: '10.5px', color: '#E86A7D', fontWeight: 600 } }, '正向提示词'),
+          h('div', { style: { fontSize: '11px', fontFamily: 'monospace', color: '#EFF5FA', maxHeight: '140px', overflowY: 'auto' } }, activeItem.prompt)
         ),
-        activeItem.uc && h('div', { className: 'nai5-card', style: { padding: '8px', background: 'rgba(24, 18, 28, 0.85)', borderColor: 'rgba(255,255,255,0.12)' } },
-          h('span', { style: { fontSize: '10.5px', color: '#fca5a5', fontWeight: 600 } }, '负向排他词 (UC)'),
-          h('div', { style: { fontSize: '11px', fontFamily: 'monospace', color: '#cbd5e1', maxHeight: '90px', overflowY: 'auto' } }, activeItem.uc)
+        activeItem.uc && h('div', { className: 'nai5-card', style: { padding: '8px', background: 'rgba(13, 24, 36, 0.86)', borderColor: 'rgba(214, 182, 124, 0.16)' } },
+          h('span', { style: { fontSize: '10.5px', color: '#6CC7FF', fontWeight: 600 } }, '负向排他词 (UC)'),
+          h('div', { style: { fontSize: '11px', fontFamily: 'monospace', color: '#CBD5E1', maxHeight: '90px', overflowY: 'auto' } }, activeItem.uc)
         ),
-        activeItem.stylePrompt && h('div', { className: 'nai5-card', style: { padding: '8px', background: 'rgba(24, 18, 28, 0.85)', borderColor: 'rgba(255,255,255,0.12)' } },
-          h('span', { style: { fontSize: '10.5px', color: '#fb7185', fontWeight: 600 } }, '画风风格串'),
-          h('div', { style: { fontSize: '11px', fontFamily: 'monospace', color: '#cbd5e1', maxHeight: '90px', overflowY: 'auto' } }, activeItem.stylePrompt)
+        activeItem.stylePrompt && h('div', { className: 'nai5-card', style: { padding: '8px', background: 'rgba(13, 24, 36, 0.86)', borderColor: 'rgba(214, 182, 124, 0.16)' } },
+          h('span', { style: { fontSize: '10.5px', color: '#F3D299', fontWeight: 600 } }, '画师风格串'),
+          h('div', { style: { fontSize: '11px', fontFamily: 'monospace', color: '#CBD5E1', maxHeight: '90px', overflowY: 'auto' } }, activeItem.stylePrompt)
         )
       )
     ),
@@ -272,22 +278,61 @@ function LightboxOverlay({
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '10px 18px',
-        background: 'rgba(13, 15, 22, 0.94)',
-        borderTop: '1px solid rgba(255,255,255,0.12)'
+        background: 'rgba(8, 15, 23, 0.94)',
+        borderTop: '1px solid rgba(214, 182, 124, 0.20)'
       },
       onClick: e => e.stopPropagation()
     },
-      h('span', { style: { fontSize: '11.5px', color: '#cbd5e1' } }, '滚轮无级缩放 · 按住左键平移 · 双击放大 · 键盘 ← / → 切换图像'),
-      h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap' } },
+      h('span', { style: { fontSize: '11.5px', color: '#BAC9D8' } }, '滚轮无级缩放 · 按住左键平移 · 双击放大 · 键盘 ← / → 切换图像'),
+      h('div', {
+        style: {
+          display: 'flex',
+          gap: '7px',
+          flexWrap: 'nowrap',
+          overflowX: 'auto',
+          alignItems: 'center',
+          maxWidth: '78%'
+        }
+      },
         h('span', {
           className: 'nai5-btn',
           style: { cursor: 'grab' },
           draggable: true,
           onDragStart: (e) => handleDragStart(e, activeItem)
-        }, h(Icon, { name: 'external', size: 12 }), '拖拽原图'),
+        }, h(Icon, { name: 'external', size: 12 }), '拖入 QQ / 微信'),
         h('button', { type: 'button', className: 'nai5-btn primary', onClick: () => sendToChatComposer(activeItem) },
           '💬 送入对话继续演进'
         ),
+        onToggleFavorite && h('button', {
+          type: 'button',
+          className: `nai5-btn ${activeItem.isFavorite ? 'primary' : ''}`,
+          onClick: () => onToggleFavorite(imgPath)
+        }, activeItem.isFavorite ? '★ 已收藏' : '☆ 收藏'),
+        onSetAsBackdrop && h('button', {
+          type: 'button',
+          className: 'nai5-btn',
+          onClick: () => onSetAsBackdrop(activeItem)
+        }, h(Icon, { name: 'image', size: 12 }), '设为画卷'),
+        onUpscale && h('button', {
+          type: 'button',
+          className: 'nai5-btn',
+          onClick: () => onUpscale(activeItem, 2)
+        }, '2× 超分'),
+        onDirector && h('button', {
+          type: 'button',
+          className: 'nai5-btn',
+          onClick: () => onDirector(activeItem, { tool: 'bg-removal', defry: 0 })
+        }, '一键去背景'),
+        onSendToImg2Img && h('button', {
+          type: 'button',
+          className: 'nai5-btn',
+          onClick: () => onSendToImg2Img(activeItem)
+        }, '送入图生图'),
+        onSendToInpaint && h('button', {
+          type: 'button',
+          className: 'nai5-btn',
+          onClick: () => onSendToInpaint(activeItem)
+        }, '局部重绘'),
         h('button', { type: 'button', className: 'nai5-btn', onClick: () => handleForkToWorkbench(activeItem) },
           h(Icon, { name: 'zap', size: 12 }), '接管至工作台 (Fork)'
         ),

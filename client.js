@@ -17,77 +17,101 @@ window.__ModuleLoader__.load({
         : node;
 
     const CSS_STYLES = `/* ============================================================
-   NAI5 Studio — 浮世落樱毛玻璃主题 (Ukiyo Sakura Glassmorphism)
-   支持跟随系统/DSH亮暗色调自动切换 (Dark: 绯夜玄冬 / Light: 雪昼和纸)
-   支持自定义背景壁纸 (--nai5-wallpaper) + 浮世绘青海波暗纹 + 飘落绯樱 + 磨砂毛玻璃
+   NAI5 Studio v4.0 — NAI5 Studio · 枫霜画室毛玻璃主题 (Frost & Scarlet Maple Atelier)
+   源自极简东方金石与浮世绘霜月美学基因：玄月寒霜 · 素雪鸟居 · 绯枫落雪 · 金线菱格透纱
+   支持自动 / 手动切换 (Dark: 玄月·寒霜绯刃 / Light: 霜晓·素雪鸟居)
    ============================================================ */
 
-/* ---------- 1. 主题色板变量：默认深色「绯夜 · 玄冬残雪」 ---------- */
+/* ---------- 1. 深色色板：「玄月 · 寒霜绯刃」 ---------- */
 .nai5-theme-dark {
-  --fx-window-tint: rgba(14, 13, 19, 0.58);
+  --fx-window-tint: rgba(8, 16, 24, 0.56);
   --fx-window-overlay:
-    linear-gradient(105deg, rgba(12, 12, 18, 0.86) 0%, rgba(15, 14, 22, 0.68) 48%, rgba(18, 12, 20, 0.38) 100%),
-    linear-gradient(180deg, rgba(10, 10, 16, 0.72) 0%, rgba(12, 11, 18, 0.35) 55%, rgba(28, 10, 18, 0.55) 100%);
+    linear-gradient(106deg, rgba(7, 13, 21, 0.88) 0%, rgba(10, 19, 30, 0.66) 44%, rgba(10, 18, 28, 0.34) 100%),
+    linear-gradient(180deg, rgba(7, 13, 21, 0.72) 0%, rgba(9, 17, 26, 0.28) 54%, rgba(18, 10, 16, 0.48) 100%);
   --fx-art-opacity: 0.78;
-  --fx-art-filter: saturate(1.08) contrast(1.04) brightness(0.92);
+  --fx-art-filter: saturate(1.06) contrast(1.03) brightness(0.94);
 
-  --fx-glass-card: rgba(20, 19, 28, 0.56);
-  --fx-glass-card-hover: rgba(28, 25, 38, 0.66);
-  --fx-glass-header: rgba(16, 15, 23, 0.68);
-  --fx-glass-input: rgba(10, 10, 16, 0.58);
-  --fx-glass-popover: rgba(20, 18, 27, 0.90);
+  --fx-glass-card: rgba(12, 22, 33, 0.60);
+  --fx-glass-card-hover: rgba(17, 30, 44, 0.72);
+  --fx-glass-header: rgba(9, 17, 26, 0.74);
+  --fx-glass-input: rgba(7, 13, 21, 0.62);
+  --fx-glass-popover: rgba(11, 20, 30, 0.94);
 
-  --fx-border-outer: rgba(255, 195, 210, 0.20);
-  --fx-border-card: rgba(255, 215, 225, 0.12);
-  --fx-border-subtle: rgba(255, 215, 225, 0.08);
-  --fx-border-focus: rgba(230, 46, 82, 0.72);
-  --fx-inner-highlight: rgba(255, 230, 236, 0.12);
+  --fx-border-outer: rgba(214, 182, 124, 0.28);
+  --fx-border-card: rgba(205, 222, 240, 0.14);
+  --fx-border-subtle: rgba(205, 222, 240, 0.08);
+  --fx-border-gold: rgba(214, 182, 124, 0.36);
+  --fx-border-focus: rgba(224, 48, 72, 0.72);
+  --fx-inner-highlight: rgba(226, 238, 250, 0.12);
 
-  --fx-text-primary: #f7f2f4;
-  --fx-text-secondary: #c4b6be;
-  --fx-text-muted: #8c7d87;
+  --fx-text-primary: #eff5fa;
+  --fx-text-secondary: #bac9d8;
+  --fx-text-muted: #7c91a6;
 
-  --fx-crimson: #e0284f;
-  --fx-crimson-soft: #ff5c7c;
-  --fx-crimson-deep: #9e1130;
-  --fx-sakura: #ffb3c6;
-  --fx-gold: #e2b887;
-  --fx-shadow-main: 0 34px 84px -16px rgba(0, 0, 0, 0.88), 0 0 40px -14px rgba(216, 31, 67, 0.35);
-  --fx-ukiyo-stroke: rgba(255, 190, 205, 0.055);
+  --fx-crimson: #d4243d;
+  --fx-crimson-soft: #e84a5f;
+  --fx-crimson-deep: #8f1024;
+  --fx-maple: #e84a5f;
+  --fx-snow: #dcebfb;
+  --fx-sakura: #e84a5f;
+  --fx-gold: #d6b67c;
+  --fx-ice-soft: #6cc7ff;
+  --fx-shadow-main: 0 34px 84px -16px rgba(2, 6, 12, 0.88), 0 0 42px -16px rgba(108, 199, 255, 0.18), 0 0 34px -14px rgba(212, 36, 61, 0.28);
+  --fx-mesh-stroke: rgba(214, 182, 124, 0.055);
+  --fx-ukiyo-stroke: rgba(214, 182, 124, 0.055);
 }
 
-/* ---------- 2. 浅色模式色板：「雪昼 · 绯樱和纸」 ---------- */
+/* ---------- 2. 浅色色板：「霜晓 · 素雪鸟居」 ---------- */
 .nai5-theme-light {
-  --fx-window-tint: rgba(252, 247, 249, 0.52);
+  --fx-window-tint: rgba(238, 243, 247, 0.56);
   --fx-window-overlay:
-    linear-gradient(105deg, rgba(255, 250, 252, 0.88) 0%, rgba(252, 244, 247, 0.72) 50%, rgba(250, 238, 243, 0.42) 100%),
-    linear-gradient(180deg, rgba(255, 252, 253, 0.76) 0%, rgba(255, 245, 248, 0.38) 55%, rgba(242, 215, 224, 0.56) 100%);
-  --fx-art-opacity: 0.72;
-  --fx-art-filter: saturate(1.06) contrast(1.01) brightness(1.04);
+    linear-gradient(106deg, rgba(244, 248, 252, 0.88) 0%, rgba(238, 244, 250, 0.70) 48%, rgba(232, 240, 248, 0.36) 100%),
+    linear-gradient(180deg, rgba(248, 251, 254, 0.78) 0%, rgba(240, 246, 252, 0.36) 54%, rgba(224, 232, 242, 0.52) 100%);
+  --fx-art-opacity: 0.74;
+  --fx-art-filter: saturate(1.06) contrast(1.02) brightness(1.02);
 
-  --fx-glass-card: rgba(255, 255, 255, 0.60);
-  --fx-glass-card-hover: rgba(255, 255, 255, 0.75);
-  --fx-glass-header: rgba(255, 250, 252, 0.74);
-  --fx-glass-input: rgba(255, 255, 255, 0.70);
-  --fx-glass-popover: rgba(255, 250, 252, 0.94);
+  --fx-glass-card: rgba(251, 253, 255, 0.68);
+  --fx-glass-card-hover: rgba(255, 255, 255, 0.82);
+  --fx-glass-header: rgba(246, 249, 252, 0.78);
+  --fx-glass-input: rgba(255, 255, 255, 0.76);
+  --fx-glass-popover: rgba(249, 251, 254, 0.96);
 
-  --fx-border-outer: rgba(216, 31, 67, 0.24);
-  --fx-border-card: rgba(216, 31, 67, 0.14);
-  --fx-border-subtle: rgba(160, 110, 125, 0.14);
-  --fx-border-focus: rgba(216, 31, 67, 0.68);
-  --fx-inner-highlight: rgba(255, 255, 255, 0.75);
+  --fx-border-outer: rgba(169, 131, 68, 0.32);
+  --fx-border-card: rgba(48, 72, 98, 0.14);
+  --fx-border-subtle: rgba(48, 72, 98, 0.09);
+  --fx-border-gold: rgba(169, 131, 68, 0.38);
+  --fx-border-focus: rgba(194, 28, 52, 0.68);
+  --fx-inner-highlight: rgba(255, 255, 255, 0.85);
 
-  --fx-text-primary: #22191e;
-  --fx-text-secondary: #5e4b55;
-  --fx-text-muted: #917b86;
+  --fx-text-primary: #151e29;
+  --fx-text-secondary: #435569;
+  --fx-text-muted: #72859b;
 
-  --fx-crimson: #d41c43;
-  --fx-crimson-soft: #e0284f;
-  --fx-crimson-deep: #9e1130;
-  --fx-sakura: #d81f43;
-  --fx-gold: #b5834c;
-  --fx-shadow-main: 0 28px 72px -16px rgba(60, 20, 35, 0.28), 0 0 32px -12px rgba(216, 31, 67, 0.18);
-  --fx-ukiyo-stroke: rgba(216, 31, 67, 0.065);
+  --fx-crimson: #c21c34;
+  --fx-crimson-soft: #d4243d;
+  --fx-crimson-deep: #8a1123;
+  --fx-maple: #c21c34;
+  --fx-snow: #4e86b8;
+  --fx-sakura: #c21c34;
+  --fx-gold: #a98344;
+  --fx-ice-soft: #1d7ec2;
+  --fx-shadow-main: 0 28px 72px -16px rgba(15, 28, 46, 0.24), 0 0 32px -12px rgba(194, 28, 52, 0.14);
+  --fx-mesh-stroke: rgba(169, 131, 68, 0.065);
+  --fx-ukiyo-stroke: rgba(169, 131, 68, 0.065);
+}
+
+/* 画卷背景通透度三档 (静谧 / 平衡 / 浓映) */
+.nai5-floating-window[data-bg-intensity="soft"] {
+  --fx-art-opacity: 0.42;
+}
+.nai5-floating-window[data-bg-intensity="soft"] .nai5-studio-bg-veil {
+  opacity: 0.98;
+}
+.nai5-floating-window[data-bg-intensity="vivid"] {
+  --fx-art-opacity: 0.94;
+}
+.nai5-floating-window[data-bg-intensity="vivid"] .nai5-studio-bg-veil {
+  opacity: 0.56;
 }
 
 .nai5-floating-window,
@@ -108,7 +132,7 @@ window.__ModuleLoader__.load({
   box-sizing: border-box;
 }
 
-/* ---------- 3. 独立悬浮窗主体与背景画卷 ---------- */
+/* ---------- 3. 独立悬浮窗主体与底层工坊画卷 ---------- */
 .nai5-floating-window {
   position: fixed;
   z-index: 99990;
@@ -130,23 +154,23 @@ window.__ModuleLoader__.load({
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* 最底层：渐变氛围与可选自定义壁纸背景层 */
+/* 最底层：枫霜氛围画卷背景层 (随景致与明暗主题切换) */
 .nai5-studio-bg-art {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-image: var(--nai5-wallpaper, radial-gradient(900px 600px at 82% 22%, rgba(224, 40, 79, 0.22), transparent 62%), radial-gradient(700px 520px at 18% 82%, rgba(226, 184, 135, 0.14), transparent 60%));
+  background-image: radial-gradient(ellipse 90% 65% at 72% 24%, rgba(164, 212, 240, 0.22) 0%, rgba(212, 54, 72, 0.14) 36%, transparent 72%), radial-gradient(ellipse 65% 55% at 22% 78%, rgba(212, 54, 72, 0.18) 0%, rgba(28, 38, 66, 0.28) 52%, transparent 80%), linear-gradient(135deg, #0d111a 0%, #161826 48%, #1d141b 100%);
   background-size: cover;
-  background-position: 68% 28%;
+  background-position: 52% 28%;
   background-repeat: no-repeat;
   opacity: var(--fx-art-opacity);
   filter: var(--fx-art-filter);
   transform: scale(1.015);
-  transition: opacity 0.35s ease, filter 0.35s ease, transform 0.5s ease;
+  transition: background-image 0.4s ease, background-position 0.4s ease, opacity 0.35s ease, filter 0.35s ease, transform 0.5s ease;
   pointer-events: none;
 }
 
-/* 渐晕柔化层：保持左侧编辑区与卡片温润通透 */
+/* 渐晕柔化层：让左侧编辑区温润通透、右侧与下方画卷景致自然浮现 */
 .nai5-studio-bg-veil {
   position: absolute;
   inset: 0;
@@ -156,35 +180,95 @@ window.__ModuleLoader__.load({
   pointer-events: none;
 }
 
-/* 浮世绘青海波 (Seigaiha) 与和式云纹装饰层 */
+/* 和风织金「金线菱格透纱 (Gold Diamond Lattice Gauze)」底纹层 */
 .nai5-studio-ukiyo-pattern {
   position: absolute;
   inset: 0;
   z-index: 1;
-  opacity: 0.85;
-  background-image: radial-gradient(circle at 100% 100%, transparent 18px, var(--fx-ukiyo-stroke) 19px, var(--fx-ukiyo-stroke) 20px, transparent 21px),
-                    radial-gradient(circle at 0% 100%, transparent 18px, var(--fx-ukiyo-stroke) 19px, var(--fx-ukiyo-stroke) 20px, transparent 21px),
-                    radial-gradient(circle at 50% 100%, transparent 10px, var(--fx-ukiyo-stroke) 11px, transparent 12px);
-  background-size: 48px 24px;
+  opacity: 0.9;
+  background-image:
+    repeating-linear-gradient(45deg, transparent 0, transparent 22px, var(--fx-mesh-stroke) 22px, var(--fx-mesh-stroke) 23px),
+    repeating-linear-gradient(-45deg, transparent 0, transparent 22px, var(--fx-mesh-stroke) 22px, var(--fx-mesh-stroke) 23px);
   pointer-events: none;
 }
 
-/* 赏画模式 (Peeking Mode)：突出自定义壁纸清晰度，卡片化为薄冰晶 */
+/* 赏画模式 (Peeking Mode)：完整透现底层工坊画卷，全标签内容统一退让并支持点击任意处返回 */
+.nai5-floating-window.peek-art .nai5-win-header {
+  z-index: 60;
+  background: var(--fx-glass-header);
+}
 .nai5-floating-window.peek-art .nai5-studio-bg-art {
-  opacity: 0.98;
-  filter: saturate(1.12) contrast(1.05) brightness(1.02);
+  opacity: 1 !important;
+  filter: saturate(1.06) contrast(1.02) brightness(1.0);
   transform: scale(1.0);
+  background-position: center 22% !important;
 }
 .nai5-floating-window.peek-art .nai5-studio-bg-veil {
-  opacity: 0.22;
+  opacity: 0.03 !important;
 }
-.nai5-floating-window.peek-art .nai5-card,
-.nai5-floating-window.peek-art .nai5-col-right {
-  opacity: 0.28;
+.nai5-floating-window.peek-art .nai5-studio-ukiyo-pattern {
+  opacity: 0.14;
+}
+.nai5-floating-window.peek-art .nai5-workbench-body,
+.nai5-floating-window.peek-art .nai5-gallery-wrap,
+.nai5-floating-window.peek-art .nai5-codex-card,
+.nai5-floating-window.peek-art .nai5-gallery-card {
+  opacity: 0.05;
+  pointer-events: none;
   transition: opacity 0.25s ease;
 }
 
-/* 飘落樱花花瓣动画层 */
+.nai5-peek-overlay {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 28;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 18px;
+  cursor: pointer;
+}
+
+.nai5-peek-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--fx-glass-popover);
+  border: 1px solid var(--fx-border-gold);
+  box-shadow: var(--fx-shadow-main);
+  backdrop-filter: blur(18px);
+  color: var(--fx-text-primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.nai5-peek-nav-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.14s ease;
+}
+
+.nai5-peek-nav-btn:hover {
+  border-color: var(--fx-gold);
+  color: var(--fx-crimson-soft);
+  background: rgba(212, 36, 61, 0.14);
+}
+
+/* 绯枫飘落与冬雪微尘双轨动效层 */
 .nai5-sakura-layer {
   position: absolute;
   inset: 0;
@@ -196,17 +280,35 @@ window.__ModuleLoader__.load({
 .nai5-petal {
   position: absolute;
   top: -24px;
-  color: var(--fx-sakura);
-  opacity: 0.45;
-  animation: nai5SakuraFall linear infinite;
-  filter: drop-shadow(0 2px 6px rgba(216, 31, 67, 0.25));
 }
 
-@keyframes nai5SakuraFall {
-  0% { transform: translate3d(0, -20px, 0) rotate(0deg) scale(0.85); opacity: 0; }
-  15% { opacity: 0.55; }
-  85% { opacity: 0.45; }
-  100% { transform: translate3d(-90px, 780px, 0) rotate(320deg) scale(1.05); opacity: 0; }
+.nai5-petal.is-maple {
+  color: var(--fx-maple);
+  opacity: 0.42;
+  animation: nai5MapleDrift linear infinite;
+  filter: drop-shadow(0 2px 6px rgba(194, 28, 52, 0.28));
+}
+
+.nai5-petal.is-snow {
+  color: var(--fx-snow);
+  opacity: 0.36;
+  animation: nai5SnowDrift linear infinite;
+  filter: drop-shadow(0 0 4px rgba(108, 199, 255, 0.35));
+}
+
+@keyframes nai5MapleDrift {
+  0% { transform: translate3d(0, -24px, 0) rotate(0deg) scale(0.86); opacity: 0; }
+  14% { opacity: 0.50; }
+  50% { transform: translate3d(-55px, 370px, 0) rotate(140deg) scale(1.0); }
+  86% { opacity: 0.42; }
+  100% { transform: translate3d(-115px, 780px, 0) rotate(290deg) scale(0.92); opacity: 0; }
+}
+
+@keyframes nai5SnowDrift {
+  0% { transform: translate3d(0, -18px, 0) rotate(0deg) scale(0.75); opacity: 0; }
+  18% { opacity: 0.44; }
+  84% { opacity: 0.32; }
+  100% { transform: translate3d(-32px, 780px, 0) rotate(180deg) scale(0.95); opacity: 0; }
 }
 
 /* ---------- 4. 缩放手柄 ---------- */
@@ -216,10 +318,10 @@ window.__ModuleLoader__.load({
 .nai5-resize-se { position: absolute; right: 0; bottom: 0; width: 16px; height: 16px; cursor: nwse-resize; z-index: 31; }
 .nai5-resize-sw { position: absolute; left: 0; bottom: 0; width: 16px; height: 16px; cursor: nesw-resize; z-index: 31; }
 
-/* ---------- 5. 顶部和式毛玻璃标题栏与朱印 ---------- */
+/* ---------- 5. 顶部和式毛玻璃标题栏与和风朱印 ---------- */
 .nai5-win-header {
   position: relative;
-  z-index: 10;
+  z-index: 60;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -229,40 +331,40 @@ window.__ModuleLoader__.load({
   backdrop-filter: blur(18px) saturate(160%);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
   border-bottom: 1px solid var(--fx-border-card);
-  box-shadow: 0 1px 0 rgba(216, 31, 67, 0.12);
+  box-shadow: 0 1px 0 rgba(214, 182, 124, 0.14);
   cursor: move;
   flex: none;
-  gap: 10px;
+  gap: 8px;
 }
 
-/* 水引 (Mizuhiki) 底部装饰金红细线 */
+/* 霜刃水引装饰线 (Ice-Gold-Crimson Edge Line) */
 .nai5-win-header::after {
   content: '';
   position: absolute;
-  left: 18px;
-  right: 18px;
+  left: 16px;
+  right: 16px;
   bottom: -1px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--fx-crimson-soft), var(--fx-gold), var(--fx-crimson-soft), transparent);
-  opacity: 0.55;
+  background: linear-gradient(90deg, transparent 3%, var(--fx-ice-soft) 18%, var(--fx-gold) 38%, var(--fx-crimson-soft) 50%, var(--fx-gold) 62%, var(--fx-ice-soft) 82%, transparent 97%);
+  opacity: 0.62;
   pointer-events: none;
 }
 
 .nai5-win-brand {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   min-width: 0;
 }
 
-/* 和式朱印 (Hanko Stamp) 徽章 */
+/* 和式朱印 (Hanko Stamp) + 古典描金边框 */
 .nai5-hanko-seal {
   width: 26px;
   height: 26px;
   border-radius: 6px;
-  background: linear-gradient(135deg, #e0284f 0%, #9e1130 100%);
-  border: 1px solid rgba(255, 220, 228, 0.45);
-  box-shadow: 0 3px 12px rgba(216, 31, 67, 0.45), inset 0 0 0 1.5px rgba(255, 255, 255, 0.18);
+  background: linear-gradient(135deg, var(--fx-crimson) 0%, var(--fx-crimson-deep) 100%);
+  border: 1px solid rgba(214, 182, 124, 0.58);
+  box-shadow: 0 4px 14px rgba(194, 28, 52, 0.45), inset 0 0 0 1px rgba(255, 240, 215, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -286,11 +388,17 @@ window.__ModuleLoader__.load({
   font-weight: 600;
   padding: 1.5px 8px;
   border-radius: 999px;
-  background: rgba(224, 40, 79, 0.14);
-  border: 1px solid rgba(224, 40, 79, 0.34);
-  color: var(--fx-crimson-soft);
+  background: rgba(214, 182, 124, 0.12);
+  border: 1px solid var(--fx-border-gold);
+  color: var(--fx-gold);
   letter-spacing: 0.06em;
   white-space: nowrap;
+}
+
+@media (max-width: 1040px) {
+  .nai5-brand-sub {
+    display: none;
+  }
 }
 
 /* 顶部中段切换器 */
@@ -323,14 +431,14 @@ window.__ModuleLoader__.load({
 
 .nai5-seg-btn:hover {
   color: var(--fx-text-primary);
-  background: rgba(224, 40, 79, 0.08);
+  background: rgba(212, 36, 61, 0.09);
 }
 
 .nai5-seg-btn.active {
-  background: linear-gradient(135deg, #e0284f 0%, #b01537 100%);
+  background: linear-gradient(135deg, var(--fx-crimson) 0%, var(--fx-crimson-deep) 100%);
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 4px 12px -4px rgba(216, 31, 67, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  box-shadow: 0 4px 14px -4px rgba(194, 28, 52, 0.72), inset 0 1px 0 rgba(255, 242, 220, 0.34);
 }
 
 .nai5-win-actions {
@@ -355,17 +463,17 @@ window.__ModuleLoader__.load({
 }
 
 .nai5-win-ctrl:hover {
-  background: rgba(224, 40, 79, 0.14);
-  border-color: rgba(224, 40, 79, 0.32);
+  background: rgba(212, 36, 61, 0.14);
+  border-color: var(--fx-border-gold);
   color: var(--fx-text-primary);
 }
 
 .nai5-win-ctrl.danger:hover {
-  background: rgba(224, 40, 79, 0.24);
-  color: #ff4d6d;
+  background: rgba(212, 36, 61, 0.24);
+  color: var(--fx-crimson-soft);
 }
 
-/* ---------- 6. 落樱毛玻璃桌面悬浮球 (Floating Orb) ---------- */
+/* ---------- 6. NAI5 Studio · 枫霜毛玻璃桌面悬浮球 (Floating Orb) ---------- */
 .nai5-floating-orb {
   position: relative;
   display: flex;
@@ -379,7 +487,7 @@ window.__ModuleLoader__.load({
   border: 1px solid var(--fx-border-outer);
   box-shadow:
     0 18px 42px -10px rgba(0, 0, 0, 0.65),
-    0 0 26px -6px rgba(216, 31, 67, 0.45),
+    0 0 26px -6px rgba(212, 36, 61, 0.38),
     inset 0 1px 0 var(--fx-inner-highlight);
   cursor: pointer;
   user-select: none;
@@ -387,10 +495,10 @@ window.__ModuleLoader__.load({
 }
 
 .nai5-floating-orb:hover {
-  border-color: var(--fx-crimson-soft);
+  border-color: var(--fx-gold);
   box-shadow:
     0 22px 48px -10px rgba(0, 0, 0, 0.75),
-    0 0 32px -4px rgba(216, 31, 67, 0.7),
+    0 0 32px -4px rgba(212, 36, 61, 0.58),
     inset 0 1px 0 var(--fx-inner-highlight);
   transform: translateY(-2px) scale(1.02);
 }
@@ -399,11 +507,11 @@ window.__ModuleLoader__.load({
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-image: radial-gradient(circle at 35% 30%, #ff758f 0%, #e0284f 52%, #7a0c26 100%);
-  background-size: 240%;
-  background-position: 62% 24%;
-  border: 1.5px solid var(--fx-crimson-soft);
-  box-shadow: 0 0 10px rgba(216, 31, 67, 0.55);
+  background-image: radial-gradient(circle at 32% 28%, rgba(243, 210, 153, 0.92), rgba(200, 35, 55, 0.94) 55%, rgba(28, 12, 18, 0.96) 100%);
+  background-size: cover;
+  background-position: center 20%;
+  border: 1.5px solid var(--fx-gold);
+  box-shadow: 0 0 12px rgba(212, 36, 61, 0.50), 0 0 0 1px rgba(212, 36, 61, 0.35);
   position: relative;
   flex: none;
 }
@@ -425,16 +533,156 @@ window.__ModuleLoader__.load({
   container-type: inline-size;
 }
 
-.nai5-col-left {
-  min-width: 360px;
-  overflow-y: auto;
-  padding: var(--fx-pad);
+/* v3.0 Left Docked 3-Layer Creation Inspector */
+.nai5-inspector {
+  min-width: 340px;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--fx-gap);
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.04);
 }
 
-/* 主工作台左右分栏拖拽条 (调节左栏提示词与右栏舞台预览比例) */
+.nai5-inspector-tabs {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 8px var(--fx-pad) 6px;
+  border-bottom: 1px solid var(--fx-border-subtle);
+  background: var(--fx-glass-header);
+  backdrop-filter: blur(12px);
+}
+
+.nai5-insp-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--fx-text-secondary);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.nai5-insp-tab:hover {
+  color: var(--fx-text-primary);
+  background: rgba(224, 40, 79, 0.08);
+}
+
+.nai5-insp-tab.active {
+  background: var(--fx-glass-card);
+  border-color: rgba(224, 40, 79, 0.42);
+  color: var(--fx-crimson-soft);
+  box-shadow: 0 3px 10px -4px rgba(216, 31, 67, 0.35), inset 0 1px 0 var(--fx-inner-highlight);
+}
+
+.nai5-tab-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(224, 40, 79, 0.22);
+  color: var(--fx-crimson-soft);
+}
+
+.nai5-tab-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--fx-crimson-soft);
+  box-shadow: 0 0 6px var(--fx-crimson-soft);
+}
+
+.nai5-inspector-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 10px var(--fx-pad);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nai5-inspector-footer {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 9px var(--fx-pad) 11px;
+  border-top: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-header);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: 0 -8px 24px -14px rgba(0, 0, 0, 0.35);
+}
+
+.nai5-quick-chips {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.nai5-status-chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 2.5px 8px;
+  font-size: 10.5px;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.14s ease;
+}
+
+.nai5-status-chip:hover {
+  border-color: rgba(224, 40, 79, 0.45);
+  color: var(--fx-text-primary);
+}
+
+.nai5-status-chip.is-accent {
+  border-color: rgba(224, 40, 79, 0.48);
+  background: rgba(224, 40, 79, 0.14);
+  color: var(--fx-crimson-soft);
+}
+
+.nai5-generate-cta {
+  width: 100%;
+  padding: 10px 15px !important;
+  font-size: 13px !important;
+  border-radius: 10px !important;
+  justify-content: space-between !important;
+}
+
+.nai5-cta-cost {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.28);
+  color: #fce7f3;
+  font-weight: 500;
+}
+
+.nai5-cta-cost.free {
+  background: rgba(16, 185, 129, 0.25);
+  color: #a7f3d0;
+}
+
+/* 主工作台左右分栏拖拽条 */
 .nai5-main-col-splitter {
   width: 10px;
   margin: 0 -2px;
@@ -465,23 +713,200 @@ window.__ModuleLoader__.load({
   box-shadow: 0 0 10px rgba(224, 40, 79, 0.7);
 }
 
-.nai5-col-right {
+/* v3.0 Right Expansive Hero Canvas Stage */
+.nai5-stage-col {
   flex: 1;
   min-width: 320px;
-  overflow-y: auto;
-  padding: var(--fx-pad);
+  height: 100%;
+  overflow: hidden;
+  padding: 9px var(--fx-pad) 10px;
   display: flex;
   flex-direction: column;
-  gap: var(--fx-gap);
-  background: rgba(0, 0, 0, 0.045);
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.025);
 }
 
-/* 右栏下半部参数自适应双列网格 (宽屏/全屏时自动并排，节省纵向空间给预览舞台) */
-.nai5-params-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
-  gap: var(--fx-gap);
+.nai5-stage-hud {
   flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.nai-seg-mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2.5px;
+  border-radius: 8px;
+  background: var(--fx-glass-input);
+  border: 1px solid var(--fx-border-card);
+}
+
+.nai-seg-mini-btn {
+  padding: 3.5px 10px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--fx-text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.14s ease;
+}
+
+.nai-seg-mini-btn:hover {
+  color: var(--fx-text-primary);
+}
+
+.nai-seg-mini-btn.active {
+  background: linear-gradient(135deg, var(--fx-crimson) 0%, var(--fx-crimson-deep) 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 8px -2px rgba(194, 28, 52, 0.65), inset 0 1px 0 rgba(255, 240, 215, 0.28);
+}
+
+.nai5-stage-subbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 6px 10px;
+  border-radius: 9px;
+  background: var(--fx-glass-card);
+  border: 1px solid var(--fx-border-card);
+  backdrop-filter: blur(12px);
+}
+
+.nai-subbar-slider {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--fx-text-secondary);
+}
+
+.nai-subbar-slider input[type="range"] {
+  width: 90px;
+}
+
+.nai5-stage-viewport {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  border-radius: 12px;
+  background: var(--fx-glass-input);
+  border: 1px solid var(--fx-border-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 10px;
+  box-shadow: inset 0 1px 0 var(--fx-inner-highlight);
+}
+
+.nai5-stage-viewport::before,
+.nai5-stage-viewport::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.72;
+}
+
+.nai5-stage-viewport::before {
+  top: 7px;
+  left: 7px;
+  border-top: 1.5px solid var(--fx-border-gold);
+  border-left: 1.5px solid var(--fx-border-gold);
+  border-top-left-radius: 3px;
+}
+
+.nai5-stage-viewport::after {
+  bottom: 7px;
+  right: 7px;
+  border-bottom: 1.5px solid var(--fx-border-gold);
+  border-right: 1.5px solid var(--fx-border-gold);
+  border-bottom-right-radius: 3px;
+}
+
+.nai5-stage-img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  filter: drop-shadow(0 14px 32px rgba(0, 0, 0, 0.45));
+  cursor: zoom-in;
+  display: block;
+  transition: transform 0.18s ease;
+}
+
+.nai5-stage-img:hover {
+  transform: scale(1.008);
+}
+
+.nai5-stage-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  padding: 20px;
+}
+
+.nai5-stage-loading {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: var(--fx-glass-popover);
+  border: 1px solid rgba(224, 40, 79, 0.55);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+  color: var(--fx-text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 25;
+  backdrop-filter: blur(16px);
+}
+
+.nai5-filmstrip-wrap {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: 9px;
+  background: var(--fx-glass-card);
+  border: 1px solid var(--fx-border-card);
+}
+
+.nai5-film-toggle {
+  flex: none;
+  padding: 4px 7px;
+  border-radius: 6px;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-secondary);
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nai5-film-toggle:hover {
+  border-color: rgba(224, 40, 79, 0.5);
+  color: var(--fx-crimson-soft);
 }
 
 /* 磨砂毛玻璃卡片 + 和式花菱纹理细节 */
@@ -524,14 +949,14 @@ window.__ModuleLoader__.load({
   color: var(--fx-text-primary);
 }
 
-/* 日式武田菱 (Hishi) 绯红小角标 */
+/* 日式武田菱 (Hishi) 金红双色微章 */
 .nai5-label-title::before {
   content: '';
   width: 5px;
   height: 5px;
-  background: linear-gradient(135deg, var(--fx-crimson-soft), var(--fx-crimson-deep));
+  background: linear-gradient(135deg, var(--fx-gold), var(--fx-crimson));
   transform: rotate(45deg);
-  box-shadow: 0 0 6px rgba(224, 40, 79, 0.65);
+  box-shadow: 0 0 7px rgba(212, 36, 61, 0.48);
   flex: none;
 }
 
@@ -576,6 +1001,7 @@ window.__ModuleLoader__.load({
   align-items: center;
   justify-content: center;
   gap: 5px;
+  flex-shrink: 0;
   padding: 5px 10px;
   border-radius: 8px;
   border: 1px solid var(--fx-border-card);
@@ -589,8 +1015,8 @@ window.__ModuleLoader__.load({
 }
 
 .nai5-btn:hover:not(:disabled) {
-  background: rgba(224, 40, 79, 0.14);
-  border-color: rgba(224, 40, 79, 0.45);
+  background: rgba(212, 36, 61, 0.13);
+  border-color: var(--fx-border-gold);
   color: var(--fx-text-primary);
 }
 
@@ -608,17 +1034,17 @@ window.__ModuleLoader__.load({
 .nai5-btn.primary {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #e62a4f 0%, #a81232 100%);
-  border-color: rgba(255, 220, 228, 0.28);
+  background: linear-gradient(135deg, var(--fx-crimson) 0%, var(--fx-crimson-deep) 100%);
+  border-color: rgba(214, 182, 124, 0.42);
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 6px 18px -6px rgba(216, 31, 67, 0.78), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  box-shadow: 0 6px 18px -6px rgba(194, 28, 52, 0.72), inset 0 1px 0 rgba(255, 240, 215, 0.32);
 }
 
 .nai5-btn.primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #ff3d63 0%, #c0163b 100%);
+  background: linear-gradient(135deg, var(--fx-crimson-soft) 0%, var(--fx-crimson) 100%);
   color: #ffffff;
-  box-shadow: 0 8px 22px -6px rgba(216, 31, 67, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.36);
+  box-shadow: 0 8px 22px -6px rgba(194, 28, 52, 0.88), inset 0 1px 0 rgba(255, 244, 224, 0.42);
 }
 
 .nai5-btn.ghost {
@@ -633,10 +1059,16 @@ window.__ModuleLoader__.load({
 }
 
 /* ---------- 9. 2D 角色坐标画布与 6 角色自适应矩阵 ---------- */
-.nai5-stage2d-wrap {
+.nai5-stage2d-wrap.is-stacked {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.nai5-char-cards-stack {
   display: flex;
-  gap: 12px;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .nai5-char-cards-grid {
@@ -801,7 +1233,7 @@ window.__ModuleLoader__.load({
   width: 100%;
   height: 4px;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--fx-crimson) 0%, rgba(224, 40, 79, 0.25) 100%);
+  background: linear-gradient(90deg, var(--fx-crimson) 0%, rgba(214, 182, 124, 0.28) 100%);
   outline: none;
   cursor: pointer;
 }
@@ -813,7 +1245,7 @@ window.__ModuleLoader__.load({
   border-radius: 50%;
   background: #ffffff;
   border: 2px solid var(--fx-crimson);
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(214, 182, 124, 0.35);
   cursor: pointer;
   transition: transform 0.12s ease;
 }
@@ -870,6 +1302,37 @@ window.__ModuleLoader__.load({
   padding-right: 2px;
 }
 
+.nai5-gallery-toolbar-card {
+  position: relative;
+  z-index: 45;
+}
+
+.nai5-card:has(.nai-popover-down),
+.nai5-card:has(.nai-popover-up) {
+  z-index: 45;
+}
+
+.nai5-char-pills-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 2px 0 6px;
+  scrollbar-width: thin;
+}
+
+.nai5-char-pills-row.is-expanded {
+  flex-wrap: wrap;
+  overflow-x: visible;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.nai5-char-pills-row > * {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
 /* ---------- 13. 画廊与灯箱 (全局容器自适应多列) ---------- */
 .nai5-gallery-wrap {
   position: relative;
@@ -911,8 +1374,8 @@ window.__ModuleLoader__.load({
 
 .nai5-gallery-card:hover {
   transform: translateY(-3px) translateZ(0);
-  border-color: var(--fx-crimson-soft);
-  box-shadow: 0 16px 32px -12px rgba(216, 31, 67, 0.42);
+  border-color: var(--fx-gold);
+  box-shadow: 0 16px 32px -12px rgba(0, 0, 0, 0.40), 0 0 0 1px var(--fx-border-gold);
 }
 
 .nai5-gallery-media {
@@ -937,7 +1400,7 @@ window.__ModuleLoader__.load({
   transform: scale(1.045) translateZ(0);
 }
 
-/* 顶部右上角悬停工具圆钮 (复制图片 / 文件管理器定位) */
+/* 顶部右上角悬停工具圆钮 (复制图片 / 资源管理器定位) */
 .nai5-gallery-top-tools {
   position: absolute;
   top: 7px;
@@ -961,11 +1424,11 @@ window.__ModuleLoader__.load({
   width: 27px;
   height: 27px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  background: rgba(16, 14, 24, 0.76);
+  border: 1px solid rgba(214, 182, 124, 0.32);
+  background: rgba(8, 15, 23, 0.78);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  color: #f8fafc;
+  color: #eff5fa;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -977,7 +1440,7 @@ window.__ModuleLoader__.load({
 
 .nai5-gallery-icon-btn:hover {
   background: var(--fx-crimson);
-  border-color: #ff8fa3;
+  border-color: var(--fx-gold);
   color: #ffffff;
   transform: scale(1.06);
 }
@@ -989,11 +1452,11 @@ window.__ModuleLoader__.load({
   right: 0;
   bottom: 0;
   z-index: 4;
-  padding: 26px 8px 8px;
+  padding: 18px 6px 6px;
   background: linear-gradient(to top, rgba(12, 10, 18, 0.90) 0%, rgba(12, 10, 18, 0.56) 58%, transparent 100%);
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px;
+  gap: 4px;
   opacity: 0;
   transform: translateY(6px);
   pointer-events: none;
@@ -1007,17 +1470,17 @@ window.__ModuleLoader__.load({
 }
 
 .nai5-gallery-dock-btn {
-  height: 27px;
-  border-radius: 7px;
-  font-size: 11px;
+  height: 23px;
+  border-radius: 6px;
+  font-size: 10.5px;
   font-weight: 600;
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 3px;
   cursor: pointer;
-  padding: 0 6px;
+  padding: 0 5px;
   transition: all 0.14s ease;
   border: 1px solid rgba(255, 255, 255, 0.24);
   background: rgba(24, 21, 34, 0.82);
@@ -1033,10 +1496,10 @@ window.__ModuleLoader__.load({
 }
 
 .nai5-gallery-dock-btn.primary {
-  background: linear-gradient(135deg, #e62a4f 0%, #b01435 100%);
-  border-color: rgba(255, 200, 212, 0.45);
+  background: linear-gradient(135deg, var(--fx-crimson) 0%, var(--fx-crimson-deep) 100%);
+  border-color: rgba(214, 182, 124, 0.45);
   color: #ffffff;
-  box-shadow: 0 3px 10px rgba(216, 31, 67, 0.45);
+  box-shadow: 0 3px 10px rgba(194, 28, 52, 0.45);
 }
 
 .nai5-gallery-dock-btn.primary:hover {
@@ -1081,19 +1544,21 @@ window.__ModuleLoader__.load({
 .nai5-gallery-seed {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 10.5px;
-  color: var(--fx-crimson-soft);
-  opacity: 0.9;
+  color: var(--fx-gold);
+  opacity: 0.94;
   white-space: nowrap;
   flex: none;
-  padding: 1px 5px;
+  padding: 1px 6px;
   border-radius: 5px;
-  background: rgba(224, 40, 79, 0.08);
-  transition: background 0.14s ease, color 0.14s ease;
+  background: rgba(214, 182, 124, 0.12);
+  border: 1px solid rgba(214, 182, 124, 0.22);
+  transition: background 0.14s ease, color 0.14s ease, border-color 0.14s ease;
 }
 
 .nai5-gallery-seed:hover {
-  background: rgba(224, 40, 79, 0.2);
-  color: var(--fx-crimson);
+  background: rgba(212, 36, 61, 0.18);
+  border-color: var(--fx-border-gold);
+  color: var(--fx-crimson-soft);
 }
 
 /* ---------- 自适应弹性卡片与可拖拽分割条 (Resizable & Adaptive Cards) ---------- */
@@ -1195,34 +1660,34 @@ window.__ModuleLoader__.load({
   right: 0;
   bottom: 0;
   background:
-    radial-gradient(900px 500px at 50% 0%, rgba(216, 31, 67, 0.14), transparent 65%),
-    rgba(10, 9, 14, 0.94);
+    radial-gradient(900px 500px at 50% 0%, rgba(108, 199, 255, 0.10), transparent 65%),
+    rgba(6, 12, 19, 0.94);
   backdrop-filter: blur(22px);
   z-index: 999999;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   user-select: none;
-  color: #f8fafc;
+  color: #eff5fa;
 }
 
 .nai5-lightbox-overlay .nai5-btn {
   background: rgba(255, 255, 255, 0.10);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  color: #f8fafc;
+  border: 1px solid rgba(214, 182, 124, 0.28);
+  color: #eff5fa;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
 .nai5-lightbox-overlay .nai5-btn:hover:not(:disabled) {
-  background: rgba(224, 40, 79, 0.28);
-  border-color: #ff5c7c;
+  background: rgba(212, 36, 61, 0.28);
+  border-color: #d6b67c;
   color: #ffffff;
-  box-shadow: 0 4px 14px rgba(216, 31, 67, 0.5);
+  box-shadow: 0 4px 14px rgba(194, 28, 52, 0.45);
 }
 
 .nai5-lightbox-overlay .nai5-btn.primary {
-  background: linear-gradient(135deg, #e62a4f 0%, #a81232 100%);
-  border-color: rgba(255, 220, 228, 0.38);
+  background: linear-gradient(135deg, #d4243d 0%, #8f1024 100%);
+  border-color: rgba(214, 182, 124, 0.45);
   color: #ffffff;
 }
 
@@ -1233,8 +1698,8 @@ window.__ModuleLoader__.load({
   width: 44px;
   height: 76px;
   border-radius: 12px;
-  background: rgba(22, 20, 30, 0.82);
-  border: 1px solid rgba(255, 210, 220, 0.28);
+  background: rgba(9, 17, 26, 0.84);
+  border: 1px solid rgba(214, 182, 124, 0.34);
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -1247,10 +1712,10 @@ window.__ModuleLoader__.load({
 }
 
 .nai5-lightbox-nav-arrow:hover {
-  background: linear-gradient(135deg, rgba(224, 40, 79, 0.85), rgba(158, 17, 48, 0.9));
-  border-color: #ffb3c6;
+  background: linear-gradient(135deg, rgba(212, 36, 61, 0.88), rgba(143, 16, 36, 0.92));
+  border-color: #d6b67c;
   transform: translateY(-50%) scale(1.06);
-  box-shadow: 0 12px 32px rgba(216, 31, 67, 0.65);
+  box-shadow: 0 12px 32px rgba(194, 28, 52, 0.6);
 }
 
 .nai5-lightbox-nav-arrow.prev { left: 20px; }
@@ -1316,16 +1781,16 @@ window.__ModuleLoader__.load({
   0%, 100% {
     box-shadow:
       0 18px 42px -10px rgba(0, 0, 0, 0.65),
-      0 0 22px 2px rgba(224, 40, 79, 0.55),
+      0 0 22px 2px rgba(212, 36, 61, 0.52),
       inset 0 1px 0 var(--fx-inner-highlight);
-    border-color: #ff4d6d;
+    border-color: var(--fx-crimson-soft);
   }
   50% {
     box-shadow:
       0 18px 48px -8px rgba(0, 0, 0, 0.75),
-      0 0 38px 8px rgba(224, 40, 79, 0.92),
+      0 0 38px 8px rgba(214, 182, 124, 0.65),
       inset 0 1px 0 var(--fx-inner-highlight);
-    border-color: #ffb3c6;
+    border-color: var(--fx-gold);
   }
 }
 
@@ -1513,6 +1978,41 @@ window.__ModuleLoader__.load({
   word-break: break-all;
   white-space: pre-wrap;
   scrollbar-width: thin;
+}
+.nai5-codex-char-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 120px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.nai5-codex-char-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 6px 8px;
+  border-radius: 7px;
+  background: var(--fx-glass-input);
+  border: 1px solid var(--fx-border-card);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--fx-text-primary);
+  word-break: break-all;
+}
+.nai5-codex-char-label {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: rgba(139, 92, 246, 0.16);
+  color: #a78bfa;
+  border: 1px solid rgba(139, 92, 246, 0.3);
 }
 
 /* ==================== VIRTUALIZED NATURAL-ASPECT MASONRY GALLERY ==================== */
@@ -1713,6 +2213,846 @@ window.__ModuleLoader__.load({
 
 .nai5-account-input:focus {
   border-color: var(--fx-crimson-soft);
+}
+
+/* ============================================================
+   NAI5 Workbench v2.0 Extensions (Inpaint / Compare / PostProcess / Refs / Chunks / Batch)
+   Cohesive with Frost & Maple Glassmorphism (--fx-* tokens, dark & light)
+   ============================================================ */
+
+.nai-mode-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: var(--fx-glass-card);
+  border: 1px solid var(--fx-border-card);
+  backdrop-filter: blur(12px);
+}
+
+.nai-drop-hint {
+  font-size: 10.5px;
+  color: var(--fx-text-muted);
+}
+
+.nai-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.nai-pill-btn:hover:not(:disabled) {
+  border-color: rgba(224, 40, 79, 0.5);
+  color: var(--fx-text-primary);
+}
+
+.nai-pill-btn.is-active {
+  background: linear-gradient(135deg, var(--fx-crimson) 0%, var(--fx-crimson-deep) 100%);
+  border-color: var(--fx-border-gold);
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(194, 28, 52, 0.35);
+}
+
+.nai-pill-btn.is-danger:hover {
+  border-color: rgba(239, 68, 68, 0.65);
+  color: #fda4af;
+}
+
+.nai-pill-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.nai-input-mini,
+.nai-select-mini {
+  padding: 4px 8px;
+  font-size: 11px;
+  border-radius: 7px;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-primary);
+  outline: none;
+}
+
+.nai-input-mini:focus,
+.nai-select-mini:focus {
+  border-color: var(--fx-border-focus);
+}
+
+/* ---------- Full-Stage Inpaint Canvas Editor ---------- */
+.nai-inpaint-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.nai-inpaint-toolbar {
+  flex: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: var(--fx-glass-header);
+  border: 1px solid var(--fx-border-card);
+}
+
+.nai-inpaint-size {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--fx-text-secondary);
+  margin: 0 4px;
+}
+
+.nai-inpaint-size input[type="range"] {
+  width: 82px;
+  accent-color: var(--fx-crimson);
+}
+
+.nai-inpaint-stage-host {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.nai-inpaint-stage {
+  position: relative;
+  display: inline-flex;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--fx-border-card);
+  user-select: none;
+}
+
+.nai-inpaint-base {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.nai-inpaint-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.nai-inpaint-cursor {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1.5px solid var(--fx-crimson-soft);
+  box-shadow: 0 0 6px rgba(224, 40, 79, 0.55);
+  pointer-events: none;
+}
+
+.nai-inpaint-empty {
+  width: 100%;
+  flex: 1;
+  min-height: 180px;
+  border-radius: 10px;
+  border: 1.5px dashed var(--fx-border-card);
+  background: var(--fx-glass-input);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.nai-inpaint-empty-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fx-text-primary);
+}
+
+.nai-inpaint-empty-sub {
+  font-size: 10.5px;
+  color: var(--fx-text-muted);
+}
+
+/* ---------- Full-Stage A/B Compare Slider ---------- */
+.nai-compare-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: ew-resize;
+  user-select: none;
+  touch-action: none;
+}
+
+.nai-compare-img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}
+
+.nai-compare-before {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nai-compare-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--fx-crimson-soft);
+  box-shadow: 0 0 12px rgba(255, 92, 124, 0.85);
+  pointer-events: none;
+}
+
+.nai-compare-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--fx-crimson);
+  color: #fff;
+  border: 2px solid #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nai-compare-badge {
+  position: absolute;
+  top: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(14, 13, 19, 0.78);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.nai-compare-badge.is-left { left: 8px; }
+.nai-compare-badge.is-right { right: 8px; }
+
+/* ---------- Single-Row Glass Action Dock & Popovers ---------- */
+.nai-action-dock {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 9px;
+  border-radius: 10px;
+  background: var(--fx-glass-card);
+  border: 1px solid var(--fx-border-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  position: relative;
+  z-index: 30;
+}
+
+.nai-dock-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: nowrap;
+}
+
+.nai-popover-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.nai-popover-up,
+.nai-popover-down {
+  position: absolute;
+  right: 0;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 9px;
+  border-radius: 11px;
+  background: var(--fx-glass-popover);
+  border: 1px solid var(--fx-border-outer);
+  box-shadow: var(--fx-shadow-main);
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+}
+
+.nai-popover-up {
+  bottom: calc(100% + 8px);
+}
+
+.nai-popover-down {
+  top: calc(100% + 6px);
+  min-width: 215px;
+}
+
+.nai-popover-up.is-narrow {
+  min-width: 205px;
+}
+
+.nai-popover-up.is-wide {
+  min-width: 310px;
+}
+
+.nai-popover-up-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.nai-popover-up-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--fx-crimson-soft);
+}
+
+.nai-defry-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--fx-text-secondary);
+}
+
+.nai-defry-inline input[type="range"] {
+  width: 70px;
+}
+
+.nai-menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  padding: 6px 9px;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  background: var(--fx-glass-input);
+  color: var(--fx-text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.14s ease;
+}
+
+.nai-menu-item strong {
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.nai-menu-item span {
+  font-size: 10px;
+  color: var(--fx-text-muted);
+}
+
+.nai-menu-item:hover {
+  border-color: rgba(224, 40, 79, 0.45);
+  background: rgba(224, 40, 79, 0.12);
+}
+
+.nai-menu-item.is-danger:hover {
+  border-color: rgba(239, 68, 68, 0.55);
+  color: #ff4d6d;
+}
+
+.nai-director-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.nai-menu-chip {
+  padding: 5px 8px;
+  border-radius: 7px;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-primary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.14s ease;
+}
+
+.nai-menu-chip:hover {
+  border-color: rgba(224, 40, 79, 0.55);
+  color: var(--fx-crimson-soft);
+}
+
+.nai-director-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nai5-btn.is-fav-active {
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.48);
+  background: rgba(245, 158, 11, 0.14);
+}
+
+/* ---------- Reference Images Panel ---------- */
+.nai-ref-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 9px 10px;
+  border-radius: 9px;
+  background: var(--fx-glass-popover);
+  border: 1px solid var(--fx-border-card);
+}
+
+.nai-ref-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.nai-ref-hint {
+  font-size: 10.5px;
+  color: var(--fx-crimson-soft);
+}
+
+.nai-ref-empty {
+  font-size: 11px;
+  color: var(--fx-text-muted);
+  padding: 8px;
+  border-radius: 7px;
+  border: 1px dashed var(--fx-border-card);
+  text-align: center;
+}
+
+.nai-ref-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+.nai-ref-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: var(--fx-glass-card);
+  border: 1px solid var(--fx-border-card);
+}
+
+.nai-ref-thumb {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex: none;
+}
+
+.nai-ref-controls {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nai-ref-slider {
+  display: flex;
+  flex-direction: column;
+  font-size: 10px;
+  color: var(--fx-text-secondary);
+}
+
+.nai-ref-slider input[type="range"] {
+  accent-color: var(--fx-crimson);
+  width: 100%;
+}
+
+.nai-ref-del {
+  flex: none;
+  border: none;
+  background: transparent;
+  color: var(--fx-text-muted);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px;
+}
+
+.nai-ref-del:hover {
+  color: var(--fx-crimson-soft);
+}
+
+/* ---------- Prompt Chunks Drawer ---------- */
+.nai-chunks-drawer {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: var(--fx-glass-popover);
+  border: 1px solid var(--fx-border-card);
+}
+
+.nai-chunks-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.nai-chunks-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fx-text-secondary);
+}
+
+.nai-chunks-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.nai-chunk-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--fx-glass-card);
+  border: 1px solid var(--fx-border-card);
+  font-size: 11px;
+  max-width: 240px;
+}
+
+.nai-chunk-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--fx-text-primary);
+}
+
+.nai-chunk-op {
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--fx-text-secondary);
+  border-radius: 4px;
+  width: 16px;
+  height: 16px;
+  line-height: 14px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 0;
+}
+
+.nai-chunk-op:hover {
+  background: rgba(224, 40, 79, 0.25);
+  color: var(--fx-crimson-soft);
+}
+
+/* ---------- Gallery Favorites & Batch Bar ---------- */
+.nai5-fav-btn.is-fav {
+  color: #fbbf24 !important;
+  background: rgba(212, 36, 61, 0.25) !important;
+}
+
+.nai5-gallery-card.is-selected {
+  outline: 2px solid var(--fx-gold);
+  box-shadow: 0 0 18px rgba(212, 36, 61, 0.40);
+}
+
+.nai5-gallery-check {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: rgba(8, 15, 23, 0.72);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+}
+
+.nai5-gallery-check.checked {
+  background: var(--fx-crimson);
+  border-color: var(--fx-gold);
+}
+
+.nai5-batch-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 7px 10px;
+  border-radius: 9px;
+  background: var(--fx-glass-popover);
+  border: 1px solid var(--fx-border-gold);
+}
+
+/* ---------- 16. 枫霜景致画卷选择器 (Curated Scene Switcher Popover) ---------- */
+.nai5-scene-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nai5-scene-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 380px;
+  max-width: calc(100vw - 28px);
+  z-index: 340;
+  cursor: default;
+  background: var(--fx-glass-popover);
+  border: 1px solid var(--fx-border-gold);
+  border-radius: 14px;
+  padding: 11px;
+  box-shadow: var(--fx-shadow-main), inset 0 1px 0 var(--fx-inner-highlight);
+  backdrop-filter: blur(26px) saturate(175%);
+  -webkit-backdrop-filter: blur(26px) saturate(175%);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  animation: fxHudSlideUp 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nai5-scene-pop-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--fx-border-card);
+}
+
+.nai5-scene-pop-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--fx-text-primary);
+}
+
+.nai5-scene-intensity-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.nai5-scene-intensity-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fx-text-secondary);
+}
+
+.nai5-scene-custom-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 9px;
+  background: rgba(212, 36, 61, 0.10);
+  border: 1px solid var(--fx-border-gold);
+}
+
+.nai5-scene-custom-thumb {
+  width: 44px;
+  height: 30px;
+  border-radius: 5px;
+  object-fit: cover;
+  border: 1px solid var(--fx-border-gold);
+  flex: none;
+}
+
+.nai5-scene-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  max-height: 330px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.nai5-scene-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-card);
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.nai5-scene-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--fx-gold);
+}
+
+.nai5-scene-card.is-active {
+  border-color: var(--fx-crimson-soft);
+  box-shadow: 0 0 0 1px var(--fx-border-gold), 0 8px 20px -10px rgba(194, 28, 52, 0.55);
+}
+
+.nai5-scene-thumb-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--fx-glass-input);
+}
+
+.nai5-scene-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  display: block;
+}
+
+.nai5-scene-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 9.5px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--fx-crimson) 0%, var(--fx-crimson-deep) 100%);
+  border: 1px solid rgba(214, 182, 124, 0.55);
+  color: #ffffff;
+}
+
+.nai5-scene-meta {
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nai5-scene-meta strong {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--fx-text-primary);
+}
+
+.nai5-scene-meta span {
+  font-size: 9.5px;
+  color: var(--fx-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- 17. Danbooru 双语词条 & 全局雅致 Toast ---------- */
+.nai5-danbooru-chip {
+  background: rgba(108, 199, 255, 0.10);
+  border-color: rgba(108, 199, 255, 0.28);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nai5-danbooru-chip:hover:not(:disabled) {
+  background: rgba(108, 199, 255, 0.18);
+  border-color: var(--fx-ice-soft);
+}
+
+.nai5-danbooru-tag {
+  color: var(--fx-text-primary);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.nai5-theme-dark .nai5-danbooru-tag {
+  color: #e2f2ff;
+}
+
+.nai5-theme-light .nai5-danbooru-chip {
+  background: rgba(29, 126, 194, 0.09);
+  border-color: rgba(29, 126, 194, 0.28);
+}
+
+.nai5-toast-pill {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--fx-glass-popover);
+  color: var(--fx-text-primary);
+  padding: 9px 15px;
+  border-radius: 10px;
+  border: 1px solid var(--fx-border-gold);
+  box-shadow: var(--fx-shadow-main), inset 0 1px 0 var(--fx-inner-highlight);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 1000000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }`;
 
 
@@ -1833,6 +3173,24 @@ window.__ModuleLoader__.load({
         .trim();
     }
 
+    function formatCodexFullText(entry) {
+      if (!entry || typeof entry !== 'object') return '';
+      const globalText = String(entry.globalPrompt !== undefined ? entry.globalPrompt : (entry.prompt || '')).trim();
+      const chars = Array.isArray(entry.characterPrompts) ? entry.characterPrompts : [];
+      if (!chars.length) return globalText || String(entry.prompt || '').trim();
+      const charLines = chars
+        .map((cp, idx) => {
+          const lbl = String(cp?.label || `char${idx + 1}`).trim();
+          const pr = String(cp?.prompt || cp?.char_caption || '').trim();
+          const uc = String(cp?.negative || cp?.uc || cp?.negativePrompt || '').trim();
+          if (!pr && !uc) return '';
+          return `[${lbl}] ${pr}${uc ? ` (UC: ${uc})` : ''}`;
+        })
+        .filter(Boolean);
+      if (!charLines.length) return globalText || String(entry.prompt || '').trim();
+      return globalText ? `${globalText}\n${charLines.join('\n')}` : charLines.join('\n');
+    }
+
     // --- src/presets.js ---
     const TAB_ID = 'dsh-nai5-studio';
     const TAB_KIND = 'novelai';
@@ -1950,11 +3308,24 @@ window.__ModuleLoader__.load({
     }
 
     // --- src/icons.js ---
-    // Crisp Linear & Japanese Sakura Vector SVG Icon System
+    // Crisp Linear & Frost-Maple Vector SVG Icon System
     const ICON_PATHS = {
       sakura: [
         ['path', { d: 'M12 2c1.3 2.1 2 4.2 1.4 6.2 1.9-.9 4-.6 5.9.5-1.4 1.9-3.2 3.1-5.2 3.1 1.4 1.6 1.7 3.7 1.1 5.9-2.1-.8-3.7-2.2-4.3-4.1-.6 1.9-2.2 3.3-4.3 4.1-.6-2.2-.3-4.3 1.1-5.9-2 0-3.8-1.2-5.2-3.1 1.9-1.1 4-1.4 5.9-.5-.6-2 .1-4.1 1.6-6.2z' }],
         ['circle', { cx: 12, cy: 12, r: 1.4 }]
+      ],
+      maple: [
+        ['path', { d: 'M12 2L14 7.2L19.2 5.2L16.2 10L21.8 11.2L16.8 14.2L18.5 17.6L13.2 16.4L12 18.2L10.8 16.4L5.5 17.6L7.2 14.2L2.2 11.2L7.8 10L4.8 5.2L10 7.2Z' }],
+        ['path', { d: 'M12 8.5v13.5' }]
+      ],
+      snowflake: [
+        ['path', { d: 'M12 2v20M4.93 7l14.14 10M19.07 7L4.93 17' }],
+        ['path', { d: 'M9.5 4.5L12 7l2.5-2.5M9.5 19.5L12 17l2.5 2.5M5.5 10.5L8 11.5L6.5 14M18.5 10.5L16 11.5l1.5 2.5' }]
+      ],
+      image: [
+        ['rect', { x: 3, y: 3, width: 18, height: 18, rx: 2 }],
+        ['circle', { cx: 8.5, cy: 8.5, r: 1.5 }],
+        ['path', { d: 'M21 15l-5-5L5 21' }]
       ],
       sun: [
         ['circle', { cx: 12, cy: 12, r: 4 }],
@@ -2101,44 +3472,92 @@ window.__ModuleLoader__.load({
       }, shapes.map(([tag, attrs], i) => h(tag, { key: i, ...attrs })));
     }
 
-    const SAKURA_PETALS = [
-      { left: '14%', delay: '0s', dur: '14s', size: 13 },
-      { left: '34%', delay: '3.5s', dur: '17s', size: 10 },
-      { left: '56%', delay: '1.8s', dur: '15s', size: 14 },
-      { left: '74%', delay: '5.2s', dur: '18s', size: 11 },
-      { left: '88%', delay: '2.4s', dur: '13s', size: 15 },
-      { left: '95%', delay: '7.0s', dur: '16s', size: 12 }
+    const STUDIO_SCENES = [
+      {
+        id: 'moonblade',
+        title: '朔月寒霜',
+        subtitle: '玄冰冷月 · 绯枫映夜',
+        tone: 'dark',
+        pos: '52% 28%',
+        gradient: 'radial-gradient(ellipse 90% 65% at 72% 24%, rgba(164, 212, 240, 0.22) 0%, rgba(212, 54, 72, 0.14) 36%, transparent 72%), radial-gradient(ellipse 65% 55% at 22% 78%, rgba(212, 54, 72, 0.18) 0%, rgba(28, 38, 66, 0.28) 52%, transparent 80%), linear-gradient(135deg, #0d111a 0%, #161826 48%, #1d141b 100%)'
+      },
+      {
+        id: 'dawn-snow',
+        title: '霜晓素雪',
+        subtitle: '素雪朱檐 · 晨曦微明',
+        tone: 'light',
+        pos: '54% 24%',
+        gradient: 'radial-gradient(ellipse 85% 60% at 74% 22%, rgba(212, 54, 72, 0.14) 0%, rgba(186, 152, 82, 0.10) 40%, transparent 74%), radial-gradient(ellipse 70% 55% at 20% 80%, rgba(132, 184, 214, 0.18) 0%, transparent 72%), linear-gradient(145deg, #f8f6f7 0%, #eef2f7 52%, #f9f1f2 100%)'
+      },
+      {
+        id: 'maple-ink',
+        title: '孤枫水墨',
+        subtitle: '极简素韵 · 一叶惊绯',
+        tone: 'both',
+        pos: '60% 22%',
+        gradient: 'radial-gradient(ellipse 75% 58% at 68% 28%, rgba(208, 42, 62, 0.18) 0%, rgba(155, 29, 44, 0.08) 44%, transparent 75%), radial-gradient(ellipse 80% 60% at 32% 72%, rgba(92, 112, 138, 0.14) 0%, transparent 70%), linear-gradient(150deg, rgba(160, 170, 188, 0.16) 0%, rgba(212, 54, 72, 0.08) 100%)'
+      },
+      {
+        id: 'lantern-dusk',
+        title: '雪暮金灯',
+        subtitle: '金灯暖雪 · 绯袖流影',
+        tone: 'both',
+        pos: '56% 24%',
+        gradient: 'radial-gradient(ellipse 70% 55% at 70% 26%, rgba(226, 180, 92, 0.24) 0%, rgba(212, 54, 72, 0.14) 42%, transparent 74%), radial-gradient(ellipse 75% 60% at 25% 75%, rgba(132, 178, 212, 0.14) 0%, transparent 72%), linear-gradient(135deg, rgba(44, 30, 32, 0.35) 0%, rgba(196, 136, 74, 0.12) 100%)'
+      }
     ];
 
-    function StudioBackdrop() {
+    const STUDIO_PARTICLES = [
+      { kind: 'maple', left: '16%', delay: '0s', dur: '16s', size: 13 },
+      { kind: 'snow', left: '26%', delay: '2.2s', dur: '13s', size: 9 },
+      { kind: 'maple', left: '44%', delay: '4.1s', dur: '18s', size: 11 },
+      { kind: 'snow', left: '53%', delay: '1.1s', dur: '12s', size: 8 },
+      { kind: 'maple', left: '66%', delay: '6.3s', dur: '15s', size: 14 },
+      { kind: 'snow', left: '72%', delay: '3.6s', dur: '14s', size: 10 },
+      { kind: 'maple', left: '84%', delay: '2.7s', dur: '17s', size: 12 },
+      { kind: 'snow', left: '89%', delay: '5.5s', dur: '11s', size: 8 },
+      { kind: 'maple', left: '94%', delay: '7.4s', dur: '16s', size: 11 },
+      { kind: 'snow', left: '38%', delay: '6.8s', dur: '15s', size: 9 },
+      { kind: 'snow', left: '61%', delay: '8.2s', dur: '13s', size: 7 }
+    ];
+
+    function StudioBackdrop({ bgUrl, bgPos, bgGradient } = {}) {
+      const resolvedBg = bgUrl ? `url("${bgUrl}")` : (bgGradient || '');
+      const artStyle = (resolvedBg || bgPos)
+        ? {
+            ...(resolvedBg ? { backgroundImage: resolvedBg } : {}),
+            ...(bgPos ? { backgroundPosition: bgPos } : {})
+          }
+        : undefined;
+
       return h(React.Fragment, null,
-        h('div', { className: 'nai5-studio-bg-art' }),
+        h('div', { className: 'nai5-studio-bg-art', style: artStyle }),
         h('div', { className: 'nai5-studio-bg-veil' }),
         h('div', { className: 'nai5-studio-ukiyo-pattern' }),
         h('svg', {
-          viewBox: '0 0 400 140',
+          viewBox: '0 0 420 140',
           style: {
             position: 'absolute',
-            right: '-10px',
-            bottom: '-8px',
-            width: '340px',
+            right: '-6px',
+            bottom: '-6px',
+            width: '360px',
             height: '120px',
             zIndex: 1,
-            opacity: 0.16,
-            pointerEvents: 'none',
-            color: 'var(--fx-crimson-soft)'
+            opacity: 0.22,
+            pointerEvents: 'none'
           }
         },
-          h('path', { d: 'M20 120 Q80 60 150 105 T280 85 T390 110', fill: 'none', stroke: 'currentColor', strokeWidth: 2 }),
-          h('path', { d: 'M60 135 Q130 75 200 115 T340 95 T410 125', fill: 'none', stroke: 'currentColor', strokeWidth: 1.2 })
+          h('path', { d: 'M18 122 L152 94 L274 72 L408 44', fill: 'none', stroke: 'var(--fx-gold)', strokeWidth: 1.2, strokeDasharray: '5 4' }),
+          h('path', { d: 'M72 136 Q212 96 414 68', fill: 'none', stroke: 'var(--fx-ice-soft)', strokeWidth: 1.1 }),
+          h('path', { d: 'M140 138 Q276 112 418 96', fill: 'none', stroke: 'var(--fx-crimson-soft)', strokeWidth: 0.9, opacity: 0.7 })
         ),
         h('div', { className: 'nai5-sakura-layer' },
-          SAKURA_PETALS.map((p, i) =>
+          STUDIO_PARTICLES.map((p, i) =>
             h('div', {
               key: i,
-              className: 'nai5-petal',
+              className: `nai5-petal ${p.kind === 'snow' ? 'is-snow' : 'is-maple'}`,
               style: { left: p.left, animationDelay: p.delay, animationDuration: p.dur }
-            }, h(Icon, { name: 'sakura', size: p.size }))
+            }, h(Icon, { name: p.kind === 'snow' ? 'snowflake' : 'maple', size: p.size }))
           )
         )
       );
@@ -2463,11 +3882,149 @@ window.__ModuleLoader__.load({
         } catch (err) {
           warnSilent('theme.savePref', err);
         }
-        const labelMap = { auto: '跟随系统与宿主色调', dark: '固定「绯夜」深色模式', light: '固定「雪昼」浅色模式' };
+        const labelMap = { auto: '跟随系统与宿主色调', dark: '固定「玄月·寒霜」深色', light: '固定「霜晓·素雪」浅色' };
         showToast(`已切换外观色调：${labelMap[next]}`);
       }, [themePref, showToast]);
 
       return { themePref, isLightTheme, themeClass, cycleThemePref };
+    }
+
+    function useStudioScene(isLightTheme, hasWallpaper, showToast) {
+      const [scenePref, setScenePref] = useState(() => {
+        try {
+          return localStorage.getItem('dsh_nai5_scene_pref_v1') || 'auto';
+        } catch (err) {
+          warnSilent('scene.readPref', err);
+          return 'auto';
+        }
+      });
+      const [customBgPath, setCustomBgPath] = useState(() => {
+        try {
+          return localStorage.getItem('dsh_nai5_custom_bg_v1') || '';
+        } catch (err) {
+          warnSilent('scene.readCustomPath', err);
+          return '';
+        }
+      });
+      const [customBgLabel, setCustomBgLabel] = useState(() => {
+        try {
+          return localStorage.getItem('dsh_nai5_custom_bg_label_v1') || '';
+        } catch (err) {
+          warnSilent('scene.readCustomLabel', err);
+          return '';
+        }
+      });
+      const [bgIntensity, setBgIntensity] = useState(() => {
+        try {
+          const val = localStorage.getItem('dsh_nai5_bg_intensity_v1');
+          return ['soft', 'balanced', 'vivid'].includes(val) ? val : 'balanced';
+        } catch (err) {
+          warnSilent('scene.readIntensity', err);
+          return 'balanced';
+        }
+      });
+
+      const selectScene = useCallback((id) => {
+        const nextId = id || 'auto';
+        setScenePref(nextId);
+        try {
+          localStorage.setItem('dsh_nai5_scene_pref_v1', nextId);
+        } catch (err) {
+          warnSilent('scene.savePref', err);
+        }
+        if (showToast) {
+          if (nextId === 'auto') {
+            showToast('画卷景致：已设为随明暗主题自动匹配');
+          } else {
+            const hit = STUDIO_SCENES.find(s => s.id === nextId);
+            if (hit) showToast(`画卷已切换：《${hit.title}》`);
+          }
+        }
+      }, [showToast]);
+
+      const setCustomBackdrop = useCallback((imgPath, label = '典藏画卷') => {
+        if (!imgPath) return;
+        setCustomBgPath(imgPath);
+        setCustomBgLabel(label || '典藏画卷');
+        setScenePref('custom');
+        try {
+          localStorage.setItem('dsh_nai5_custom_bg_v1', imgPath);
+          localStorage.setItem('dsh_nai5_custom_bg_label_v1', label || '典藏画卷');
+          localStorage.setItem('dsh_nai5_scene_pref_v1', 'custom');
+        } catch (err) {
+          warnSilent('scene.saveCustom', err);
+        }
+        if (showToast) showToast(`已将「${label || '典藏画卷'}」设为工坊背景画卷`);
+      }, [showToast]);
+
+      const clearCustomBackdrop = useCallback(() => {
+        setCustomBgPath('');
+        setCustomBgLabel('');
+        setScenePref('auto');
+        try {
+          localStorage.removeItem('dsh_nai5_custom_bg_v1');
+          localStorage.removeItem('dsh_nai5_custom_bg_label_v1');
+          localStorage.setItem('dsh_nai5_scene_pref_v1', 'auto');
+        } catch (err) {
+          warnSilent('scene.clearCustom', err);
+        }
+        if (showToast) showToast('已恢复工坊内置精选画卷');
+      }, [showToast]);
+
+      const updateBgIntensity = useCallback((level) => {
+        if (!['soft', 'balanced', 'vivid'].includes(level)) return;
+        setBgIntensity(level);
+        try {
+          localStorage.setItem('dsh_nai5_bg_intensity_v1', level);
+        } catch (err) {
+          warnSilent('scene.saveIntensity', err);
+        }
+      }, []);
+
+      const isCustomActive = scenePref === 'custom' && Boolean(customBgPath);
+      const useConfigWallpaper = scenePref === 'auto' && Boolean(hasWallpaper);
+      const resolvedCurated = isCustomActive
+        ? null
+        : (scenePref === 'auto'
+          ? STUDIO_SCENES.find(s => s.id === (isLightTheme ? 'dawn-snow' : 'moonblade'))
+          : (STUDIO_SCENES.find(s => s.id === scenePref) || STUDIO_SCENES[0]));
+
+      const activeScene = resolvedCurated || STUDIO_SCENES[0];
+      const activeBgUrl = isCustomActive
+        ? getImageUrl(customBgPath, false)
+        : (useConfigWallpaper ? '/api/novelai/wallpaper' : '');
+      const activeBgGradient = (isCustomActive || useConfigWallpaper) ? '' : (activeScene.gradient || '');
+      const activeBgPos = (isCustomActive || useConfigWallpaper) ? 'center 24%' : activeScene.pos;
+      const activeTitle = isCustomActive ? (customBgLabel || '典藏画卷') : (useConfigWallpaper ? '自定义壁纸' : activeScene.title);
+
+      const cycleCuratedScene = useCallback((delta = 1) => {
+        const idx = STUDIO_SCENES.findIndex(s => s.id === activeScene.id);
+        const nextIdx = (idx + delta + STUDIO_SCENES.length) % STUDIO_SCENES.length;
+        const nextScene = STUDIO_SCENES[nextIdx];
+        setScenePref(nextScene.id);
+        try {
+          localStorage.setItem('dsh_nai5_scene_pref_v1', nextScene.id);
+        } catch (err) {
+          warnSilent('scene.cycle', err);
+        }
+      }, [activeScene]);
+
+      return {
+        scenePref,
+        customBgPath,
+        customBgLabel,
+        bgIntensity,
+        activeScene,
+        activeBgUrl,
+        activeBgGradient,
+        activeBgPos,
+        activeTitle,
+        selectScene,
+        setCustomBackdrop,
+        clearCustomBackdrop,
+        cycleCuratedScene,
+        updateBgIntensity
+      };
     }
 
     function useWindowGeometry(setActiveTab) {
@@ -2569,7 +4126,7 @@ window.__ModuleLoader__.load({
         };
       }, [setActiveTab, updateWinMode]);
 
-      const [mainColSplitX, setMainColSplitX] = useState(57);
+      const [mainColSplitX, setMainColSplitX] = useState(41);
       const [styleSplitX, setStyleSplitX] = useState(50);
       const [vertSplitRatio, setVertSplitRatio] = useState(1.05);
       const workbenchBodyRef = useRef(null);
@@ -3006,8 +4563,9 @@ window.__ModuleLoader__.load({
       const [filterMonth, setFilterMonth] = useState('all');
       const [filterRating, setFilterRating] = useState('all');
       const [filterTopic, setFilterTopic] = useState('all');
+      const [filterFavorites, setFilterFavorites] = useState(false);
       const [gallerySearch, setGallerySearch] = useState('');
-      const [galleryMeta, setGalleryMeta] = useState({ characters: [], months: [], ratings: [], topics: [], total: 0 });
+      const [galleryMeta, setGalleryMeta] = useState({ characters: [], months: [], ratings: [], topics: [], total: 0, favoritesCount: 0 });
 
       const fetchGalleryMeta = useCallback(async () => {
         try {
@@ -3031,6 +4589,7 @@ window.__ModuleLoader__.load({
         const ra = opts.rating !== undefined ? opts.rating : filterRating;
         const top = opts.topic !== undefined ? opts.topic : filterTopic;
         const q = opts.search !== undefined ? opts.search : gallerySearch;
+        const fav = opts.favorites !== undefined ? opts.favorites : filterFavorites;
 
         const pageSize = 24;
         const queryOffset = isReset ? 0 : historyLenRef.current;
@@ -3050,7 +4609,8 @@ window.__ModuleLoader__.load({
             month: mo,
             rating: ra,
             topic: top,
-            search: q
+            search: q,
+            favorites: fav ? '1' : ''
           });
           const res = await fetch(`/api/novelai/history?${queryParams}`);
           if (res.ok) {
@@ -3082,7 +4642,7 @@ window.__ModuleLoader__.load({
           setLoadingHistory(false);
           setLoadingMore(false);
         }
-      }, [filterChar, filterMonth, filterRating, filterTopic, gallerySearch, showToast, setLatestImage]);
+      }, [filterChar, filterMonth, filterRating, filterTopic, filterFavorites, gallerySearch, showToast, setLatestImage]);
 
       const applyFilter = useCallback((patch = {}) => {
         const nextChar = patch.character !== undefined ? patch.character : filterChar;
@@ -3090,12 +4650,14 @@ window.__ModuleLoader__.load({
         const nextRating = patch.rating !== undefined ? patch.rating : filterRating;
         const nextTopic = patch.topic !== undefined ? patch.topic : filterTopic;
         const nextSearch = patch.search !== undefined ? patch.search : gallerySearch;
+        const nextFav = patch.favorites !== undefined ? patch.favorites : filterFavorites;
 
         if (patch.character !== undefined) setFilterChar(patch.character);
         if (patch.month !== undefined) setFilterMonth(patch.month);
         if (patch.rating !== undefined) setFilterRating(patch.rating);
         if (patch.topic !== undefined) setFilterTopic(patch.topic);
         if (patch.search !== undefined) setGallerySearch(patch.search);
+        if (patch.favorites !== undefined) setFilterFavorites(patch.favorites);
 
         fetchHistoryWithParams({
           character: nextChar,
@@ -3103,10 +4665,11 @@ window.__ModuleLoader__.load({
           rating: nextRating,
           topic: nextTopic,
           search: nextSearch,
+          favorites: nextFav,
           isReset: true,
           showToastMsg: patch.showToast ? '找到 {count} 张匹配图片' : undefined
         });
-      }, [filterChar, filterMonth, filterRating, filterTopic, gallerySearch, fetchHistoryWithParams]);
+      }, [filterChar, filterMonth, filterRating, filterTopic, filterFavorites, gallerySearch, fetchHistoryWithParams]);
 
       const handleRefreshGallery = useCallback(async () => {
         try {
@@ -3117,7 +4680,7 @@ window.__ModuleLoader__.load({
               setGalleryMeta(data);
               setTotalCount(data.total || 0);
               await fetchHistoryWithParams({ isReset: true });
-              showToast(`已重扫目录，共索引 ${data.total || 0} 张图像`);
+              showToast(`🔄 已重扫目录，共索引 ${data.total || 0} 张图像`);
               return;
             }
           }
@@ -3133,9 +4696,9 @@ window.__ModuleLoader__.load({
           if (res.ok) {
             const data = await res.json();
             if (data.ok) {
-              if (data.started) showToast(`已启动后台提取（待补全 ${data.totalPending || 0} 张 PNG 元数据）`);
-              else if (data.running) showToast(`后台正在提取剩余 ${data.totalPending || 0} 张元数据...`);
-              else showToast('全部图片尺寸与 PNG 元数据均已完整缓存');
+              if (data.started) showToast(`🧩 已启动后台提取（待补全 ${data.totalPending || 0} 张 PNG 元数据）`);
+              else if (data.running) showToast(`⏳ 后台正在提取剩余 ${data.totalPending || 0} 张元数据...`);
+              else showToast('✅ 全部图片尺寸与 PNG 元数据均已完整缓存');
               return;
             }
           }
@@ -3150,6 +4713,75 @@ window.__ModuleLoader__.load({
           fetchHistoryWithParams({ isReset: false });
         }
       }, [hasMore, loadingHistory, loadingMore, fetchHistoryWithParams]);
+
+      const toggleFavorite = useCallback(async (imgPath) => {
+        if (!imgPath) return null;
+        try {
+          const res = await fetch('/api/novelai/favorites/toggle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: imgPath })
+          });
+          const data = await res.json();
+          if (data.ok) {
+            setHistory(prev => prev.map(x => ((x.source_path || x.filePath) === imgPath ? { ...x, isFavorite: data.isFavorite } : x)));
+            setLatestImage(cur => (cur && (cur.source_path || cur.filePath) === imgPath ? { ...cur, isFavorite: data.isFavorite } : cur));
+            setGalleryMeta(prev => ({ ...prev, favoritesCount: data.count !== undefined ? data.count : prev.favoritesCount }));
+            showToast(data.isFavorite ? '★ 已加入收藏夹' : '☆ 已取消收藏');
+            if (filterFavorites && !data.isFavorite) {
+              fetchHistoryWithParams({ isReset: true });
+            }
+            return data.isFavorite;
+          }
+        } catch (err) {
+          showToast(`收藏操作失败: ${err.message}`);
+        }
+        return null;
+      }, [filterFavorites, fetchHistoryWithParams, setLatestImage, showToast]);
+
+      const batchMove = useCallback(async (paths = [], targetCharacter = '综合创作') => {
+        if (!Array.isArray(paths) || paths.length === 0) return { ok: false };
+        try {
+          const res = await fetch('/api/novelai/gallery/batch-move', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ paths, targetCharacter })
+          });
+          const data = await res.json();
+          if (data.ok) {
+            showToast(`📂 已将 ${data.movedCount || 0} 张归类至 [${data.targetCharacter || targetCharacter}]`);
+            await fetchGalleryMeta();
+            await fetchHistoryWithParams({ isReset: true });
+            return data;
+          }
+          showToast(`批量移动失败: ${data.error || '未知错误'}`);
+        } catch (err) {
+          showToast(`批量移动异常: ${err.message}`);
+        }
+        return { ok: false };
+      }, [fetchGalleryMeta, fetchHistoryWithParams, showToast]);
+
+      const batchDelete = useCallback(async (paths = []) => {
+        if (!Array.isArray(paths) || paths.length === 0) return { ok: false };
+        try {
+          const res = await fetch('/api/novelai/gallery/batch-delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ paths })
+          });
+          const data = await res.json();
+          if (data.ok) {
+            showToast(`🗑 已永久删除 ${data.deletedCount || 0} 张图像`);
+            await fetchGalleryMeta();
+            await fetchHistoryWithParams({ isReset: true });
+            return data;
+          }
+          showToast(`批量删除失败: ${data.error || '未知错误'}`);
+        } catch (err) {
+          showToast(`批量删除异常: ${err.message}`);
+        }
+        return { ok: false };
+      }, [fetchGalleryMeta, fetchHistoryWithParams, showToast]);
 
       return {
         history,
@@ -3169,6 +4801,7 @@ window.__ModuleLoader__.load({
         filterMonth,
         filterRating,
         filterTopic,
+        filterFavorites,
         gallerySearch,
         setGallerySearch,
         galleryMeta,
@@ -3177,7 +4810,10 @@ window.__ModuleLoader__.load({
         applyFilter,
         handleRefreshGallery,
         handleBackfillMetadata,
-        handleLoadMore
+        handleLoadMore,
+        toggleFavorite,
+        batchMove,
+        batchDelete
       };
     }
 
@@ -4340,8 +5976,8 @@ window.__ModuleLoader__.load({
         },
           h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px' } },
             h('span', { style: { display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '12px', fontWeight: 700 } },
-              h(Icon, { name: 'sakura', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
-              'NAI5 Studio · 对话伴侣 HUD'
+              h(Icon, { name: 'maple', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
+              'NAI5 Studio · 枫霜伴侣 HUD'
             ),
             h('button', {
               type: 'button',
@@ -4493,7 +6129,7 @@ window.__ModuleLoader__.load({
               type: 'button',
               className: 'nai5-btn xs',
               onClick: () => { setActiveTab('studio'); updateWinMode('open'); }
-            }, h(Icon, { name: 'sakura', size: 11 }), '绘卷工坊'),
+            }, h(Icon, { name: 'maple', size: 11 }), '绘卷工坊'),
             h('button', {
               type: 'button',
               className: 'nai5-btn xs',
@@ -4535,8 +6171,8 @@ window.__ModuleLoader__.load({
             } : undefined
           }),
           h('span', { style: { display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '12px', fontWeight: 700, color: 'var(--fx-text-primary)', letterSpacing: '0.02em' } },
-            h(Icon, { name: 'sakura', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
-            isBusyGenerating ? 'AI 绘卷渲染中...' : (bridgeLocks.enabled ? 'NAI5 · 已锁同步' : 'NAI5 Studio')
+            h(Icon, { name: 'maple', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
+            isBusyGenerating ? 'AI 绘卷渲染中...' : (bridgeLocks.enabled ? 'NAI5 · 已锁伴侣' : 'NAI5 Studio')
           ),
           (accountInfo.configured === false
             ? h('span', {
@@ -4544,8 +6180,8 @@ window.__ModuleLoader__.load({
                   fontSize: '10.5px',
                   padding: '1px 7px',
                   borderRadius: '999px',
-                  background: 'rgba(224, 40, 79, 0.14)',
-                  border: '1px solid rgba(224, 40, 79, 0.3)',
+                  background: 'rgba(200, 35, 55, 0.14)',
+                  border: '1px solid rgba(200, 35, 55, 0.35)',
                   color: 'var(--fx-crimson-soft)',
                   fontWeight: 600
                 }
@@ -4555,9 +6191,9 @@ window.__ModuleLoader__.load({
                   fontSize: '10.5px',
                   padding: '1px 7px',
                   borderRadius: '999px',
-                  background: 'rgba(224, 40, 79, 0.14)',
-                  border: '1px solid rgba(224, 40, 79, 0.3)',
-                  color: 'var(--fx-crimson-soft)',
+                  background: 'rgba(200, 35, 55, 0.14)',
+                  border: '1px solid var(--fx-border-gold)',
+                  color: 'var(--fx-gold)',
                   fontWeight: 600
                 }
               }, accountInfo.balanceSupported === false ? '中转' : `${balance}`))
@@ -4565,17 +6201,762 @@ window.__ModuleLoader__.load({
       );
     }
 
+    // --- src/inpaint_editor.js ---
+    // ============================================================
+    // Inpaint Mask Editor & A/B Compare Slider (Zero-JSX h(...))
+    // Absorbed from Langbai Studio InpaintCanvas / Compare View
+    // ============================================================
+
+    function InpaintMaskEditor(props) {
+      const {
+        sourceImageUrl,
+        width = 832,
+        height = 1216,
+        onChangeMask,
+        onUploadSource,
+        onClearSource
+      } = props || {};
+
+      const [tool, setTool] = useState('brush'); // 'brush' | 'erase'
+      const [brushSize, setBrushSize] = useState(42);
+      const [undoCount, setUndoCount] = useState(0);
+      const [hoverPos, setHoverPos] = useState(null);
+
+      const previewCanvasRef = useRef(null);
+      const maskCanvasRef = useRef(null);
+      const historyRef = useRef([]);
+      const drawingRef = useRef(false);
+      const lastPtRef = useRef(null);
+      const fileInputRef = useRef(null);
+
+      const syncPreviewFromMask = useCallback(() => {
+        const prev = previewCanvasRef.current;
+        const mask = maskCanvasRef.current;
+        if (!prev || !mask) return;
+        const pCtx = prev.getContext('2d');
+        const mCtx = mask.getContext('2d');
+        pCtx.clearRect(0, 0, prev.width, prev.height);
+        const imgData = mCtx.getImageData(0, 0, mask.width, mask.height);
+        const out = pCtx.createImageData(prev.width, prev.height);
+        const src = imgData.data;
+        const dst = out.data;
+        for (let i = 0; i < src.length; i += 4) {
+          if (src[i] > 100) {
+            dst[i] = 225;
+            dst[i + 1] = 29;
+            dst[i + 2] = 72;
+            dst[i + 3] = 155;
+          }
+        }
+        pCtx.putImageData(out, 0, 0);
+      }, []);
+
+      // Initialize hidden binary mask canvas + preview overlay canvas
+      useEffect(() => {
+        const w = Math.max(64, Number(width) || 832);
+        const hVal = Math.max(64, Number(height) || 1216);
+        if (!maskCanvasRef.current) {
+          maskCanvasRef.current = document.createElement('canvas');
+        }
+        const mask = maskCanvasRef.current;
+        if (mask.width !== w || mask.height !== hVal) {
+          mask.width = w;
+          mask.height = hVal;
+          const mCtx = mask.getContext('2d');
+          mCtx.fillStyle = '#000000';
+          mCtx.fillRect(0, 0, w, hVal);
+          historyRef.current = [];
+          setUndoCount(0);
+        }
+        if (previewCanvasRef.current) {
+          previewCanvasRef.current.width = w;
+          previewCanvasRef.current.height = hVal;
+          syncPreviewFromMask();
+        }
+      }, [width, height, sourceImageUrl, syncPreviewFromMask]);
+
+      const emitMask = useCallback(() => {
+        const mask = maskCanvasRef.current;
+        if (!mask || !onChangeMask) return;
+        onChangeMask(mask.toDataURL('image/png'));
+      }, [onChangeMask]);
+
+      const pushHistory = useCallback(() => {
+        const mask = maskCanvasRef.current;
+        if (!mask) return;
+        const ctx = mask.getContext('2d');
+        const snap = ctx.getImageData(0, 0, mask.width, mask.height);
+        const stack = historyRef.current;
+        stack.push(snap);
+        if (stack.length > 20) stack.shift();
+        setUndoCount(stack.length);
+      }, []);
+
+      const canvasCoordsFromEvent = (e) => {
+        const el = previewCanvasRef.current;
+        if (!el) return { x: 0, y: 0 };
+        const rect = el.getBoundingClientRect();
+        const scaleX = el.width / Math.max(1, rect.width);
+        const scaleY = el.height / Math.max(1, rect.height);
+        return {
+          x: (e.clientX - rect.left) * scaleX,
+          y: (e.clientY - rect.top) * scaleY
+        };
+      };
+
+      const paintStroke = (fromPt, toPt) => {
+        const mask = maskCanvasRef.current;
+        if (!mask) return;
+        const ctx = mask.getContext('2d');
+        ctx.save();
+        ctx.strokeStyle = tool === 'brush' ? '#ffffff' : '#000000';
+        ctx.fillStyle = tool === 'brush' ? '#ffffff' : '#000000';
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = brushSize;
+        ctx.beginPath();
+        ctx.moveTo(fromPt.x, fromPt.y);
+        ctx.lineTo(toPt.x, toPt.y);
+        ctx.stroke();
+        ctx.restore();
+        syncPreviewFromMask();
+      };
+
+      const handlePointerDown = (e) => {
+        if (!sourceImageUrl) return;
+        e.preventDefault();
+        pushHistory();
+        drawingRef.current = true;
+        const pt = canvasCoordsFromEvent(e);
+        lastPtRef.current = pt;
+        paintStroke(pt, pt);
+        if (e.currentTarget && e.currentTarget.setPointerCapture) {
+          try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+      };
+
+      const handlePointerMove = (e) => {
+        const el = previewCanvasRef.current;
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          setHoverPos({ x: e.clientX - rect.left, y: e.clientY - rect.top, rectW: rect.width, canvasW: el.width });
+        }
+        if (!drawingRef.current || !lastPtRef.current) return;
+        const pt = canvasCoordsFromEvent(e);
+        paintStroke(lastPtRef.current, pt);
+        lastPtRef.current = pt;
+      };
+
+      const handlePointerUp = () => {
+        if (!drawingRef.current) return;
+        drawingRef.current = false;
+        lastPtRef.current = null;
+        emitMask();
+      };
+
+      const handleUndo = () => {
+        const mask = maskCanvasRef.current;
+        const stack = historyRef.current;
+        if (!mask || stack.length === 0) return;
+        const prevSnap = stack.pop();
+        setUndoCount(stack.length);
+        const ctx = mask.getContext('2d');
+        ctx.putImageData(prevSnap, 0, 0);
+        syncPreviewFromMask();
+        emitMask();
+      };
+
+      const handleClearMask = () => {
+        const mask = maskCanvasRef.current;
+        if (!mask) return;
+        pushHistory();
+        const ctx = mask.getContext('2d');
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, mask.width, mask.height);
+        syncPreviewFromMask();
+        emitMask();
+      };
+
+      const handleInvertMask = () => {
+        const mask = maskCanvasRef.current;
+        if (!mask) return;
+        pushHistory();
+        const ctx = mask.getContext('2d');
+        const imgData = ctx.getImageData(0, 0, mask.width, mask.height);
+        const d = imgData.data;
+        for (let i = 0; i < d.length; i += 4) {
+          const inv = 255 - d[i];
+          d[i] = inv;
+          d[i + 1] = inv;
+          d[i + 2] = inv;
+          d[i + 3] = 255;
+        }
+        ctx.putImageData(imgData, 0, 0);
+        syncPreviewFromMask();
+        emitMask();
+      };
+
+      const handleFilePick = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file || !onUploadSource) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (typeof reader.result === 'string') {
+            onUploadSource(reader.result, file.name);
+          }
+        };
+        reader.readAsDataURL(file);
+      };
+
+      const cursorRadiusPx = hoverPos && hoverPos.rectW > 0
+        ? Math.max(4, (brushSize * (hoverPos.rectW / Math.max(1, hoverPos.canvasW))) / 2)
+        : 12;
+
+      return h('div', { className: 'nai-inpaint-wrap' },
+        h('div', { className: 'nai-inpaint-toolbar' },
+          h('button', {
+            className: 'nai-pill-btn' + (tool === 'brush' ? ' is-active' : ''),
+            onClick: () => setTool('brush')
+          }, '画笔重绘'),
+          h('button', {
+            className: 'nai-pill-btn' + (tool === 'erase' ? ' is-active' : ''),
+            onClick: () => setTool('erase')
+          }, '橡皮擦除'),
+          h('label', { className: 'nai-inpaint-size' },
+            h('span', null, '笔刷 ' + brushSize + 'px'),
+            h('input', {
+              type: 'range',
+              min: 8,
+              max: 160,
+              value: brushSize,
+              onChange: (e) => setBrushSize(Number(e.target.value) || 42)
+            })
+          ),
+          h('button', {
+            className: 'nai-pill-btn',
+            disabled: undoCount === 0,
+            onClick: handleUndo
+          }, '撤销'),
+          h('button', { className: 'nai-pill-btn', onClick: handleInvertMask }, '反选'),
+          h('button', { className: 'nai-pill-btn', onClick: handleClearMask }, '清空'),
+          h('button', {
+            className: 'nai-pill-btn',
+            onClick: () => fileInputRef.current && fileInputRef.current.click()
+          }, sourceImageUrl ? '换底图' : '选底图'),
+          sourceImageUrl ? h('button', {
+            className: 'nai-pill-btn is-danger',
+            onClick: onClearSource
+          }, '退出底图') : null,
+          h('input', {
+            ref: fileInputRef,
+            type: 'file',
+            accept: 'image/png,image/jpeg,image/webp',
+            style: { display: 'none' },
+            onChange: handleFilePick
+          })
+        ),
+        sourceImageUrl
+          ? h('div', { className: 'nai-inpaint-stage-host' },
+              h('div', { className: 'nai-inpaint-stage' },
+                h('img', { src: sourceImageUrl, className: 'nai-inpaint-base', alt: 'inpaint-base', draggable: false }),
+                h('canvas', {
+                  ref: previewCanvasRef,
+                  className: 'nai-inpaint-canvas',
+                  onPointerDown: handlePointerDown,
+                  onPointerMove: handlePointerMove,
+                  onPointerUp: handlePointerUp,
+                  onPointerLeave: () => { setHoverPos(null); handlePointerUp(); }
+                }),
+                hoverPos
+                  ? h('div', {
+                      className: 'nai-inpaint-cursor',
+                      style: {
+                        left: hoverPos.x + 'px',
+                        top: hoverPos.y + 'px',
+                        width: (cursorRadiusPx * 2) + 'px',
+                        height: (cursorRadiusPx * 2) + 'px'
+                      }
+                    })
+                  : null
+              )
+            )
+          : h('div', {
+              className: 'nai-inpaint-empty',
+              onClick: () => fileInputRef.current && fileInputRef.current.click()
+            },
+              h('div', { className: 'nai-inpaint-empty-title' }, '点击选择本地图片，或在画廊/大图点「局部重绘」送入'),
+              h('div', { className: 'nai-inpaint-empty-sub' }, '涂抹红色区域即会被 NovelAI V5 Inpainting 模型按提示词重绘')
+            )
+      );
+    }
+
+    function CompareSlider(props) {
+      const {
+        beforeUrl,
+        afterUrl,
+        beforeLabel = '原图',
+        afterLabel = '成图'
+      } = props || {};
+      const [pos, setPos] = useState(50);
+      const wrapRef = useRef(null);
+      const draggingRef = useRef(false);
+
+      const updatePos = (clientX) => {
+        const el = wrapRef.current;
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const pct = ((clientX - rect.left) / Math.max(1, rect.width)) * 100;
+        setPos(Math.max(0, Math.min(100, Math.round(pct))));
+      };
+
+      return h('div', {
+        ref: wrapRef,
+        className: 'nai-compare-wrap',
+        onPointerDown: (e) => {
+          draggingRef.current = true;
+          updatePos(e.clientX);
+          if (e.currentTarget.setPointerCapture) {
+            try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {}
+          }
+        },
+        onPointerMove: (e) => { if (draggingRef.current) updatePos(e.clientX); },
+        onPointerUp: () => { draggingRef.current = false; }
+      },
+        h('img', { src: afterUrl, className: 'nai-compare-img', alt: afterLabel, draggable: false }),
+        h('div', {
+          className: 'nai-compare-before',
+          style: { clipPath: 'inset(0 ' + (100 - pos) + '% 0 0)' }
+        },
+          h('img', { src: beforeUrl, className: 'nai-compare-img', alt: beforeLabel, draggable: false })
+        ),
+        h('div', { className: 'nai-compare-divider', style: { left: pos + '%' } },
+          h('div', { className: 'nai-compare-handle' }, '↔')
+        ),
+        h('span', { className: 'nai-compare-badge is-left' }, beforeLabel),
+        h('span', { className: 'nai-compare-badge is-right' }, afterLabel)
+      );
+    }
+
+    // --- src/postprocess_bar.js ---
+    // ============================================================
+    // Post-Process Single-Row Glass Dock, Reference Panel & Prompt Chunks Drawer
+    // Zero-JSX h(...) matching NAI5 Studio Canvas-First Atelier v4.0
+    // ============================================================
+
+    function PostProcessToolbar(props) {
+      const {
+        hasImage,
+        isFavorite,
+        busyAction,
+        onUpscale,
+        onDirector,
+        onSendToChat,
+        onForkToWorkbench,
+        onSendToImg2Img,
+        onSendToInpaint,
+        onToggleFavorite,
+        onCopyImage,
+        onReveal,
+        onOpenLightbox
+      } = props || {};
+
+      const [openMenu, setOpenMenu] = useState(null); // null | 'upscale' | 'director'
+      const [defry, setDefry] = useState(0);
+      const [colorizePrompt, setColorizePrompt] = useState('');
+      const [emotion, setEmotion] = useState('happy');
+      const [emotionLevel, setEmotionLevel] = useState('normal');
+      const dockRef = useRef(null);
+
+      useEffect(() => {
+        if (!openMenu) return;
+        const onDocDown = (e) => {
+          if (dockRef.current && !dockRef.current.contains(e.target)) {
+            setOpenMenu(null);
+          }
+        };
+        document.addEventListener('mousedown', onDocDown);
+        return () => document.removeEventListener('mousedown', onDocDown);
+      }, [openMenu]);
+
+      if (!hasImage) return null;
+
+      const isBusy = Boolean(busyAction);
+      const isUpscaling = busyAction && busyAction.startsWith('upscale');
+      const isDirectorBusy = busyAction && busyAction.startsWith('director:');
+
+      const runUpscale = (scale) => {
+        setOpenMenu(null);
+        onUpscale && onUpscale(scale);
+      };
+
+      const runDirector = (opts) => {
+        setOpenMenu(null);
+        onDirector && onDirector(opts);
+      };
+
+      return h('div', { ref: dockRef, className: 'nai-action-dock' },
+        // Primary workflow group
+        h('div', { className: 'nai-dock-group' },
+          onSendToChat ? h('button', {
+            type: 'button',
+            className: 'nai5-btn primary xs',
+            title: '将此图配方与 Seed 推送至 DSH 对话继续创作',
+            onClick: onSendToChat
+          }, '💬 送入对话') : null,
+          onForkToWorkbench ? h('button', {
+            type: 'button',
+            className: 'nai5-btn xs',
+            title: '接管当前成图的完整提示词与参数至左侧面板',
+            onClick: onForkToWorkbench
+          }, h(Icon, { name: 'zap', size: 11 }), '回灌配方') : null,
+          h('button', {
+            type: 'button',
+            className: 'nai5-btn xs',
+            disabled: isBusy,
+            title: '以此作为底图进入图生图微调',
+            onClick: () => onSendToImg2Img && onSendToImg2Img()
+          }, '图生图'),
+          h('button', {
+            type: 'button',
+            className: 'nai5-btn xs',
+            disabled: isBusy,
+            title: '涂抹蒙版进行局部重绘',
+            onClick: () => onSendToInpaint && onSendToInpaint()
+          }, '局部重绘')
+        ),
+
+        // Post-process popovers group (upward overlays)
+        h('div', { className: 'nai-dock-group' },
+          h('div', { className: 'nai-popover-anchor' },
+            h('button', {
+              type: 'button',
+              className: 'nai5-btn xs' + (openMenu === 'upscale' ? ' primary' : ''),
+              disabled: isBusy,
+              onClick: () => setOpenMenu(m => (m === 'upscale' ? null : 'upscale'))
+            }, isUpscaling ? '超分中…' : '✨ 超分 ▾'),
+            openMenu === 'upscale' && h('div', { className: 'nai-popover-up is-narrow' },
+              h('div', { className: 'nai-popover-up-title' }, 'NovelAI 无损超分'),
+              h('button', {
+                type: 'button',
+                className: 'nai-menu-item',
+                onClick: () => runUpscale(2)
+              },
+                h('strong', null, '2× 清晰放大'),
+                h('span', null, '快速倍增分辨率并自动归档')
+              ),
+              h('button', {
+                type: 'button',
+                className: 'nai-menu-item',
+                onClick: () => runUpscale(4)
+              },
+                h('strong', null, '4× 极清输出'),
+                h('span', null, '双轮精炼，适合超高清海报壁纸')
+              )
+            )
+          ),
+          h('div', { className: 'nai-popover-anchor' },
+            h('button', {
+              type: 'button',
+              className: 'nai5-btn xs' + (openMenu === 'director' ? ' primary' : ''),
+              disabled: isBusy,
+              onClick: () => setOpenMenu(m => (m === 'director' ? null : 'director'))
+            }, isDirectorBusy ? '处理中…' : '🎨 导演工具 ▾'),
+            openMenu === 'director' && h('div', { className: 'nai-popover-up is-wide' },
+              h('div', { className: 'nai-popover-up-head' },
+                h('span', { className: 'nai-popover-up-title' }, 'NovelAI 导演辅助引擎'),
+                h('label', { className: 'nai-defry-inline' },
+                  h('span', null, 'Defry ' + defry),
+                  h('input', {
+                    type: 'range',
+                    className: 'nai5-slider',
+                    min: 0,
+                    max: 5,
+                    step: 1,
+                    value: defry,
+                    onChange: (e) => setDefry(Number(e.target.value) || 0)
+                  })
+                )
+              ),
+              h('div', { className: 'nai-director-grid' },
+                h('button', { type: 'button', className: 'nai-menu-chip', onClick: () => runDirector({ tool: 'bg-removal', defry }) }, '✂ 一键去背景'),
+                h('button', { type: 'button', className: 'nai-menu-chip', onClick: () => runDirector({ tool: 'lineart', defry }) }, '✒ 提取线稿'),
+                h('button', { type: 'button', className: 'nai-menu-chip', onClick: () => runDirector({ tool: 'sketch', defry }) }, '✏ 素描草图'),
+                h('button', { type: 'button', className: 'nai-menu-chip', onClick: () => runDirector({ tool: 'declutter', defry }) }, '🧹 净屏去字')
+              ),
+              h('div', { className: 'nai-director-row' },
+                h('input', {
+                  type: 'text',
+                  className: 'nai-input-mini',
+                  style: { flex: 1 },
+                  placeholder: '上色光线/氛围 (如 warm sunset light)...',
+                  value: colorizePrompt,
+                  onChange: (e) => setColorizePrompt(e.target.value)
+                }),
+                h('button', {
+                  type: 'button',
+                  className: 'nai5-btn primary xs',
+                  onClick: () => runDirector({ tool: 'colorize', defry, prompt: colorizePrompt })
+                }, 'AI 上色')
+              ),
+              h('div', { className: 'nai-director-row' },
+                h('select', {
+                  className: 'nai-select-mini',
+                  value: emotion,
+                  onChange: (e) => setEmotion(e.target.value)
+                },
+                  ['happy', 'sad', 'angry', 'blush', 'surprised', 'shy', 'smug', 'tears'].map((em) =>
+                    h('option', { key: em, value: em }, em)
+                  )
+                ),
+                h('select', {
+                  className: 'nai-select-mini',
+                  value: emotionLevel,
+                  onChange: (e) => setEmotionLevel(e.target.value)
+                },
+                  ['normal', 'strong', 'slightly_weak', 'weak'].map((lv) =>
+                    h('option', { key: lv, value: lv }, lv)
+                  )
+                ),
+                h('button', {
+                  type: 'button',
+                  className: 'nai5-btn xs',
+                  onClick: () => runDirector({ tool: 'emotion', defry, emotion, emotionLevel })
+                }, '😊 微调表情')
+              )
+            )
+          )
+        ),
+
+        // Utility icon group
+        h('div', { className: 'nai-dock-group' },
+          onToggleFavorite ? h('button', {
+            type: 'button',
+            className: 'nai5-btn xs' + (isFavorite ? ' is-fav-active' : ''),
+            title: isFavorite ? '取消收藏' : '标星收藏此作品',
+            onClick: onToggleFavorite
+          }, isFavorite ? '★' : '☆') : null,
+          onCopyImage ? h('button', {
+            type: 'button',
+            className: 'nai5-btn xs',
+            title: '复制原图到剪贴板',
+            onClick: onCopyImage
+          }, h(Icon, { name: 'copy', size: 11 })) : null,
+          onReveal ? h('button', {
+            type: 'button',
+            className: 'nai5-btn xs',
+            title: '在资源管理器中定位原图',
+            onClick: onReveal
+          }, h(Icon, { name: 'folder', size: 11 })) : null,
+          onOpenLightbox ? h('button', {
+            type: 'button',
+            className: 'nai5-btn xs',
+            title: '打开高清灯箱视图',
+            onClick: onOpenLightbox
+          }, h(Icon, { name: 'maximize', size: 11 })) : null
+        )
+      );
+    }
+
+    function ReferencePanel(props) {
+      const {
+        refTab,
+        setRefTab,
+        vibeReferences = [],
+        setVibeReferences,
+        preciseReferences = [],
+        setPreciseReferences,
+        onUseCurrentCanvas
+      } = props || {};
+
+      const fileInputRef = useRef(null);
+      const isPrecise = refTab === 'precise';
+      const activeList = isPrecise ? preciseReferences : vibeReferences;
+
+      const updateItem = (idx, patch) => {
+        const updater = isPrecise ? setPreciseReferences : setVibeReferences;
+        updater((prev) => prev.map((it, i) => (i === idx ? { ...it, ...patch } : it)));
+      };
+
+      const removeItem = (idx) => {
+        const updater = isPrecise ? setPreciseReferences : setVibeReferences;
+        updater((prev) => prev.filter((_, i) => i !== idx));
+      };
+
+      const addFiles = (files) => {
+        Array.from(files || []).slice(0, isPrecise ? 4 : 6).forEach((file) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            if (typeof reader.result !== 'string') return;
+            const item = isPrecise
+              ? { image: reader.result, name: file.name, type: 'character&style', strength: 1.0, fidelity: 1.0 }
+              : { image: reader.result, name: file.name, strength: 0.6, infoExtracted: 1.0 };
+            const updater = isPrecise ? setPreciseReferences : setVibeReferences;
+            updater((prev) => [...prev, item].slice(0, isPrecise ? 4 : 6));
+          };
+          reader.readAsDataURL(file);
+        });
+      };
+
+      return h('div', { className: 'nai-ref-panel' },
+        h('div', { className: 'nai-ref-tabs' },
+          h('button', {
+            type: 'button',
+            className: 'nai-pill-btn' + (!isPrecise ? ' is-active' : ''),
+            onClick: () => setRefTab('vibe')
+          }, '氛围迁移 Vibe (' + vibeReferences.length + ')'),
+          h('button', {
+            type: 'button',
+            className: 'nai-pill-btn' + (isPrecise ? ' is-active' : ''),
+            onClick: () => setRefTab('precise')
+          }, '精准参考 V4.5 (' + preciseReferences.length + ')'),
+          h('div', { style: { flex: 1 } }),
+          h('button', {
+            type: 'button',
+            className: 'nai-pill-btn',
+            onClick: () => fileInputRef.current && fileInputRef.current.click()
+          }, '+ 传参考图'),
+          onUseCurrentCanvas ? h('button', {
+            type: 'button',
+            className: 'nai-pill-btn',
+            onClick: () => onUseCurrentCanvas(isPrecise ? 'precise' : 'vibe')
+          }, '抓当前成图') : null,
+          h('input', {
+            ref: fileInputRef,
+            type: 'file',
+            multiple: true,
+            accept: 'image/png,image/jpeg,image/webp',
+            style: { display: 'none' },
+            onChange: (e) => { addFiles(e.target.files); e.target.value = ''; }
+          })
+        ),
+        isPrecise ? h('div', { className: 'nai-ref-hint' }, '启用 V4.5 精准参考时将自动切换至 nai-diffusion-4-5-full 多段流上传，并与氛围迁移互斥。') : null,
+        activeList.length === 0
+          ? h('div', { className: 'nai-ref-empty' }, '暂无参考图。上传本地参考图或点击「抓当前成图」，即可微调迁移强度与提取率。')
+          : h('div', { className: 'nai-ref-list' },
+              activeList.map((ref, idx) =>
+                h('div', { key: idx, className: 'nai-ref-card' },
+                  h('img', { src: ref.image, className: 'nai-ref-thumb', alt: ref.name || 'ref' }),
+                  h('div', { className: 'nai-ref-controls' },
+                    isPrecise
+                      ? h('select', {
+                          className: 'nai-select-mini',
+                          value: ref.type || 'character&style',
+                          onChange: (e) => updateItem(idx, { type: e.target.value })
+                        },
+                          h('option', { value: 'character&style' }, '角色 + 画风'),
+                          h('option', { value: 'character' }, '仅角色'),
+                          h('option', { value: 'style' }, '仅画风')
+                        )
+                      : null,
+                    h('label', { className: 'nai-ref-slider' },
+                      h('span', null, '参考强度 ' + Number(ref.strength ?? 0.6).toFixed(2)),
+                      h('input', {
+                        type: 'range',
+                        min: 0.05,
+                        max: 1.0,
+                        step: 0.05,
+                        value: ref.strength ?? (isPrecise ? 1.0 : 0.6),
+                        onChange: (e) => updateItem(idx, { strength: Number(e.target.value) })
+                      })
+                    ),
+                    h('label', { className: 'nai-ref-slider' },
+                      h('span', null, (isPrecise ? '还原度 ' : '信息提取 ') + Number(isPrecise ? (ref.fidelity ?? 1) : (ref.infoExtracted ?? 1)).toFixed(2)),
+                      h('input', {
+                        type: 'range',
+                        min: 0.05,
+                        max: 1.0,
+                        step: 0.05,
+                        value: isPrecise ? (ref.fidelity ?? 1.0) : (ref.infoExtracted ?? 1.0),
+                        onChange: (e) => updateItem(
+                          idx,
+                          isPrecise ? { fidelity: Number(e.target.value) } : { infoExtracted: Number(e.target.value) }
+                        )
+                      })
+                    )
+                  ),
+                  h('button', {
+                    type: 'button',
+                    className: 'nai-ref-del',
+                    onClick: () => removeItem(idx),
+                    title: '移除参考图'
+                  }, '✕')
+                )
+              )
+            )
+      );
+    }
+
+    function PromptChunksDrawer(props) {
+      const {
+        prompt = '',
+        onChangePrompt,
+        onRepairSyntax
+      } = props || {};
+
+      const chunks = React.useMemo(() => {
+        return String(prompt || '')
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean);
+      }, [prompt]);
+
+      const bumpChunk = (idx, delta) => {
+        const next = [...chunks];
+        const current = next[idx];
+        const m = current.match(/^(-?\d+(?:\.\d+)?)::(.*?)\s*::$/);
+        if (m) {
+          const nextWeight = Math.max(-3, Math.min(3, +(parseFloat(m[1]) + delta).toFixed(2)));
+          if (Math.abs(nextWeight - 1) < 0.01) {
+            next[idx] = m[2].trim();
+          } else {
+            next[idx] = nextWeight + '::' + m[2].trim() + ' ::';
+          }
+        } else {
+          const nextWeight = delta > 0 ? 1.15 : 0.85;
+          next[idx] = nextWeight + '::' + current + ' ::';
+        }
+        onChangePrompt && onChangePrompt(next.join(', '));
+      };
+
+      const removeChunk = (idx) => {
+        const next = chunks.filter((_, i) => i !== idx);
+        onChangePrompt && onChangePrompt(next.join(', '));
+      };
+
+      return h('div', { className: 'nai-chunks-drawer' },
+        h('div', { className: 'nai-chunks-head' },
+          h('span', { className: 'nai-chunks-title' }, '分段权重滑块 (' + chunks.length + ' 词组)'),
+          onRepairSyntax ? h('button', {
+            type: 'button',
+            className: 'nai-pill-btn',
+            onClick: onRepairSyntax
+          }, '✨ V5 语法一键修复') : null
+        ),
+        h('div', { className: 'nai-chunks-list' },
+          chunks.map((chunk, idx) =>
+            h('div', { key: idx + '_' + chunk.slice(0, 12), className: 'nai-chunk-pill' },
+              h('span', { className: 'nai-chunk-text', title: chunk }, chunk),
+              h('button', { type: 'button', className: 'nai-chunk-op', onClick: () => bumpChunk(idx, -0.1), title: '降权 -0.1' }, '−'),
+              h('button', { type: 'button', className: 'nai-chunk-op', onClick: () => bumpChunk(idx, 0.1), title: '加权 +0.1' }, '+'),
+              h('button', { type: 'button', className: 'nai-chunk-op is-del', onClick: () => removeChunk(idx), title: '删除词条' }, '×')
+            )
+          )
+        )
+      );
+    }
+
     // --- src/workbench.js ---
+    // ============================================================
+    // NAI5 Studio Workbench v4.0 — Canvas-First Frost & Maple Architecture
+    // Left 3-Layer Creation Inspector + Right Hero Canvas Stage
+    // Zero-JSX h(...) matching Frost & Maple Glassmorphism Dark & Light themes
+    // ============================================================
+
     function StudioWorkbench({
       workbenchBodyRef,
-      splitRowRef,
       dragRef,
       mainColSplitX,
       setMainColSplitX,
-      styleSplitX,
-      setStyleSplitX,
-      vertSplitRatio,
-      setVertSplitRatio,
       bridgeLocks,
       toggleBridgeLock,
       autoMirrorAgent,
@@ -4606,6 +6987,54 @@ window.__ModuleLoader__.load({
       setSampler,
       cfgRescale,
       setCfgRescale,
+      model,
+      setModel,
+      effort,
+      setEffort,
+      noiseSchedule,
+      setNoiseSchedule,
+      variety,
+      setVariety,
+      transparentBackground,
+      setTransparentBackground,
+      batchCount,
+      setBatchCount,
+      genMode,
+      setGenMode,
+      sourceImage,
+      setSourceImage,
+      sourceImagePreviewUrl,
+      setSourceImagePreviewUrl,
+      i2iStrength,
+      setI2iStrength,
+      i2iNoise,
+      setI2iNoise,
+      setInpaintMask,
+      inpaintStrength,
+      setInpaintStrength,
+      colorCorrect,
+      setColorCorrect,
+      refTab,
+      setRefTab,
+      vibeReferences,
+      setVibeReferences,
+      preciseReferences,
+      setPreciseReferences,
+      showChunksDrawer,
+      setShowChunksDrawer,
+      compareBeforeItem,
+      compareActive,
+      setCompareActive,
+      busyPostAction,
+      handleUpscale,
+      handleDirector,
+      handleSendToImg2Img,
+      handleSendToInpaint,
+      handleUploadSourceImage,
+      handleRepairPrompt,
+      handleInspectDroppedFile,
+      handleUseCurrentCanvasAsRef,
+      onToggleFavorite,
       latestImage,
       latestFullUrl,
       characterPrompts,
@@ -4636,8 +7065,6 @@ window.__ModuleLoader__.load({
       setUcMode,
       stylePrompt,
       setStylePrompt,
-      showStyleAndUc,
-      setShowStyleAndUc,
       posTextareaRef,
       charTextareaRefs,
       showInlineSearch,
@@ -4662,572 +7089,995 @@ window.__ModuleLoader__.load({
       handleGenerate,
       showToast
     }) {
-      return h('div', { ref: workbenchBodyRef, className: 'nai5-workbench-body' },
-        h('div', {
-          className: 'nai5-col-left',
-          style: { width: `${mainColSplitX}%`, flex: 'none' }
-        },
-          accountsLoaded && accountsCount === 0 && h('div', {
-            className: 'nai5-card',
-            style: {
-              padding: '10px 12px',
-              background: 'rgba(224, 40, 79, 0.12)',
-              borderColor: 'rgba(224, 40, 79, 0.42)',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '10px',
-              flexWrap: 'wrap'
-            }
-          },
-            h('div', { style: { display: 'flex', flexDirection: 'column', gap: '2px', minWidth: 0 } },
-              h('strong', { style: { fontSize: '12px', color: 'var(--fx-text-primary)' } }, '尚未配置 NovelAI API 账号'),
-              h('span', { style: { fontSize: '11px', color: 'var(--fx-text-secondary)' } },
-                '请添加官方 API (https://image.novelai.net) 或兼容中转站 Key，密钥仅存放在本机配置目录。'
-              )
-            ),
-            h('button', {
-              type: 'button',
-              className: 'nai5-btn primary xs',
-              onClick: onOpenAccountSetup
-            }, h(Icon, { name: 'user', size: 11 }), '立即配置 API Key')
-          ),
+      const [inspectorTab, setInspectorTab] = useState('prompt'); // 'prompt' | 'chars' | 'params'
+      const [styleUcTab, setStyleUcTab] = useState('uc'); // 'uc' | 'style'
+      const [showPromptMenu, setShowPromptMenu] = useState(false);
+      const [showFilmstrip, setShowFilmstrip] = useState(true);
+      const promptMenuRef = useRef(null);
+      const modeFileRef = useRef(null);
 
-          h('div', { className: 'nai5-bridge-bar' },
-            h('div', { style: { display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' } },
-              h('button', {
-                type: 'button',
-                className: `nai5-btn xs ${bridgeLocks.enabled ? 'primary' : ''}`,
-                title: '开启后，DSH 对话里的 AI 调用生图时将继承下方勾选的工作台参数',
-                onClick: () => toggleBridgeLock('enabled')
-              }, bridgeLocks.enabled ? '🔗 参数锁已赋能对话' : '🔓 对话参数锁已关闭'),
-              bridgeLocks.enabled && h(React.Fragment, null,
-                h('span', {
-                  className: `nai5-lock-chip ${bridgeLocks.lockStyle ? 'active' : ''}`,
-                  title: '强制对话生图使用当前工作台画师风格串',
-                  onClick: () => toggleBridgeLock('lockStyle')
-                }, bridgeLocks.lockStyle ? '✓ 锁画风' : '锁画风'),
-                h('span', {
-                  className: `nai5-lock-chip ${bridgeLocks.lockAspect ? 'active' : ''}`,
-                  title: '强制对话生图使用当前工作台画幅宽高',
-                  onClick: () => toggleBridgeLock('lockAspect')
-                }, bridgeLocks.lockAspect ? `✓ 锁画幅(${width}×${height})` : '锁画幅'),
-                h('span', {
-                  className: `nai5-lock-chip ${bridgeLocks.lockSeed ? 'active' : ''}`,
-                  title: '当固定 Seed 时，强制对话生图使用该 Seed',
-                  onClick: () => {
-                    if (!bridgeLocks.lockSeed && seedMode !== 'fixed') {
-                      setSeedMode('fixed');
-                      if (!seed && latestImage?.seed) setSeed(latestImage.seed);
-                    }
-                    toggleBridgeLock('lockSeed');
-                  }
-                }, bridgeLocks.lockSeed ? '✓ 锁Seed' : '锁Seed'),
-                h('span', {
-                  className: `nai5-lock-chip ${bridgeLocks.lockChars2D ? 'active' : ''}`,
-                  title: '将工作台 2D 角色坐标自动注入给对话生图',
-                  onClick: () => toggleBridgeLock('lockChars2D')
-                }, bridgeLocks.lockChars2D ? `✓ 锁2D站位(${characterPrompts.length}人)` : '锁2D站位'),
-                h('span', {
-                  className: `nai5-lock-chip ${bridgeLocks.lockRatingUc ? 'active' : ''}`,
-                  title: '强制对话生图使用当前工作台的负向排他词 (UC)',
-                  onClick: () => toggleBridgeLock('lockRatingUc')
-                }, bridgeLocks.lockRatingUc ? '✓ 锁负向UC' : '锁负向UC')
-              )
+      useEffect(() => {
+        if (!showPromptMenu) return;
+        const closeOnOutside = (e) => {
+          if (promptMenuRef.current && !promptMenuRef.current.contains(e.target)) {
+            setShowPromptMenu(false);
+          }
+        };
+        document.addEventListener('mousedown', closeOnOutside);
+        return () => document.removeEventListener('mousedown', closeOnOutside);
+      }, [showPromptMenu]);
+
+      const totalCharAndRefs = (characterPrompts?.length || 0) + (vibeReferences?.length || 0) + (preciseReferences?.length || 0);
+      const isBusyAny = Boolean(isGenerating || busyPostAction);
+
+      const swapDimensions = () => {
+        const curW = Number(width) || 832;
+        const curH = Number(height) || 1216;
+        setWidth(curH);
+        setHeight(curW);
+        setPixelTier('custom');
+      };
+
+      const toggleQuickEffort = () => {
+        if (effort === 'medium') {
+          setEffort('high');
+          if (model.includes('-medium')) setModel('nai-diffusion-5-full');
+          setSteps(28);
+        } else if (Number(steps) < 45) {
+          setEffort('high');
+          if (model.includes('-medium')) setModel('nai-diffusion-5-full');
+          setSteps(50);
+        } else {
+          setEffort('medium');
+          setSteps(14);
+          setModel('nai-diffusion-5-full-medium');
+        }
+      };
+
+      const cycleBatchCount = () => {
+        const next = batchCount === 1 ? 2 : (batchCount === 2 ? 4 : 1);
+        setBatchCount(next);
+      };
+
+      const handleDropImage = (e) => {
+        const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        if (f && f.type && f.type.startsWith('image/') && handleInspectDroppedFile) {
+          e.preventDefault();
+          handleInspectDroppedFile(f);
+        }
+      };
+
+      const handleDragOverImage = (e) => {
+        if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes('Files')) {
+          e.preventDefault();
+        }
+      };
+
+      // ---------- Left Inspector Tab 1: Prompt & Quick Aspect ----------
+      const renderPromptTab = () => h(React.Fragment, null,
+        accountsLoaded && accountsCount === 0 && h('div', {
+          className: 'nai5-card',
+          style: {
+            padding: '10px 12px',
+            background: 'rgba(200, 35, 55, 0.12)',
+            borderColor: 'rgba(200, 35, 55, 0.42)',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '10px',
+            flexWrap: 'wrap',
+            flex: 'none'
+          }
+        },
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '2px', minWidth: 0 } },
+            h('strong', { style: { fontSize: '12px', color: 'var(--fx-text-primary)' } }, '尚未配置 NovelAI API 账号'),
+            h('span', { style: { fontSize: '11px', color: 'var(--fx-text-secondary)' } },
+              '请添加官方 API (https://image.novelai.net) 或兼容中转站 Key，密钥仅存放在本机配置目录。'
+            )
+          ),
+          h('button', {
+            type: 'button',
+            className: 'nai5-btn primary xs',
+            onClick: onOpenAccountSetup
+          }, h(Icon, { name: 'user', size: 11 }), '立即配置 API Key')
+        ),
+        h('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', flex: 'none' } },
+          h(FolderPresetPicker, {
+            label: '画师风格预设（可选）',
+            iconName: 'palette',
+            presets: artistPresets,
+            selectedId: selectedArtistId,
+            currentValue: stylePrompt,
+            emptyHint: `未配置画师预设。点击右上角「新建」或「导入」JSON（也可放到 ${studioConfig?.artistPresetsFile || '~/.dsh/nai5-studio/artist_presets.json'}）。`,
+            onSelect: (preset) => {
+              setSelectedArtistId(preset.id);
+              setStylePrompt(preset.prompt);
+              showToast(`已切换画风: ${preset.name}`);
+            },
+            onAdd: (np) => {
+              setArtistPresets(prev => persistPresetAdd('dsh_nai5_artist_presets_v1', np, prev));
+              setSelectedArtistId(np.id);
+              showToast(`已保存画风预设: ${np.name}`);
+            },
+            onDelete: (id) => {
+              setArtistPresets(prev => persistPresetDelete('dsh_nai5_artist_presets_v1', id, prev, serverArtistPresets));
+            },
+            onImportJson: (raw, err) => onImportPresetsJson('artist', raw, err),
+            placeholder: '选择或导入画师预设...'
+          }),
+          h(FolderPresetPicker, {
+            label: 'OC 角色档案库（可选）',
+            iconName: 'user',
+            presets: ocPresets,
+            selectedId: selectedOcId,
+            currentValue: positivePrompt,
+            emptyHint: `未配置角色档案。点击右上角「新建」或「导入」JSON（也可放到 ${studioConfig?.ocPresetsFile || '~/.dsh/nai5-studio/oc_presets.json'}）。`,
+            onSelect: (preset) => {
+              setSelectedOcId(preset.id);
+              setPositivePrompt(prev => {
+                const trimmed = prev.trim();
+                return trimmed ? `${preset.prompt}, ${trimmed}` : preset.prompt;
+              });
+              showToast(`已载入角色: ${preset.name}`);
+            },
+            onAdd: (np) => {
+              setOcPresets(prev => persistPresetAdd('dsh_nai5_oc_presets_v1', np, prev));
+              setSelectedOcId(np.id);
+              showToast(`已保存角色预设: ${np.name}`);
+            },
+            onDelete: (id) => {
+              setOcPresets(prev => persistPresetDelete('dsh_nai5_oc_presets_v1', id, prev, serverOcPresets));
+            },
+            onImportJson: (raw, err) => onImportPresetsJson('oc', raw, err),
+            placeholder: '选择或导入 OC 角色...'
+          })
+        ),
+
+        // Positive Prompt Card (4 crisp header actions + overflow popover)
+        h('div', { className: 'nai5-card', style: { flex: 'none' } },
+          h('div', { className: 'nai5-label-bar' },
+            h('span', { className: 'nai5-label-title' },
+              h(Icon, { name: 'sparkles', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
+              '正向提示词'
             ),
-            h('div', { style: { display: 'flex', alignItems: 'center', gap: '6px' } },
-              h('span', {
-                className: `nai5-lock-chip ${autoMirrorAgent ? 'active' : ''}`,
-                title: '当你在 DSH 对话生图时，自动将新图与提示词实时同步回工作台',
-                onClick: () => setAutoMirrorAgent(m => !m)
-              }, autoMirrorAgent ? '⚡ 自动镜像对话出图' : '○ 暂停镜像'),
+            h('div', { style: { display: 'flex', alignItems: 'center', gap: '4px', flex: 'none' } },
               h('button', {
                 type: 'button',
-                className: 'nai5-btn primary xs',
-                title: '将当前工作台调好的配方与 Seed 送入 DSH 聊天输入框继续演进',
-                onClick: () => sendToChatComposer(null)
-              }, '💬 送入对话继续演进')
+                className: 'nai5-btn xs',
+                title: '选中标签或将光标放在词内，提升 +0.1 权重',
+                onClick: () => setPositivePrompt(prev => adjustPromptWeight(prev, posTextareaRef.current, 0.1))
+              }, '+权'),
+              h('button', {
+                type: 'button',
+                className: 'nai5-btn xs',
+                title: '选中标签或将光标放在词内，降低 -0.1 权重',
+                onClick: () => setPositivePrompt(prev => adjustPromptWeight(prev, posTextareaRef.current, -0.1))
+              }, '-权'),
+              h('button', {
+                type: 'button',
+                className: `nai5-btn xs ${showInlineSearch ? 'primary' : ''}`,
+                title: '内联速查 Danbooru 标签与已挂载的可选词库/法典',
+                onClick: () => setShowInlineSearch(s => !s)
+              }, h(Icon, { name: 'search', size: 11 }), '速查'),
+              h('div', { ref: promptMenuRef, className: 'nai-popover-anchor' },
+                h('button', {
+                  type: 'button',
+                  className: `nai5-btn xs ${showPromptMenu || showChunksDrawer ? 'primary' : ''}`,
+                  onClick: () => setShowPromptMenu(v => !v)
+                }, '更多 ▾'),
+                showPromptMenu && h('div', { className: 'nai-popover-down' },
+                  h('button', {
+                    type: 'button',
+                    className: 'nai-menu-item',
+                    onClick: () => { setShowPromptMenu(false); handleRepairPrompt(); }
+                  }, h('strong', null, '✨ V5 语法一键修复'), h('span', null, '修复全角符号与权重分隔符')),
+                  h('button', {
+                    type: 'button',
+                    className: 'nai-menu-item',
+                    onClick: () => {
+                      setPositivePrompt(prev => formatPromptText(prev));
+                      setShowPromptMenu(false);
+                      showToast('已规范化提示词格式');
+                    }
+                  }, h('strong', null, '🪄 格式化排版'), h('span', null, '清理中文逗号与冗余空白')),
+                  h('button', {
+                    type: 'button',
+                    className: 'nai-menu-item',
+                    onClick: () => { setShowChunksDrawer(s => !s); setShowPromptMenu(false); }
+                  }, h('strong', null, showChunksDrawer ? '🧩 收起词组权重面板' : '🧩 展开词组权重面板'), h('span', null, '逐词条可视加减权重或删除')),
+                  h('button', {
+                    type: 'button',
+                    className: 'nai-menu-item',
+                    onClick: () => { copyToClipboard(positivePrompt, '正向提示词'); setShowPromptMenu(false); }
+                  }, h('strong', null, '📋 复制全部提示词')),
+                  h('button', {
+                    type: 'button',
+                    className: 'nai-menu-item is-danger',
+                    onClick: () => { setPositivePrompt(''); setShowPromptMenu(false); }
+                  }, h('strong', null, '🗑 清空提示词'))
+                )
+              )
             )
           ),
 
-          h('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' } },
-            h(FolderPresetPicker, {
-              label: '画师风格预设（可选）',
-              iconName: 'palette',
-              presets: artistPresets,
-              selectedId: selectedArtistId,
-              currentValue: stylePrompt,
-              emptyHint: `未配置画师预设。点击右上角「新建」或「导入」JSON（也可放到 ${studioConfig?.artistPresetsFile || '~/.dsh/nai5-studio/artist_presets.json'}）。`,
-              onSelect: (preset) => {
-                setSelectedArtistId(preset.id);
-                setStylePrompt(preset.prompt);
-                showToast(`已切换画风: ${preset.name}`);
-              },
-              onAdd: (np) => {
-                setArtistPresets(prev => persistPresetAdd('dsh_nai5_artist_presets_v1', np, prev));
-                setSelectedArtistId(np.id);
-                showToast(`已保存画风预设: ${np.name}`);
-              },
-              onDelete: (id) => {
-                setArtistPresets(prev => persistPresetDelete('dsh_nai5_artist_presets_v1', id, prev, serverArtistPresets));
-              },
-              onImportJson: (raw, err) => onImportPresetsJson('artist', raw, err),
-              placeholder: '选择或导入画师预设...'
-            }),
-            h(FolderPresetPicker, {
-              label: 'OC 角色档案库（可选）',
-              iconName: 'user',
-              presets: ocPresets,
-              selectedId: selectedOcId,
-              currentValue: positivePrompt,
-              emptyHint: `未配置角色档案。点击右上角「新建」或「导入」JSON（也可放到 ${studioConfig?.ocPresetsFile || '~/.dsh/nai5-studio/oc_presets.json'}）。`,
-              onSelect: (preset) => {
-                setSelectedOcId(preset.id);
-                setPositivePrompt(prev => {
-                  const trimmed = prev.trim();
-                  return trimmed ? `${preset.prompt}, ${trimmed}` : preset.prompt;
-                });
-                showToast(`已载入角色: ${preset.name}`);
-              },
-              onAdd: (np) => {
-                setOcPresets(prev => persistPresetAdd('dsh_nai5_oc_presets_v1', np, prev));
-                setSelectedOcId(np.id);
-                showToast(`已保存角色预设: ${np.name}`);
-              },
-              onDelete: (id) => {
-                setOcPresets(prev => persistPresetDelete('dsh_nai5_oc_presets_v1', id, prev, serverOcPresets));
-              },
-              onImportJson: (raw, err) => onImportPresetsJson('oc', raw, err),
-              placeholder: '选择或导入 OC 角色...'
-            })
-          ),
-
-          h('div', {
-            className: 'nai5-card adaptive-flex',
-            style: { flex: 1, minHeight: '145px' }
+          showInlineSearch && h('div', {
+            style: {
+              padding: '8px',
+              borderRadius: '8px',
+              background: 'var(--fx-glass-popover)',
+              border: '1px solid rgba(224, 40, 79, 0.3)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '7px'
+            }
           },
-            h('div', { className: 'nai5-label-bar', style: { flexWrap: 'wrap' } },
-              h('span', { className: 'nai5-label-title' },
-                h(Icon, { name: 'sparkles', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
-                '正向提示词 (Positive Prompt)'
-              ),
-              h('div', { style: { display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' } },
-                h('button', {
-                  type: 'button',
-                  className: 'nai5-btn xs',
-                  title: '选中标签或将光标放在词内，点击提升 +0.1 权重 (1.1::tag::)',
-                  onClick: () => setPositivePrompt(prev => adjustPromptWeight(prev, posTextareaRef.current, 0.1))
-                }, '+权重 1.1::'),
-                h('button', {
-                  type: 'button',
-                  className: 'nai5-btn xs',
-                  title: '选中标签或将光标放在词内，点击降低 -0.1 权重或添加负权重',
-                  onClick: () => setPositivePrompt(prev => adjustPromptWeight(prev, posTextareaRef.current, -0.1))
-                }, '-权重 ::'),
-                h('button', {
-                  type: 'button',
-                  className: 'nai5-btn xs',
-                  title: '自动清理中文逗号、多余空格与数字画师权重粘连',
-                  onClick: () => {
-                    setPositivePrompt(prev => formatPromptText(prev));
-                    showToast('已规范化提示词格式');
-                  }
-                }, h(Icon, { name: 'wand', size: 11 }), '格式化'),
-                h('button', {
-                  type: 'button',
-                  className: `nai5-btn xs ${showInlineSearch ? 'primary' : ''}`,
-                  title: '免切页内联检索同义词与已挂载的可选词库/法典',
-                  onClick: () => setShowInlineSearch(s => !s)
-                }, h(Icon, { name: 'search', size: 11 }), '速查词库'),
-                h('button', {
-                  type: 'button',
-                  className: 'nai5-btn xs',
-                  onClick: () => copyToClipboard(positivePrompt, '正向提示词')
-                }, h(Icon, { name: 'copy', size: 11 })),
-                h('button', {
-                  type: 'button',
-                  className: 'nai5-btn xs',
-                  title: '清空正向提示词',
-                  onClick: () => setPositivePrompt('')
-                }, h(Icon, { name: 'trash', size: 11 }))
-              )
+            h('div', { style: { display: 'flex', gap: '6px' } },
+              h('input', {
+                type: 'text',
+                className: 'nai5-input',
+                style: { flex: 1, fontSize: '11.5px', padding: '5px 8px' },
+                placeholder: '搜索中英文 Tag 或法典（如：白丝、旗袍、仰视）...',
+                value: inlineQuery,
+                onChange: e => setInlineQuery(e.target.value),
+                onKeyDown: e => e.key === 'Enter' && runTagSearch(inlineQuery, true)
+              }),
+              h('button', {
+                type: 'button',
+                className: 'nai5-btn primary xs',
+                onClick: () => runTagSearch(inlineQuery, true)
+              }, inlineSearching ? '...' : '检索'),
+              h('button', {
+                type: 'button',
+                className: 'nai5-btn xs',
+                onClick: () => setShowInlineSearch(false)
+              }, h(Icon, { name: 'close', size: 11 }))
             ),
-
-            showInlineSearch && h('div', {
-              style: {
-                padding: '8px',
-                borderRadius: '8px',
-                background: 'var(--fx-glass-popover)',
-                border: '1px solid rgba(99, 102, 241, 0.35)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px'
-              }
+            inlineResults && h('div', {
+              style: { display: 'flex', flexWrap: 'wrap', gap: '5px', maxHeight: '125px', overflowY: 'auto' }
             },
-              h('div', { style: { display: 'flex', gap: '6px' } },
-                h('input', {
-                  type: 'text',
-                  className: 'nai5-input',
-                  style: { flex: 1, fontSize: '11.5px', padding: '5px 8px' },
-                  placeholder: '输入中英文查询同义词或已导入法典（如：逆光、旗袍、仰视）...',
-                  value: inlineQuery,
-                  onChange: e => setInlineQuery(e.target.value),
-                  onKeyDown: e => e.key === 'Enter' && runTagSearch(inlineQuery, true)
-                }),
+              (inlineResults.danbooru?.results || []).map(r =>
                 h('button', {
-                  type: 'button',
-                  className: 'nai5-btn primary xs',
-                  onClick: () => runTagSearch(inlineQuery, true)
-                }, inlineSearching ? '...' : '检索'),
-                h('button', {
+                  key: r.tag,
                   type: 'button',
                   className: 'nai5-btn xs',
-                  onClick: () => setShowInlineSearch(false)
-                }, h(Icon, { name: 'close', size: 11 }))
-              ),
-              inlineResults && h('div', {
-                style: {
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: '5px',
-                  maxHeight: '130px',
-                  overflowY: 'auto'
-                }
-              },
-                (inlineResults.danbooru?.results || []).map(r =>
-                  h('button', {
-                    key: r.tag,
-                    type: 'button',
-                    className: 'nai5-btn xs',
-                    style: { background: 'rgba(99, 102, 241, 0.12)', borderColor: 'rgba(99, 102, 241, 0.3)' },
-                    title: `点击插入标签: ${r.tag}`,
-                    onClick: () => {
-                      setPositivePrompt(prev => prev.trim() ? `${prev.trim()}, ${r.tag}` : r.tag);
-                      showToast(`已插入 ${r.tag}`);
-                    }
-                  },
-                    h('span', { style: { color: '#e0e7ff', fontWeight: 600 } }, r.tag),
-                    r.cn_name && h('span', { style: { color: 'var(--fx-text-secondary)', fontSize: '10px' } }, r.cn_name)
-                  )
-                ),
-                (inlineResults.codex?.results || []).map((c, idx) =>
-                  h('button', {
-                    key: 'cx_' + idx,
-                    type: 'button',
-                    className: 'nai5-btn xs',
-                    style: { background: 'rgba(16, 185, 129, 0.12)', borderColor: 'rgba(16, 185, 129, 0.3)' },
-                    title: `${c.codex}: ${c.prompt}`,
-                    onClick: () => {
-                      setPositivePrompt(prev => prev.trim() ? `${prev.trim()}, ${c.prompt}` : c.prompt);
-                      showToast(`已插入法典词串: ${c.name}`);
-                    }
-                  },
-                    h('span', { style: { color: '#6ee7b7', fontWeight: 600 } }, `[法典] ${c.name}`)
-                  )
+                  title: `点击插入标签: ${r.tag}`,
+                  onClick: () => {
+                    setPositivePrompt(prev => prev.trim() ? `${prev.trim()}, ${r.tag}` : r.tag);
+                    showToast(`已插入 ${r.tag}`);
+                  }
+                },
+                  h('span', { style: { fontWeight: 600 } }, r.tag),
+                  r.cn_name && h('span', { style: { color: 'var(--fx-text-secondary)', fontSize: '10px' } }, r.cn_name)
                 )
+              ),
+              (inlineResults.codex?.results || []).map((c, idx) =>
+                h('button', {
+                  key: 'cx_' + idx,
+                  type: 'button',
+                  className: 'nai5-btn xs',
+                  style: { borderColor: 'var(--fx-border-gold)' },
+                  title: `${c.codex}: ${c.prompt}`,
+                  onClick: () => {
+                    setPositivePrompt(prev => prev.trim() ? `${prev.trim()}, ${c.prompt}` : c.prompt);
+                    showToast(`已插入法典词串: ${c.name}`);
+                  }
+                }, h('span', { style: { fontWeight: 600 } }, `[法典] ${c.name}`))
               )
-            ),
-
-            h('textarea', {
-              ref: posTextareaRef,
-              className: 'nai5-textarea',
-              rows: 4,
-              placeholder: '输入全局画面描述、人数、构图机位、环境光影与动作交互...',
-              value: positivePrompt,
-              onChange: e => setPositivePrompt(e.target.value)
-            })
+            )
           ),
 
-          h('div', { className: 'nai5-card' },
-            h('div', { className: 'nai5-label-bar', style: { flexWrap: 'wrap' } },
-              h('span', { className: 'nai5-label-title' },
-                h(Icon, { name: 'users', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
-                'V5 多角色 2D 站位画布与独立分框',
-                h('span', {
-                  style: {
-                    fontSize: '10px',
-                    padding: '1px 7px',
-                    borderRadius: '999px',
-                    background: characterPrompts.length > 0 ? 'rgba(224, 40, 79, 0.18)' : 'rgba(255, 255, 255, 0.06)',
-                    color: characterPrompts.length > 0 ? 'var(--fx-crimson-soft)' : 'var(--fx-text-muted)'
-                  }
-                }, `${characterPrompts.length} / ${MAX_V5_CHARACTERS} 角色`)
-              ),
-              h('div', { style: { display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' } },
-                h('button', { type: 'button', className: 'nai5-btn xs', title: '2 人左右对称 (A:0.25 / B:0.75)', onClick: () => applyCharLayoutPreset('2lr') }, '双人左右'),
-                h('button', { type: 'button', className: 'nai5-btn xs', title: '2 人上下/前后', onClick: () => applyCharLayoutPreset('2tb') }, '双人上下'),
-                h('button', { type: 'button', className: 'nai5-btn xs', title: '3 人横向并排', onClick: () => applyCharLayoutPreset('3row') }, '三人并排'),
-                h('button', { type: 'button', className: 'nai5-btn xs', title: '4 人 2×2 矩阵', onClick: () => applyCharLayoutPreset('4grid') }, '四人矩阵'),
-                h('button', { type: 'button', className: 'nai5-btn xs', title: '6 人双排群像', onClick: () => applyCharLayoutPreset('6group') }, '六人群像'),
-                h('button', { type: 'button', className: 'nai5-btn xs', title: '9 人 3×3 矩阵', onClick: () => applyCharLayoutPreset('9grid') }, '九人方阵'),
-                h('button', { type: 'button', className: 'nai5-btn xs', title: '12 人三排群像', onClick: () => applyCharLayoutPreset('12group') }, '十二群像'),
-                h('button', {
-                  type: 'button',
-                  className: 'nai5-btn primary xs',
-                  disabled: characterPrompts.length >= MAX_V5_CHARACTERS,
-                  title: characterPrompts.length >= MAX_V5_CHARACTERS ? `已达 NovelAI V5 ${MAX_V5_CHARACTERS} 角色上限` : `新增独立角色控制框 (最多 ${MAX_V5_CHARACTERS} 个)`,
-                  onClick: addCharacterBox
-                }, h(Icon, { name: 'plus', size: 11 }), `添加角色 (${characterPrompts.length}/${MAX_V5_CHARACTERS})`),
-                characterPrompts.length > 0 && h('button', {
+          h('textarea', {
+            ref: posTextareaRef,
+            className: 'nai5-textarea',
+            rows: 6,
+            style: { minHeight: '132px', resize: 'vertical' },
+            placeholder: '输入全局画面描述、人数、构图机位、环境光影与动作交互...',
+            value: positivePrompt,
+            onChange: e => setPositivePrompt(e.target.value)
+          }),
+
+          showChunksDrawer && h(PromptChunksDrawer, {
+            prompt: positivePrompt,
+            onChangePrompt: setPositivePrompt,
+            onRepairSyntax: handleRepairPrompt
+          })
+        ),
+
+        // Unified Switchable Style / Negative UC Card
+        h('div', { className: 'nai5-card', style: { flex: 'none' } },
+          h('div', { className: 'nai5-label-bar' },
+            h('div', { className: 'nai-seg-mini' },
+              h('button', {
+                type: 'button',
+                className: `nai-seg-mini-btn ${styleUcTab === 'uc' ? 'active' : ''}`,
+                onClick: () => setStyleUcTab('uc')
+              }, '负向排他 UC'),
+              h('button', {
+                type: 'button',
+                className: `nai-seg-mini-btn ${styleUcTab === 'style' ? 'active' : ''}`,
+                onClick: () => setStyleUcTab('style')
+              }, '画师风格串 Style')
+            ),
+            styleUcTab === 'uc'
+              ? h('div', { style: { display: 'flex', alignItems: 'center', gap: '4px' } },
+                  [
+                    { id: 'safe', label: 'Safe' },
+                    { id: 'standard', label: '标准' },
+                    { id: 'minimal', label: '极简' }
+                  ].map(u =>
+                    h('button', {
+                      key: u.id,
+                      type: 'button',
+                      className: `nai5-btn xs ${ucMode === u.id ? 'primary' : ''}`,
+                      onClick: () => { setUcMode(u.id); setNegativePrompt(UC_PRESETS[u.id]); }
+                    }, u.label)
+                  ),
+                  h('button', {
+                    type: 'button',
+                    className: 'nai5-btn ghost xs',
+                    title: '复制负向排他词',
+                    onClick: () => copyToClipboard(negativePrompt, '负向排他词')
+                  }, h(Icon, { name: 'copy', size: 11 }))
+                )
+              : h('button', {
                   type: 'button',
                   className: 'nai5-btn ghost xs',
-                  title: '清空所有角色框，恢复单框模式',
-                  onClick: () => setCharacterPrompts([])
-                }, h(Icon, { name: 'trash', size: 11 })),
-                characterPrompts.length > 0 && h('button', {
-                  type: 'button',
-                  className: 'nai5-btn xs',
-                  onClick: () => setShowCharBoxes(s => !s)
-                }, h(Icon, { name: showCharBoxes ? 'chevronUp' : 'chevronDown', size: 11 }))
-              )
-            ),
+                  title: '复制画师风格串',
+                  onClick: () => copyToClipboard(stylePrompt, '画师风格串')
+                }, h(Icon, { name: 'copy', size: 11 }), '复制画风')
+          ),
+          styleUcTab === 'uc'
+            ? h('textarea', {
+                className: 'nai5-textarea',
+                rows: 3,
+                style: { minHeight: '72px', fontSize: '11px', resize: 'vertical' },
+                placeholder: '输入全局负向排他词 (Undesired Content)...',
+                value: negativePrompt,
+                onChange: e => setNegativePrompt(e.target.value)
+              })
+            : h('textarea', {
+                className: 'nai5-textarea',
+                rows: 3,
+                style: { minHeight: '72px', fontSize: '11px', resize: 'vertical' },
+                placeholder: '画师串与笔触质感词（由上方预设带出，可自由微调）...',
+                value: stylePrompt,
+                onChange: e => setStylePrompt(e.target.value)
+              })
+        ),
 
-            characterPrompts.length === 0
-              ? h('div', {
+        // Quick Aspect Strip Card
+        h('div', { className: 'nai5-card', style: { flex: 'none', gap: '7px' } },
+          h('div', { className: 'nai5-label-bar' },
+            h('span', { className: 'nai5-label-title' }, '画幅比例与档位'),
+            h('span', { style: { fontSize: '11px', color: 'var(--fx-crimson-soft)', fontFamily: 'monospace' } },
+              `${width}×${height} · ${((width * height) / 1048576).toFixed(2)}MP`
+            )
+          ),
+          h('div', { className: 'nai5-ratio-grid' },
+            [
+              { r: '2:3', label: '2:3 竖', w: 9, h: 13 },
+              { r: '3:2', label: '3:2 横', w: 13, h: 9 },
+              { r: '1:1', label: '1:1 方', w: 11, h: 11 },
+              { r: '9:16', label: '9:16', w: 8, h: 13 },
+              { r: '16:9', label: '16:9', w: 14, h: 8 }
+            ].map(item =>
+              h('button', {
+                key: item.r,
+                type: 'button',
+                className: `nai5-ratio-pill ${aspectRatio === item.r ? 'active' : ''}`,
+                style: { flexDirection: 'row', padding: '5px 4px', gap: '5px' },
+                onClick: () => handleRatioChange(item.r)
+              },
+                h('span', {
                   style: {
-                    fontSize: '11px',
-                    color: 'var(--fx-text-muted)',
-                    padding: '8px 10px',
-                    borderRadius: '7px',
-                    background: 'rgba(255,255,255,0.02)',
-                    border: '1px dashed rgba(255,255,255,0.08)'
+                    width: `${item.w}px`,
+                    height: `${item.h}px`,
+                    border: '1.5px solid currentColor',
+                    borderRadius: '2px',
+                    display: 'inline-block',
+                    flex: 'none'
                   }
-                }, `当前为单框模式。支持 NovelAI V5 最高 ${MAX_V5_CHARACTERS} 角色独立控制（A ~ V）：点击上方快捷排布或「+ 添加角色」即可在 2D 画布上拖拽设定各角色 (X, Y) 坐标并隔离特征词。`)
-              : (showCharBoxes && h('div', { className: 'nai5-stage2d-wrap' },
+                }),
+                h('span', null, item.label)
+              )
+            )
+          ),
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: '6px' } },
+            h('select', {
+              className: 'nai5-select',
+              style: { flex: 1, padding: '4px 8px', fontSize: '11px' },
+              value: pixelTier,
+              onChange: e => handleTierChange(e.target.value === 'custom' ? 'custom' : Number(e.target.value))
+            },
+              h('option', { value: 0.4 }, '0.4 MP 小图'),
+              h('option', { value: 1 }, '1.0 MP 标准'),
+              h('option', { value: 1.5 }, '1.5 MP 大图'),
+              h('option', { value: 2 }, '2.0 MP 超清'),
+              h('option', { value: 3 }, '3.0 MP 极限'),
+              h('option', { value: 'custom' }, '自定义尺寸')
+            ),
+            h('button', {
+              type: 'button',
+              className: 'nai5-btn xs',
+              title: '一键互换宽与高 (竖屏 ⇄ 横屏)',
+              onClick: swapDimensions
+            }, '⇄ 互换宽高')
+          )
+        )
+      );
+
+      // ---------- Left Inspector Tab 2: Characters (22) & References ----------
+      const renderCharsAndRefsTab = () => h(React.Fragment, null,
+        h('div', { className: 'nai5-card', style: { flex: 'none' } },
+          h('div', { className: 'nai5-label-bar' },
+            h('span', { className: 'nai5-label-title' },
+              h(Icon, { name: 'users', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
+              'V5 多角色 2D 站位画布',
+              h('span', {
+                style: {
+                  fontSize: '10px',
+                  padding: '1px 7px',
+                  borderRadius: '999px',
+                  background: characterPrompts.length > 0 ? 'rgba(224, 40, 79, 0.18)' : 'rgba(255, 255, 255, 0.06)',
+                  color: characterPrompts.length > 0 ? 'var(--fx-crimson-soft)' : 'var(--fx-text-muted)'
+                }
+              }, `${characterPrompts.length}/${MAX_V5_CHARACTERS}`)
+            ),
+            h('div', { style: { display: 'flex', alignItems: 'center', gap: '4px' } },
+              h('select', {
+                className: 'nai5-select',
+                style: { width: '104px', padding: '3px 6px', fontSize: '10.5px' },
+                value: '',
+                title: '一键生成多角色 2D 队列坐标',
+                onChange: (e) => {
+                  if (e.target.value) applyCharLayoutPreset(e.target.value);
+                }
+              },
+                h('option', { value: '' }, '快捷排布...'),
+                h('option', { value: '2lr' }, '双人左右'),
+                h('option', { value: '2tb' }, '双人上下'),
+                h('option', { value: '3row' }, '三人并排'),
+                h('option', { value: '4grid' }, '四人矩阵'),
+                h('option', { value: '6group' }, '六人群像'),
+                h('option', { value: '9grid' }, '九人方阵'),
+                h('option', { value: '12group' }, '十二群像')
+              ),
+              h('button', {
+                type: 'button',
+                className: 'nai5-btn primary xs',
+                disabled: characterPrompts.length >= MAX_V5_CHARACTERS,
+                onClick: addCharacterBox
+              }, h(Icon, { name: 'plus', size: 11 }), '添加'),
+              characterPrompts.length > 0 && h('button', {
+                type: 'button',
+                className: 'nai5-btn ghost xs',
+                title: '清空所有角色框，恢复单框模式',
+                onClick: () => setCharacterPrompts([])
+              }, h(Icon, { name: 'trash', size: 11 })),
+              characterPrompts.length > 0 && h('button', {
+                type: 'button',
+                className: 'nai5-btn xs',
+                onClick: () => setShowCharBoxes(s => !s)
+              }, h(Icon, { name: showCharBoxes ? 'chevronUp' : 'chevronDown', size: 11 }))
+            )
+          ),
+
+          characterPrompts.length === 0
+            ? h('div', { className: 'nai-ref-empty' },
+                `当前为单框模式。支持 NovelAI V5 最高 ${MAX_V5_CHARACTERS} 角色独立控制：选择上方快捷排布或点击「+ 添加」，即可在 2D 舞台拖拽坐标。`
+              )
+            : (showCharBoxes && h('div', { className: 'nai5-stage2d-wrap is-stacked' },
+                h('div', { style: { display: 'flex', justifyContent: 'center' } },
                   h(CharacterStage2D, {
                     characterPrompts,
                     width,
                     height,
                     onUpdateCoord: updateCharacterCoord2D
-                  }),
-                  h('div', { className: 'nai5-char-cards-grid' },
-                    characterPrompts.map((cp, idx) => {
-                      const color = CHAR_COLORS[idx % CHAR_COLORS.length];
-                      const letter = String.fromCharCode(65 + idx);
-                      return h('div', {
-                        key: cp.id || idx,
-                        style: {
-                          padding: '8px 10px',
-                          borderRadius: '8px',
-                          background: 'var(--fx-glass-input)',
-                          border: `1px solid ${color}55`,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: '6px'
-                        }
-                      },
-                        h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px', flexWrap: 'wrap' } },
-                          h('div', { style: { display: 'flex', alignItems: 'center', gap: '6px' } },
-                            h('span', {
-                              style: {
-                                width: '18px',
-                                height: '18px',
-                                borderRadius: '50%',
-                                background: color,
-                                color: '#fff',
-                                fontSize: '10.5px',
-                                fontWeight: 700,
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }
-                            }, letter),
-                            h('span', { style: { fontSize: '11.5px', fontWeight: 600, color: 'var(--fx-text-primary)' } }, `角色 ${letter}`),
-                            h('span', { style: { fontSize: '10.5px', color: 'var(--fx-text-secondary)', fontFamily: 'monospace' } },
-                              `X:${Number(cp.x).toFixed(2)} Y:${Number(cp.y).toFixed(2)}`
-                            )
-                          ),
-                          h('div', { style: { display: 'flex', alignItems: 'center', gap: '4px' } },
-                            ocPresets.length > 0 && h('select', {
-                              className: 'nai5-select',
-                              style: { width: '132px', padding: '2px 6px', fontSize: '10.5px' },
-                              value: '',
-                              onChange: (e) => {
-                                const oc = ocPresets.find(o => o.id === e.target.value);
-                                if (oc) {
-                                  updateCharacterBox(idx, 'prompt', oc.prompt);
-                                  showToast(`角色 ${letter} 已载入 ${oc.name}`);
-                                }
-                              }
-                            },
-                              h('option', { value: '' }, '快速填入 OC...'),
-                              ocPresets.map(o => h('option', { key: o.id, value: o.id }, o.name))
-                            ),
-                            h('button', {
-                              type: 'button',
-                              className: 'nai5-btn xs',
-                              title: '提升选中词权重',
-                              onClick: () => updateCharacterBox(idx, 'prompt', adjustPromptWeight(cp.prompt, charTextareaRefs.current[idx], 0.1))
-                            }, '+权'),
-                            h('button', {
-                              type: 'button',
-                              className: 'nai5-btn xs',
-                              title: '降低选中词权重',
-                              onClick: () => updateCharacterBox(idx, 'prompt', adjustPromptWeight(cp.prompt, charTextareaRefs.current[idx], -0.1))
-                            }, '-权'),
-                            h('button', {
-                              type: 'button',
-                              className: 'nai5-btn ghost xs',
-                              title: '移除该角色分框',
-                              onClick: () => removeCharacterBox(idx)
-                            }, h(Icon, { name: 'trash', size: 11 }))
+                  })
+                ),
+                h('div', { className: 'nai5-char-cards-stack' },
+                  characterPrompts.map((cp, idx) => {
+                    const color = CHAR_COLORS[idx % CHAR_COLORS.length];
+                    const letter = String.fromCharCode(65 + idx);
+                    return h('div', {
+                      key: cp.id || idx,
+                      style: {
+                        padding: '8px 10px',
+                        borderRadius: '8px',
+                        background: 'var(--fx-glass-input)',
+                        border: `1px solid ${color}55`,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '6px'
+                      }
+                    },
+                      h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px', flexWrap: 'wrap' } },
+                        h('div', { style: { display: 'flex', alignItems: 'center', gap: '6px' } },
+                          h('span', {
+                            style: {
+                              width: '18px',
+                              height: '18px',
+                              borderRadius: '50%',
+                              background: color,
+                              color: '#fff',
+                              fontSize: '10.5px',
+                              fontWeight: 700,
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }
+                          }, letter),
+                          h('span', { style: { fontSize: '11.5px', fontWeight: 600, color: 'var(--fx-text-primary)' } }, `角色 ${letter}`),
+                          h('span', { style: { fontSize: '10.5px', color: 'var(--fx-text-secondary)', fontFamily: 'monospace' } },
+                            `X:${Number(cp.x).toFixed(2)} Y:${Number(cp.y).toFixed(2)}`
                           )
                         ),
-                        h('textarea', {
-                          ref: el => { charTextareaRefs.current[idx] = el; },
-                          className: 'nai5-textarea',
-                          rows: 2,
-                          style: { minHeight: '42px', fontSize: '11px' },
-                          placeholder: `角色 ${letter} 外观、发型、服装与专属动作 (如 source#hug / target#hug)...`,
-                          value: cp.prompt,
-                          onChange: e => updateCharacterBox(idx, 'prompt', e.target.value)
-                        }),
-                        h('input', {
-                          type: 'text',
-                          className: 'nai5-input',
-                          style: { fontSize: '10.5px', padding: '4px 8px', color: 'var(--fx-text-secondary)' },
-                          placeholder: `角色 ${letter} 专属排他负向 UC (填入对方发色/瞳色特征防止串色)...`,
-                          value: cp.negativePrompt || '',
-                          onChange: e => updateCharacterBox(idx, 'negativePrompt', e.target.value)
-                        })
-                      );
-                    })
-                  )
-                ))
+                        h('div', { style: { display: 'flex', alignItems: 'center', gap: '4px' } },
+                          h('select', {
+                            className: 'nai5-select',
+                            style: { width: '126px', padding: '2px 6px', fontSize: '10.5px' },
+                            value: '',
+                            onChange: (e) => {
+                              const oc = ocPresets.find(o => o.id === e.target.value);
+                              if (oc) {
+                                updateCharacterBox(idx, 'prompt', oc.prompt);
+                                showToast(`角色 ${letter} 已载入 ${oc.name}`);
+                              }
+                            }
+                          },
+                            h('option', { value: '' }, ocPresets.length > 0 ? '填入 OC 预设...' : '未导入 OC 预设'),
+                            ocPresets.map(o => h('option', { key: o.id, value: o.id }, o.name))
+                          ),
+                          h('button', {
+                            type: 'button',
+                            className: 'nai5-btn xs',
+                            onClick: () => updateCharacterBox(idx, 'prompt', adjustPromptWeight(cp.prompt, charTextareaRefs.current[idx], 0.1))
+                          }, '+权'),
+                          h('button', {
+                            type: 'button',
+                            className: 'nai5-btn xs',
+                            onClick: () => updateCharacterBox(idx, 'prompt', adjustPromptWeight(cp.prompt, charTextareaRefs.current[idx], -0.1))
+                          }, '-权'),
+                          h('button', {
+                            type: 'button',
+                            className: 'nai5-btn ghost xs',
+                            onClick: () => removeCharacterBox(idx)
+                          }, h(Icon, { name: 'trash', size: 11 }))
+                        )
+                      ),
+                      h('textarea', {
+                        ref: el => { charTextareaRefs.current[idx] = el; },
+                        className: 'nai5-textarea',
+                        rows: 3,
+                        style: { minHeight: '54px', fontSize: '11.5px' },
+                        placeholder: `角色 ${letter} 外观、发型、服装与专属动作 (如 source#hug / target#hug)...`,
+                        value: cp.prompt,
+                        onChange: e => updateCharacterBox(idx, 'prompt', e.target.value)
+                      }),
+                      h('input', {
+                        type: 'text',
+                        className: 'nai5-input',
+                        style: { fontSize: '10.5px', padding: '4px 8px', color: 'var(--fx-text-secondary)' },
+                        placeholder: `角色 ${letter} 专属负向 UC (填入对方发色/特征防同构串色)...`,
+                        value: cp.negativePrompt || '',
+                        onChange: e => updateCharacterBox(idx, 'negativePrompt', e.target.value)
+                      })
+                    );
+                  })
+                )
+              ))
+        ),
+
+        h('div', { className: 'nai5-card', style: { flex: 'none' } },
+          h('div', { className: 'nai5-label-bar' },
+            h('span', { className: 'nai5-label-title' },
+              h(Icon, { name: 'palette', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
+              '参考图系统 (Vibe / V4.5 Precise)'
+            )
           ),
+          h(ReferencePanel, {
+            refTab,
+            setRefTab,
+            vibeReferences,
+            setVibeReferences,
+            preciseReferences,
+            setPreciseReferences,
+            onUseCurrentCanvas: handleUseCurrentCanvasAsRef
+          })
+        )
+      );
 
-          showStyleAndUc && h('div', {
-            className: 'nai5-v-splitter',
-            title: '上下拖拽调节「正向提示词」与「风格串/负向排他」区域高度占比（双击重置比例）',
-            onDoubleClick: () => setVertSplitRatio(1.05),
-            onMouseDown: (e) => {
-              e.preventDefault();
-              dragRef.current = {
-                mode: 'split_v',
-                startX: e.clientX,
-                startY: e.clientY,
-                origRatio: vertSplitRatio
-              };
-            }
-          }),
-
-          h('div', {
-            className: `nai5-card ${showStyleAndUc ? 'adaptive-flex' : ''}`,
-            style: showStyleAndUc ? { flex: vertSplitRatio, minHeight: '155px' } : { flex: 'none' }
-          },
-            h('div', { className: 'nai5-label-bar', style: { flexWrap: 'wrap' } },
-              h('span', { className: 'nai5-label-title' },
-                h(Icon, { name: 'code', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
-                '画风风格串 (stylePrompt) & 负向排他 (UC)',
-                showStyleAndUc && h('span', {
-                  style: {
-                    fontSize: '10px',
-                    fontWeight: 500,
-                    color: 'var(--fx-text-muted)',
-                    marginLeft: '4px'
-                  }
-                }, '· 可拖拽分栏 / 自适应拉伸')
-              ),
-              h('div', { style: { display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' } },
-                h('button', {
-                  type: 'button',
-                  className: `nai5-btn xs ${ucMode === 'safe' ? 'primary' : ''}`,
-                  onClick: () => { setUcMode('safe'); setNegativePrompt(UC_PRESETS.safe); }
-                }, 'Safe 全年龄'),
-                h('button', {
-                  type: 'button',
-                  className: `nai5-btn xs ${ucMode === 'standard' ? 'primary' : ''}`,
-                  onClick: () => { setUcMode('standard'); setNegativePrompt(UC_PRESETS.standard); }
-                }, '标准质量'),
-                h('button', {
-                  type: 'button',
-                  className: `nai5-btn xs ${ucMode === 'minimal' ? 'primary' : ''}`,
-                  onClick: () => { setUcMode('minimal'); setNegativePrompt(UC_PRESETS.minimal); }
-                }, '极简'),
-                h('button', {
-                  type: 'button',
-                  className: 'nai5-btn xs',
-                  title: showStyleAndUc ? '折叠风格串与负向词面板' : '展开风格串与负向词面板',
-                  onClick: () => setShowStyleAndUc(s => !s)
-                }, h(Icon, { name: showStyleAndUc ? 'chevronUp' : 'chevronDown', size: 11 }))
-              )
-            ),
-            showStyleAndUc && h('div', {
-              ref: splitRowRef,
-              className: 'nai5-split-row'
-            },
-              h('div', {
-                className: 'nai5-split-pane',
-                style: { width: `${styleSplitX}%`, flex: 'none' }
-              },
-                h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between' } },
-                  h('span', { style: { fontSize: '10.5px', fontWeight: 600, color: 'var(--fx-text-secondary)' } }, '画风风格串 (Style Prompt)'),
-                  h('button', {
-                    type: 'button',
-                    className: 'nai5-btn ghost xs',
-                    style: { padding: '1px 5px', fontSize: '10px' },
-                    title: '复制画风风格串',
-                    onClick: () => copyToClipboard(stylePrompt, '画风风格串')
-                  }, h(Icon, { name: 'copy', size: 10 }))
-                ),
-                h('textarea', {
-                  className: 'nai5-textarea',
-                  rows: 3,
-                  style: { fontSize: '11px', flex: 1, minHeight: '90px' },
-                  placeholder: '可选画师标签与笔触质感词（例如 <style> clean lineart, cel shading </style>）...',
-                  value: stylePrompt,
-                  onChange: e => setStylePrompt(e.target.value)
-                })
-              ),
-
-              h('div', {
-                className: 'nai5-h-splitter',
-                title: '左右拖拽调节「风格串」与「负向提示词」宽度占比（双击恢复 50:50）',
-                onDoubleClick: () => setStyleSplitX(50),
-                onMouseDown: (e) => {
-                  e.preventDefault();
-                  const rowW = splitRowRef.current ? splitRowRef.current.clientWidth : 520;
-                  dragRef.current = {
-                    mode: 'split_h',
-                    startX: e.clientX,
-                    startY: e.clientY,
-                    rowW,
-                    origPct: styleSplitX
-                  };
+      // ---------- Left Inspector Tab 3: Params & DSH Bridge Locks ----------
+      const renderParamsAndBridgeTab = () => h(React.Fragment, null,
+        h('div', { className: 'nai5-card', style: { flex: 'none' } },
+          h('div', { className: 'nai5-label-bar' },
+            h('span', { className: 'nai5-label-title' }, '模型 · 生成档位 · 高级特性')
+          ),
+          h('div', { style: { display: 'grid', gridTemplateColumns: '1.25fr 1fr', gap: '8px' } },
+            h('select', {
+              className: 'nai5-select',
+              style: { padding: '5px 8px', fontSize: '11px' },
+              value: model,
+              onChange: (e) => {
+                const nextM = e.target.value;
+                setModel(nextM);
+                if (nextM.includes('-medium')) {
+                  setEffort('medium');
+                  setSteps(14);
+                } else if (effort === 'medium') {
+                  setEffort('high');
+                  setSteps(28);
                 }
-              }),
-
-              h('div', {
-                className: 'nai5-split-pane',
-                style: { flex: 1 }
-              },
-                h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between' } },
-                  h('span', { style: { fontSize: '10.5px', fontWeight: 600, color: 'var(--fx-text-secondary)' } }, '全局负向提示词 (Negative UC)'),
-                  h('button', {
-                    type: 'button',
-                    className: 'nai5-btn ghost xs',
-                    style: { padding: '1px 5px', fontSize: '10px' },
-                    title: '复制全局负向提示词',
-                    onClick: () => copyToClipboard(negativePrompt, '全局负向提示词')
-                  }, h(Icon, { name: 'copy', size: 10 }))
-                ),
-                h('textarea', {
-                  className: 'nai5-textarea',
-                  rows: 3,
-                  style: { fontSize: '11px', flex: 1, minHeight: '90px' },
-                  placeholder: '输入全局负向排他词 (Undesired Content)...',
-                  value: negativePrompt,
-                  onChange: e => setNegativePrompt(e.target.value)
-                })
-              )
+              }
+            },
+              h('option', { value: 'nai-diffusion-5-full' }, 'NAI V5 Full (主力旗舰)'),
+              h('option', { value: 'nai-diffusion-5-full-medium' }, 'NAI V5 Medium (轻量快出)'),
+              h('option', { value: 'nai-diffusion-4-5-full' }, 'NAI V4.5 Full')
+            ),
+            h('div', { style: { display: 'inline-flex', gap: '4px' } },
+              h('button', {
+                type: 'button',
+                className: `nai5-btn xs ${effort === 'medium' ? 'primary' : ''}`,
+                style: { flex: 1 },
+                title: '14 步极速生成（轻量无负向）',
+                onClick: () => {
+                  setEffort('medium');
+                  setSteps(14);
+                  setModel('nai-diffusion-5-full-medium');
+                }
+              }, '极速 14'),
+              h('button', {
+                type: 'button',
+                className: `nai5-btn xs ${effort !== 'medium' && Number(steps) < 45 ? 'primary' : ''}`,
+                style: { flex: 1 },
+                title: '28 步标准高质（Opus 小图免费额度适用）',
+                onClick: () => {
+                  setEffort('high');
+                  if (model.includes('-medium')) setModel('nai-diffusion-5-full');
+                  setSteps(28);
+                }
+              }, '高质 28'),
+              h('button', {
+                type: 'button',
+                className: `nai5-btn xs ${effort !== 'medium' && Number(steps) >= 45 ? 'primary' : ''}`,
+                style: { flex: 1 },
+                title: '50 步超高精细度渲染（复杂结构/光影极致打磨）',
+                onClick: () => {
+                  setEffort('high');
+                  if (model.includes('-medium')) setModel('nai-diffusion-5-full');
+                  setSteps(50);
+                }
+              }, '超高 50')
+            )
+          ),
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', marginTop: '2px' } },
+            h('button', {
+              type: 'button',
+              className: `nai5-btn xs ${variety ? 'primary' : ''}`,
+              title: 'Variety+ 多样性增强 (skip_cfg_above_sigma=58)',
+              onClick: () => setVariety(v => !v)
+            }, 'Variety+ 多样性'),
+            h('button', {
+              type: 'button',
+              className: `nai5-btn xs ${transparentBackground ? 'primary' : ''}`,
+              title: 'NAI V5 直出透明背景 (Straight Alpha)',
+              onClick: () => setTransparentBackground(v => !v)
+            }, '透明 Alpha 背景'),
+            h('div', { style: { flex: 1 } }),
+            h('span', { style: { fontSize: '10.5px', color: 'var(--fx-text-secondary)' } }, '批量'),
+            [1, 2, 4].map(cnt =>
+              h('button', {
+                key: cnt,
+                type: 'button',
+                className: `nai5-btn xs ${batchCount === cnt ? 'primary' : ''}`,
+                onClick: () => setBatchCount(cnt)
+              }, `${cnt}×`)
             )
           )
         ),
 
+        h('div', { className: 'nai5-card', style: { flex: 'none' } },
+          h('div', { className: 'nai5-label-bar' },
+            h('span', { className: 'nai5-label-title' }, '采样精度 · 分辨率微调 · Seed')
+          ),
+          h('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '6px', alignItems: 'center' } },
+            h('label', { style: { display: 'flex', alignItems: 'center', gap: '5px', fontSize: '10.5px', color: 'var(--fx-text-secondary)' } },
+              'W',
+              h('input', {
+                type: 'number',
+                className: 'nai5-input',
+                style: { flex: 1, fontSize: '11px', padding: '4px 7px' },
+                step: 64, min: 64, max: 2048,
+                value: width,
+                onChange: e => { setWidth(Number(e.target.value) || 832); setPixelTier('custom'); }
+              })
+            ),
+            h('label', { style: { display: 'flex', alignItems: 'center', gap: '5px', fontSize: '10.5px', color: 'var(--fx-text-secondary)' } },
+              'H',
+              h('input', {
+                type: 'number',
+                className: 'nai5-input',
+                style: { flex: 1, fontSize: '11px', padding: '4px 7px' },
+                step: 64, min: 64, max: 2048,
+                value: height,
+                onChange: e => { setHeight(Number(e.target.value) || 1216); setPixelTier('custom'); }
+              })
+            ),
+            h('button', { type: 'button', className: 'nai5-btn xs', onClick: swapDimensions }, '⇄')
+          ),
+
+          h('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '4px' } },
+            h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
+              h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '10.5px', color: 'var(--fx-text-secondary)' } },
+                h('span', null, '步数 Steps'),
+                h('div', { style: { display: 'inline-flex', alignItems: 'center', gap: '4px' } },
+                  [14, 28, 50].map(st =>
+                    h('button', {
+                      key: st,
+                      type: 'button',
+                      className: `nai5-btn xs ${Number(steps) === st ? 'primary' : 'ghost'}`,
+                      style: { padding: '1px 5px', fontSize: '10px' },
+                      onClick: () => {
+                        setSteps(st);
+                        if (st === 14) {
+                          setEffort('medium');
+                          setModel('nai-diffusion-5-full-medium');
+                        } else {
+                          setEffort('high');
+                          if (model.includes('-medium')) setModel('nai-diffusion-5-full');
+                        }
+                      }
+                    }, st)
+                  ),
+                  h('strong', { style: { color: 'var(--fx-text-primary)', marginLeft: '2px' } }, steps)
+                )
+              ),
+              h('input', { type: 'range', className: 'nai5-slider', min: 1, max: 50, value: steps, onChange: e => setSteps(Number(e.target.value)) })
+            ),
+            h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
+              h('div', { style: { display: 'flex', justifyContent: 'space-between', fontSize: '10.5px', color: 'var(--fx-text-secondary)' } },
+                h('span', null, '引导 CFG'),
+                h('strong', { style: { color: 'var(--fx-text-primary)' } }, cfgScale)
+              ),
+              h('input', { type: 'range', className: 'nai5-slider', min: 1, max: 10, step: 0.5, value: cfgScale, onChange: e => setCfgScale(Number(e.target.value)) })
+            )
+          ),
+
+          h('div', { style: { display: 'grid', gridTemplateColumns: '1.1fr 0.9fr 1fr', gap: '6px', alignItems: 'center', marginTop: '4px' } },
+            h('select', {
+              className: 'nai5-select',
+              style: { padding: '4px 7px', fontSize: '11px' },
+              value: sampler,
+              onChange: e => setSampler(e.target.value)
+            },
+              h('option', { value: 'k_euler_ancestral' }, 'Euler Ancestral'),
+              h('option', { value: 'k_euler' }, 'Euler'),
+              h('option', { value: 'k_dpmpp_2s_ancestral' }, 'DPM++ 2S A'),
+              h('option', { value: 'k_dpmpp_2m' }, 'DPM++ 2M'),
+              h('option', { value: 'k_dpmpp_sde' }, 'DPM++ SDE'),
+              h('option', { value: 'ddim' }, 'DDIM')
+            ),
+            h('select', {
+              className: 'nai5-select',
+              style: { padding: '4px 7px', fontSize: '11px' },
+              value: noiseSchedule,
+              onChange: e => setNoiseSchedule(e.target.value)
+            },
+              h('option', { value: 'karras' }, 'Karras'),
+              h('option', { value: 'exponential' }, 'Exponential'),
+              h('option', { value: 'polyexponential' }, 'Polyexp'),
+              h('option', { value: 'native' }, 'Native')
+            ),
+            h('div', { style: { display: 'flex', flexDirection: 'column', gap: '3px' } },
+              h('div', { style: { display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--fx-text-secondary)' } },
+                h('span', null, 'Rescale'),
+                h('span', { style: { color: 'var(--fx-text-primary)' } }, Number(cfgRescale).toFixed(2))
+              ),
+              h('input', { type: 'range', className: 'nai5-slider', min: 0, max: 1, step: 0.05, value: cfgRescale, onChange: e => setCfgRescale(Number(e.target.value)) })
+            )
+          ),
+
+          h('div', { style: { display: 'flex', gap: '6px', alignItems: 'center', marginTop: '4px', flexWrap: 'wrap' } },
+            h('button', {
+              type: 'button',
+              className: `nai5-btn xs ${seedMode === 'random' ? 'primary' : ''}`,
+              onClick: () => { setSeedMode('random'); setSeed(''); }
+            }, h(Icon, { name: 'dice', size: 12 }), '随机'),
+            h('button', {
+              type: 'button',
+              className: `nai5-btn xs ${seedMode === 'fixed' ? 'primary' : ''}`,
+              onClick: () => {
+                setSeedMode('fixed');
+                if (!seed) setSeed(latestImage?.seed || Math.floor(Math.random() * 4294967295));
+              }
+            }, h(Icon, { name: 'lock', size: 12 }), '固定'),
+            seedMode === 'fixed' && h('input', {
+              type: 'number',
+              className: 'nai5-input',
+              style: { flex: 1, minWidth: '100px', padding: '4px 8px', fontSize: '11px', fontFamily: 'monospace' },
+              placeholder: '输入固定 Seed...',
+              value: seed,
+              onChange: e => setSeed(e.target.value)
+            }),
+            latestImage?.seed && h('button', {
+              type: 'button',
+              className: 'nai5-btn xs',
+              onClick: () => {
+                setSeedMode('fixed');
+                setSeed(latestImage.seed);
+                showToast(`已锁定 Seed: ${latestImage.seed}`);
+              }
+            }, '锁定上张 Seed')
+          )
+        ),
+
+        // DSH Bridge Controls (Cleanly housed inside Settings tab!)
+        h('div', { className: 'nai5-card', style: { flex: 'none' } },
+          h('div', { className: 'nai5-label-bar' },
+            h('span', { className: 'nai5-label-title' },
+              h(Icon, { name: bridgeLocks.enabled ? 'lock' : 'unlock', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
+              'DSH 对话双向硬件协同'
+            ),
+            h('button', {
+              type: 'button',
+              className: `nai5-btn xs ${bridgeLocks.enabled ? 'primary' : ''}`,
+              onClick: () => toggleBridgeLock('enabled')
+            }, bridgeLocks.enabled ? '🔗 硬件锁已开启' : '🔓 硬件锁已关闭')
+          ),
+          bridgeLocks.enabled && h('div', { style: { display: 'flex', alignItems: 'center', gap: '5px', flexWrap: 'wrap' } },
+            h('span', {
+              className: `nai5-lock-chip ${bridgeLocks.lockStyle ? 'active' : ''}`,
+              onClick: () => toggleBridgeLock('lockStyle')
+            }, bridgeLocks.lockStyle ? '✓ 锁画风' : '锁画风'),
+            h('span', {
+              className: `nai5-lock-chip ${bridgeLocks.lockAspect ? 'active' : ''}`,
+              onClick: () => toggleBridgeLock('lockAspect')
+            }, bridgeLocks.lockAspect ? `✓ 锁画幅(${width}×${height})` : '锁画幅'),
+            h('span', {
+              className: `nai5-lock-chip ${bridgeLocks.lockSeed ? 'active' : ''}`,
+              onClick: () => {
+                if (!bridgeLocks.lockSeed && seedMode !== 'fixed') {
+                  setSeedMode('fixed');
+                  if (!seed && latestImage?.seed) setSeed(latestImage.seed);
+                }
+                toggleBridgeLock('lockSeed');
+              }
+            }, bridgeLocks.lockSeed ? '✓ 锁Seed' : '锁Seed'),
+            h('span', {
+              className: `nai5-lock-chip ${bridgeLocks.lockChars2D ? 'active' : ''}`,
+              onClick: () => toggleBridgeLock('lockChars2D')
+            }, bridgeLocks.lockChars2D ? `✓ 锁2D站位(${characterPrompts.length}人)` : '锁2D站位'),
+            h('span', {
+              className: `nai5-lock-chip ${bridgeLocks.lockRatingUc ? 'active' : ''}`,
+              onClick: () => toggleBridgeLock('lockRatingUc')
+            }, bridgeLocks.lockRatingUc ? '✓ 锁负向UC' : '锁负向UC')
+          ),
+          h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap', marginTop: '4px' } },
+            h('span', {
+              className: `nai5-lock-chip ${autoMirrorAgent ? 'active' : ''}`,
+              onClick: () => setAutoMirrorAgent(m => !m)
+            }, autoMirrorAgent ? '⚡ 自动镜像对话出图' : '○ 暂停自动镜像'),
+            h('button', {
+              type: 'button',
+              className: 'nai5-btn primary xs',
+              onClick: () => sendToChatComposer(null)
+            }, '💬 推送当前配方至对话')
+          )
+        )
+      );
+
+      // ---------- Main Split Return: Left Inspector + Resizer + Right Hero Stage ----------
+      return h('div', {
+        ref: workbenchBodyRef,
+        className: 'nai5-workbench-body',
+        onDragOver: handleDragOverImage,
+        onDrop: handleDropImage
+      },
+        // LEFT COLUMN: 3-Layer Creation Inspector
+        h('aside', {
+          className: 'nai5-inspector',
+          style: { width: `${mainColSplitX}%`, flex: 'none' }
+        },
+          // Layer 1: Pinned Sub-Tab Bar
+          h('div', { className: 'nai5-inspector-tabs' },
+            h('button', {
+              type: 'button',
+              className: `nai5-insp-tab ${inspectorTab === 'prompt' ? 'active' : ''}`,
+              onClick: () => setInspectorTab('prompt')
+            }, '✦ 提示词'),
+            h('button', {
+              type: 'button',
+              className: `nai5-insp-tab ${inspectorTab === 'chars' ? 'active' : ''}`,
+              onClick: () => setInspectorTab('chars')
+            },
+              '◎ 角色与参考',
+              totalCharAndRefs > 0 && h('span', { className: 'nai5-tab-badge' }, totalCharAndRefs)
+            ),
+            h('button', {
+              type: 'button',
+              className: `nai5-insp-tab ${inspectorTab === 'params' ? 'active' : ''}`,
+              onClick: () => setInspectorTab('params')
+            },
+              '⚙ 参数与协同',
+              bridgeLocks.enabled && h('span', { className: 'nai5-tab-dot', title: 'DSH 对话硬件锁已启用' })
+            )
+          ),
+
+          // Layer 2: Scrollable Content Area (flex: 1, zero overlap)
+          h('div', { className: 'nai5-inspector-scroll' },
+            inspectorTab === 'prompt' && renderPromptTab(),
+            inspectorTab === 'chars' && renderCharsAndRefsTab(),
+            inspectorTab === 'params' && renderParamsAndBridgeTab()
+          ),
+
+          // Layer 3: Pinned Sticky Footer (Quick Status Chips + Generate CTA)
+          h('div', { className: 'nai5-inspector-footer' },
+            h('div', { className: 'nai5-quick-chips' },
+              h('button', {
+                type: 'button',
+                className: `nai5-status-chip ${effort !== 'medium' && Number(steps) >= 45 ? 'is-accent' : ''}`,
+                title: '点击循环切换：极速 14 → 高质 28 → 超高 50',
+                onClick: toggleQuickEffort
+              }, effort === 'medium' ? '🐇 极速 14' : (Number(steps) >= 45 ? `💎 超高 ${steps}` : `⚡ 高质 ${steps}`)),
+              h('button', {
+                type: 'button',
+                className: 'nai5-status-chip',
+                title: '点击在 参数与协同 标签精确调整分辨率',
+                onClick: () => setInspectorTab('params')
+              }, `${width}×${height}`),
+              h('button', {
+                type: 'button',
+                className: `nai5-status-chip ${seedMode === 'fixed' ? 'is-accent' : ''}`,
+                title: '点击快速切换 随机 / 固定 Seed',
+                onClick: () => {
+                  if (seedMode === 'random') {
+                    setSeedMode('fixed');
+                    if (!seed) setSeed(latestImage?.seed || Math.floor(Math.random() * 4294967295));
+                  } else {
+                    setSeedMode('random');
+                  }
+                }
+              }, seedMode === 'fixed' ? `🔒 #${seed || '固定'}` : '🎲 随机'),
+              genMode === 'txt2img' && h('button', {
+                type: 'button',
+                className: `nai5-status-chip ${batchCount > 1 ? 'is-accent' : ''}`,
+                title: '点击循环切换生成张数 (1× / 2× / 4×)',
+                onClick: cycleBatchCount
+              }, `${batchCount}× 连出`),
+              (vibeReferences.length + preciseReferences.length > 0) && h('button', {
+                type: 'button',
+                className: 'nai5-status-chip is-accent',
+                onClick: () => setInspectorTab('chars')
+              }, `参考×${vibeReferences.length + preciseReferences.length}`)
+            ),
+            h('button', {
+              type: 'button',
+              className: 'nai5-btn primary nai5-generate-cta',
+              disabled: isGenerating,
+              onClick: handleGenerate
+            },
+              h('span', { style: { display: 'inline-flex', alignItems: 'center', gap: '7px' } },
+                h(Icon, { name: 'sparkles', size: 15 }),
+                isGenerating
+                  ? '正在直连渲染并归档...'
+                  : (genMode === 'inpaint'
+                      ? '立即局部重绘 (Inpaint)'
+                      : genMode === 'img2img'
+                        ? '立即图生图 (Img2Img)'
+                        : (batchCount > 1 ? `立即连续生成 ${batchCount} 张` : '立即生成图像'))
+              ),
+              h('span', {
+                className: `nai5-cta-cost ${costInfo.free ? 'free' : ''}`
+              }, costInfo.label)
+            )
+          )
+        ),
+
+        // SPLITTER
         h('div', {
           className: 'nai5-main-col-splitter',
-          title: '左右拖拽调节工作台左栏与右栏宽度比例（双击恢复 57:43）',
-          onDoubleClick: () => setMainColSplitX(57),
+          title: '左右拖拽调节工作台分栏宽度（双击恢复 41:59）',
+          onDoubleClick: () => setMainColSplitX(41),
           onMouseDown: (e) => {
             e.preventDefault();
             const bodyW = workbenchBodyRef.current ? workbenchBodyRef.current.clientWidth : 1160;
@@ -5241,94 +8091,190 @@ window.__ModuleLoader__.load({
           }
         }),
 
-        h('div', { className: 'nai5-col-right' },
-          h('div', { className: 'nai5-card preview-card' },
-            h('div', { className: 'nai5-label-bar', style: { flex: 'none' } },
-              h('span', { className: 'nai5-label-title' },
-                h(Icon, { name: 'eye', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
-                '实时舞台预览'
-              ),
-              latestImage && h('span', { style: { fontSize: '10.5px', color: 'var(--fx-text-secondary)', fontFamily: 'monospace' } },
-                `Seed: ${latestImage.seed}`
+        // RIGHT COLUMN: Expansive Hero Canvas Stage
+        h('main', { className: 'nai5-stage-col' },
+          // Row 1: Top Mode HUD + Seed / Compare HUD
+          h('div', { className: 'nai5-stage-hud' },
+            h('div', { className: 'nai-seg-mini' },
+              [
+                { id: 'txt2img', label: '文生图' },
+                { id: 'img2img', label: '图生图' },
+                { id: 'inpaint', label: '局部重绘' }
+              ].map(m =>
+                h('button', {
+                  key: m.id,
+                  type: 'button',
+                  className: `nai-seg-mini-btn ${genMode === m.id ? 'active' : ''}`,
+                  onClick: () => setGenMode(m.id)
+                }, m.label)
               )
             ),
-            h('div', { className: 'nai5-preview-stage' },
+            h('div', { style: { display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 } },
+              compareBeforeItem && latestImage && genMode !== 'inpaint' && h('button', {
+                type: 'button',
+                className: `nai5-btn xs ${compareActive ? 'primary' : ''}`,
+                onClick: () => setCompareActive(v => !v)
+              }, compareActive ? '退出 A/B 对比' : 'A/B 对比'),
               latestImage
-                ? h('img', {
-                    src: latestFullUrl,
-                    className: 'nai5-preview-img',
-                    draggable: true,
-                    onDragStart: (e) => handleDragStart(e, latestImage),
+                ? h('button', {
+                    type: 'button',
+                    className: 'nai5-btn xs',
+                    title: '点击锁定并复制此成品 Seed',
                     onClick: () => {
-                      setPreviewIndex(null);
-                      setPreviewCustomItem(latestImage);
-                      resetZoom();
+                      setSeedMode('fixed');
+                      setSeed(latestImage.seed);
+                      copyToClipboard(String(latestImage.seed || ''), `Seed: ${latestImage.seed}`);
                     }
-                  })
-                : h('div', {
-                    style: {
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '8px',
-                      color: 'var(--fx-text-muted)',
-                      fontSize: '11.5px'
-                    }
-                  },
-                    h(Icon, { name: 'sparkles', size: 24, style: { opacity: 0.4 } }),
-                    h('span', null, `${width} × ${height} (${aspectRatio})`),
-                    h('span', { style: { fontSize: '10.5px' } }, '点击下方按钮生成作品')
-                  )
-            ),
-            latestImage && h('div', {
-              style: {
-                display: 'grid',
-                gridTemplateColumns: 'repeat(5, 1fr)',
-                gap: '5px',
-                flex: 'none'
-              }
-            },
-              h('button', {
-                type: 'button',
-                className: 'nai5-btn xs',
-                onClick: () => {
-                  setPreviewIndex(null);
-                  setPreviewCustomItem(latestImage);
-                  resetZoom();
+                  }, `${latestImage.width || width}×${latestImage.height || height} · #${latestImage.seed}`)
+                : h('span', { className: 'nai-drop-hint' }, '📥 支持直接拖入 PNG 读取配方')
+            )
+          ),
+
+          // Row 2: Contextual Sub-Bar (ONLY shown when img2img or inpaint is active)
+          (genMode === 'img2img' || genMode === 'inpaint') && h('div', { className: 'nai5-stage-subbar' },
+            sourceImagePreviewUrl && h('img', {
+              src: sourceImagePreviewUrl,
+              style: { width: '32px', height: '32px', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--fx-border-card)', flex: 'none' }
+            }),
+            h('button', {
+              type: 'button',
+              className: 'nai5-btn xs',
+              onClick: () => modeFileRef.current && modeFileRef.current.click()
+            }, sourceImage ? '换底图' : '选择底图'),
+            latestImage && h('button', {
+              type: 'button',
+              className: 'nai5-btn xs',
+              onClick: () => {
+                const p = latestImage.source_path || latestImage.filePath;
+                if (p) {
+                  setSourceImage(p);
+                  setSourceImagePreviewUrl(getImageUrl(p, false));
                 }
-              }, h(Icon, { name: 'maximize', size: 11 }), '灯箱大图'),
-              h('button', {
-                type: 'button',
-                className: 'nai5-btn primary xs',
-                title: '将此图配方与 Seed 送回 DSH 聊天框继续演进',
-                onClick: () => sendToChatComposer(latestImage)
-              }, '💬 送入对话'),
-              h('button', {
-                type: 'button',
-                className: 'nai5-btn xs',
-                onClick: () => handleForkToWorkbench(latestImage)
-              }, h(Icon, { name: 'zap', size: 11 }), '回灌配方'),
-              h('button', {
-                type: 'button',
-                className: 'nai5-btn xs',
-                onClick: () => copyImageToClipboard(latestImage.source_path || latestImage.filePath)
-              }, h(Icon, { name: 'copy', size: 11 }), '复制图片'),
-              h('button', {
-                type: 'button',
-                className: 'nai5-btn xs',
-                onClick: () => handleRevealInExplorer(latestImage.source_path || latestImage.filePath)
-              }, h(Icon, { name: 'folder', size: 11 }), '定位')
-            ),
-            history.length > 0 && h('div', { className: 'nai5-filmstrip' },
-              history.slice(0, 12).map((item, i) => {
+              }
+            }, '用当前图'),
+            h('input', {
+              ref: modeFileRef,
+              type: 'file',
+              accept: 'image/png,image/jpeg,image/webp',
+              style: { display: 'none' },
+              onChange: (e) => {
+                const file = e.target.files && e.target.files[0];
+                if (!file) return;
+                const r = new FileReader();
+                r.onload = () => typeof r.result === 'string' && handleUploadSourceImage(r.result);
+                r.readAsDataURL(file);
+                e.target.value = '';
+              }
+            }),
+            genMode === 'img2img'
+              ? h(React.Fragment, null,
+                  h('label', { className: 'nai-subbar-slider' },
+                    h('span', null, `强度 ${Number(i2iStrength).toFixed(2)}`),
+                    h('input', { type: 'range', className: 'nai5-slider', min: 0.05, max: 0.95, step: 0.05, value: i2iStrength, onChange: e => setI2iStrength(Number(e.target.value)) })
+                  ),
+                  h('label', { className: 'nai-subbar-slider' },
+                    h('span', null, `噪点 ${Number(i2iNoise).toFixed(2)}`),
+                    h('input', { type: 'range', className: 'nai5-slider', min: 0, max: 0.5, step: 0.05, value: i2iNoise, onChange: e => setI2iNoise(Number(e.target.value)) })
+                  )
+                )
+              : h(React.Fragment, null,
+                  h('label', { className: 'nai-subbar-slider' },
+                    h('span', null, `融合强度 ${Number(inpaintStrength).toFixed(2)}`),
+                    h('input', { type: 'range', className: 'nai5-slider', min: 0.1, max: 1, step: 0.05, value: inpaintStrength, onChange: e => setInpaintStrength(Number(e.target.value)) })
+                  ),
+                  h('label', { style: { display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: 'var(--fx-text-secondary)', cursor: 'pointer' } },
+                    h('input', { type: 'checkbox', checked: Boolean(colorCorrect), onChange: e => setColorCorrect(e.target.checked) }),
+                    '色彩校正'
+                  )
+                )
+          ),
+
+          // Row 3: Expansive Hero Canvas Viewport
+          h('div', { className: 'nai5-stage-viewport' },
+            genMode === 'inpaint'
+              ? h(InpaintMaskEditor, {
+                  sourceImageUrl: sourceImagePreviewUrl,
+                  width,
+                  height,
+                  onChangeMask: setInpaintMask,
+                  onUploadSource: handleUploadSourceImage,
+                  onClearSource: () => {
+                    setSourceImage('');
+                    setSourceImagePreviewUrl('');
+                    setInpaintMask('');
+                    setGenMode('txt2img');
+                  }
+                })
+              : (compareActive && compareBeforeItem && latestFullUrl
+                  ? h(CompareSlider, {
+                      beforeUrl: getImageUrl(compareBeforeItem.source_path || compareBeforeItem.filePath, false),
+                      afterUrl: latestFullUrl,
+                      beforeLabel: '处理前',
+                      afterLabel: '成图'
+                    })
+                  : (latestImage
+                      ? h('img', {
+                          src: latestFullUrl,
+                          className: 'nai5-stage-img',
+                          draggable: true,
+                          onDragStart: (e) => handleDragStart(e, latestImage),
+                          onClick: () => {
+                            setPreviewIndex(null);
+                            setPreviewCustomItem(latestImage);
+                            resetZoom();
+                          }
+                        })
+                      : h('div', { className: 'nai5-stage-empty' },
+                          h(Icon, { name: 'maple', size: 30, style: { color: 'var(--fx-crimson-soft)', opacity: 0.72 } }),
+                          h('div', { style: { fontSize: '13.5px', fontWeight: 700, color: 'var(--fx-text-primary)', letterSpacing: '0.02em' } }, `${width} × ${height} (${aspectRatio})`),
+                          h('div', { style: { fontSize: '11.5px', color: 'var(--fx-text-secondary)', maxWidth: '300px', lineHeight: 1.55 } }, '在左侧编织提示词后点击下方「立即生成图像」，或直接拖入 PNG 自动解析配方')
+                        ))),
+
+            isBusyAny && h('div', { className: 'nai5-stage-loading' },
+              h(Icon, { name: 'sparkles', size: 14, style: { color: 'var(--fx-crimson-soft)' } }),
+              h('span', null, busyPostAction ? '正在执行后处理引擎...' : 'NovelAI 极速渲染与归档中...')
+            )
+          ),
+
+          // Row 4: Single-Row Glass Action Dock (Upward Popovers)
+          latestImage && h(PostProcessToolbar, {
+            hasImage: Boolean(latestImage),
+            isFavorite: Boolean(latestImage?.isFavorite),
+            busyAction: busyPostAction,
+            onUpscale: (scale) => handleUpscale(latestImage, scale),
+            onDirector: (opts) => handleDirector(latestImage, opts),
+            onSendToChat: () => sendToChatComposer(latestImage),
+            onForkToWorkbench: () => handleForkToWorkbench(latestImage),
+            onSendToImg2Img: () => handleSendToImg2Img(latestImage),
+            onSendToInpaint: () => handleSendToInpaint(latestImage),
+            onToggleFavorite: onToggleFavorite ? () => onToggleFavorite(latestImage.source_path || latestImage.filePath) : null,
+            onCopyImage: () => copyImageToClipboard(latestImage.source_path || latestImage.filePath),
+            onReveal: () => handleRevealInExplorer(latestImage.source_path || latestImage.filePath),
+            onOpenLightbox: () => {
+              setPreviewIndex(null);
+              setPreviewCustomItem(latestImage);
+              resetZoom();
+            }
+          }),
+
+          // Row 5: Collapsible Bottom Filmstrip
+          history.length > 0 && h('div', { className: 'nai5-filmstrip-wrap' },
+            h('button', {
+              type: 'button',
+              className: 'nai5-film-toggle',
+              title: showFilmstrip ? '收起底部历史缩略图以获得最大画布视野' : '展开最近生成历史',
+              onClick: () => setShowFilmstrip(v => !v)
+            }, showFilmstrip ? '▾' : `▸ 近期 (${Math.min(16, history.length)})`),
+            showFilmstrip && h('div', { className: 'nai5-filmstrip' },
+              history.slice(0, 16).map((item, i) => {
                 const p = item.source_path || item.filePath;
                 const isCur = latestImage && (latestImage.source_path || latestImage.filePath) === p;
                 return h('img', {
                   key: p || i,
                   src: getImageUrl(p, true),
                   className: `nai5-film-thumb ${isCur ? 'active' : ''}`,
-                  title: `点击预览 · 双击打开大图 (Seed: ${item.seed})`,
-                  onClick: () => setLatestImage(item),
+                  title: `点击切换画布预览 · 双击灯箱看大图 (Seed: ${item.seed})`,
+                  onClick: () => { setCompareActive(false); setLatestImage(item); },
                   onDoubleClick: () => {
                     setPreviewCustomItem(null);
                     setPreviewIndex(i);
@@ -5337,195 +8283,6 @@ window.__ModuleLoader__.load({
                 });
               })
             )
-          ),
-
-          h('div', { className: 'nai5-params-grid' },
-            h('div', { className: 'nai5-card' },
-              h('div', { className: 'nai5-label-bar' },
-                h('span', { className: 'nai5-label-title' }, '画幅比例与分辨率'),
-                h('span', { style: { fontSize: '11px', color: 'var(--fx-crimson-soft)', fontFamily: 'monospace' } },
-                  `${width} × ${height} (${(width * height / (1024 * 1024)).toFixed(2)} MP)`
-                )
-              ),
-              h('div', { className: 'nai5-ratio-grid' },
-                [
-                  { r: '2:3', label: '2:3 竖', w: 10, h: 14 },
-                  { r: '3:2', label: '3:2 横', w: 14, h: 10 },
-                  { r: '1:1', label: '1:1 方', w: 12, h: 12 },
-                  { r: '9:16', label: '9:16 屏', w: 8, h: 14 },
-                  { r: '16:9', label: '16:9 宽', w: 15, h: 9 }
-                ].map(item =>
-                  h('button', {
-                    key: item.r,
-                    type: 'button',
-                    className: `nai5-ratio-pill ${aspectRatio === item.r ? 'active' : ''}`,
-                    onClick: () => handleRatioChange(item.r)
-                  },
-                    h('span', {
-                      style: {
-                        width: `${item.w}px`,
-                        height: `${item.h}px`,
-                        border: '1.5px solid currentColor',
-                        borderRadius: '2px',
-                        display: 'inline-block'
-                      }
-                    }),
-                    h('span', null, item.label)
-                  )
-                )
-              ),
-              h('div', { style: { display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr', gap: '6px', marginTop: '2px' } },
-                h('select', {
-                  className: 'nai5-select',
-                  style: { padding: '5px 8px', fontSize: '11px' },
-                  value: pixelTier,
-                  onChange: e => handleTierChange(e.target.value === 'custom' ? 'custom' : Number(e.target.value))
-                },
-                  h('option', { value: 0.4 }, '0.4 MP 小图'),
-                  h('option', { value: 1 }, '1.0 MP 标准'),
-                  h('option', { value: 1.5 }, '1.5 MP 大图'),
-                  h('option', { value: 2 }, '2.0 MP 超清'),
-                  h('option', { value: 3 }, '3.0 MP 极限'),
-                  h('option', { value: 'custom' }, '自定义尺寸')
-                ),
-                h('input', {
-                  type: 'number',
-                  className: 'nai5-input',
-                  style: { fontSize: '11px', padding: '5px 8px' },
-                  step: 64, min: 64, max: 3072,
-                  value: width,
-                  title: '宽度 (W)',
-                  onChange: e => { setWidth(Number(e.target.value) || 832); setPixelTier('custom'); }
-                }),
-                h('input', {
-                  type: 'number',
-                  className: 'nai5-input',
-                  style: { fontSize: '11px', padding: '5px 8px' },
-                  step: 64, min: 64, max: 3072,
-                  value: height,
-                  title: '高度 (H)',
-                  onChange: e => { setHeight(Number(e.target.value) || 1216); setPixelTier('custom'); }
-                })
-              )
-            ),
-
-            h('div', { className: 'nai5-card' },
-              h('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' } },
-                h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
-                  h('div', { style: { display: 'flex', justifyContent: 'space-between', fontSize: '10.5px', color: 'var(--fx-text-secondary)' } },
-                    h('span', null, '步数 Steps'),
-                    h('strong', { style: { color: 'var(--fx-text-primary)' } }, steps)
-                  ),
-                  h('input', {
-                    type: 'range',
-                    className: 'nai5-slider',
-                    min: 1, max: 50, value: steps,
-                    onChange: e => setSteps(Number(e.target.value))
-                  })
-                ),
-                h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
-                  h('div', { style: { display: 'flex', justifyContent: 'space-between', fontSize: '10.5px', color: 'var(--fx-text-secondary)' } },
-                    h('span', null, '引导 CFG'),
-                    h('strong', { style: { color: 'var(--fx-text-primary)' } }, cfgScale)
-                  ),
-                  h('input', {
-                    type: 'range',
-                    className: 'nai5-slider',
-                    min: 0, max: 10, step: 0.5, value: cfgScale,
-                    onChange: e => setCfgScale(Number(e.target.value))
-                  })
-                )
-              ),
-              h('div', { style: { display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '8px', alignItems: 'center', marginTop: '2px' } },
-                h('select', {
-                  className: 'nai5-select',
-                  style: { padding: '5px 8px', fontSize: '11px' },
-                  value: sampler,
-                  onChange: e => setSampler(e.target.value)
-                },
-                  h('option', { value: 'k_euler_ancestral' }, 'Euler Ancestral (推荐)'),
-                  h('option', { value: 'k_euler' }, 'Euler (确定性)'),
-                  h('option', { value: 'k_dpmpp_2s_ancestral' }, 'DPM++ 2S Ancestral'),
-                  h('option', { value: 'k_dpmpp_2m' }, 'DPM++ 2M (平滑)'),
-                  h('option', { value: 'k_dpmpp_sde' }, 'DPM++ SDE'),
-                  h('option', { value: 'ddim' }, 'DDIM')
-                ),
-                h('div', { style: { display: 'flex', flexDirection: 'column', gap: '3px' } },
-                  h('div', { style: { display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--fx-text-secondary)' } },
-                    h('span', null, 'Rescale'),
-                    h('span', { style: { color: 'var(--fx-text-primary)' } }, Number(cfgRescale).toFixed(2))
-                  ),
-                  h('input', {
-                    type: 'range',
-                    className: 'nai5-slider',
-                    min: 0, max: 1, step: 0.05, value: cfgRescale,
-                    onChange: e => setCfgRescale(Number(e.target.value))
-                  })
-                )
-              ),
-              h('div', { style: { display: 'flex', gap: '6px', alignItems: 'center', marginTop: '2px' } },
-                h('button', {
-                  type: 'button',
-                  className: `nai5-btn xs ${seedMode === 'random' ? 'primary' : ''}`,
-                  onClick: () => { setSeedMode('random'); setSeed(''); }
-                }, h(Icon, { name: 'dice', size: 12 }), '随机'),
-                h('button', {
-                  type: 'button',
-                  className: `nai5-btn xs ${seedMode === 'fixed' ? 'primary' : ''}`,
-                  onClick: () => {
-                    setSeedMode('fixed');
-                    if (!seed) setSeed(latestImage?.seed || Math.floor(Math.random() * 4294967295));
-                  }
-                }, h(Icon, { name: 'lock', size: 12 }), '固定'),
-                seedMode === 'fixed' && h('input', {
-                  type: 'number',
-                  className: 'nai5-input',
-                  style: { flex: 1, padding: '4px 8px', fontSize: '11px', fontFamily: 'monospace' },
-                  placeholder: '输入固定 Seed...',
-                  value: seed,
-                  onChange: e => setSeed(e.target.value)
-                }),
-                latestImage?.seed && h('button', {
-                  type: 'button',
-                  className: 'nai5-btn xs',
-                  title: '锁定当前预览图的 Seed',
-                  onClick: () => {
-                    setSeedMode('fixed');
-                    setSeed(latestImage.seed);
-                    showToast(`已锁定 Seed: ${latestImage.seed}`);
-                  }
-                }, '上张Seed')
-              )
-            )
-          ),
-
-          h('button', {
-            type: 'button',
-            className: 'nai5-btn primary',
-            style: {
-              width: '100%',
-              padding: '11px 16px',
-              fontSize: '13px',
-              borderRadius: '10px',
-              justifyContent: 'space-between'
-            },
-            disabled: isGenerating,
-            onClick: handleGenerate
-          },
-            h('span', { style: { display: 'inline-flex', alignItems: 'center', gap: '7px' } },
-              h(Icon, { name: 'sparkles', size: 15 }),
-              isGenerating ? '正在直连渲染并归档...' : '立即生成图像'
-            ),
-            h('span', {
-              style: {
-                fontSize: '11px',
-                padding: '2px 8px',
-                borderRadius: '999px',
-                background: costInfo.free ? 'rgba(16, 185, 129, 0.25)' : 'rgba(0, 0, 0, 0.28)',
-                color: costInfo.free ? '#6ee7b7' : '#e0e7ff',
-                fontWeight: 500
-              }
-            }, costInfo.label)
           )
         )
       );
@@ -5546,6 +8303,7 @@ window.__ModuleLoader__.load({
       filterMonth,
       filterRating,
       filterTopic,
+      filterFavorites,
       gallerySearch,
       setGallerySearch,
       galleryMeta,
@@ -5553,12 +8311,18 @@ window.__ModuleLoader__.load({
       onRefreshGallery,
       onBackfillMetadata,
       onLoadMore,
+      onToggleFavorite,
+      onBatchMove,
+      onBatchDelete,
+      onSendToImg2Img,
+      onSendToInpaint,
       onOpenPreview,
       onDragStart,
       onCopyImage,
       onRevealInExplorer,
       onForkToWorkbench,
       onSendToChat,
+      onSetAsBackdrop,
       onCopyText
     }) {
       const wrapRef = useRef(null);
@@ -5566,6 +8330,29 @@ window.__ModuleLoader__.load({
       const [hostWidth, setHostWidth] = useState(960);
       const [scrollState, setScrollState] = useState({ top: 0, height: 720 });
       const scrollRafRef = useRef(false);
+      const [batchMode, setBatchMode] = useState(false);
+      const [selectedPaths, setSelectedPaths] = useState([]);
+      const [batchTargetChar, setBatchTargetChar] = useState('');
+      const [expandChars, setExpandChars] = useState(false);
+      const [showManageMenu, setShowManageMenu] = useState(false);
+      const manageMenuRef = useRef(null);
+
+      useEffect(() => {
+        if (!showManageMenu) return;
+        const onDown = (e) => {
+          if (manageMenuRef.current && !manageMenuRef.current.contains(e.target)) {
+            setShowManageMenu(false);
+          }
+        };
+        document.addEventListener('mousedown', onDown);
+        return () => document.removeEventListener('mousedown', onDown);
+      }, [showManageMenu]);
+
+      const selectedSet = React.useMemo(() => new Set(selectedPaths), [selectedPaths]);
+      const toggleSelectPath = useCallback((p) => {
+        if (!p) return;
+        setSelectedPaths(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
+      }, []);
 
       useEffect(() => {
         const el = hostRef.current;
@@ -5615,14 +8402,15 @@ window.__ModuleLoader__.load({
         const w = Number(item.width) || 832;
         const hVal = Number(item.height) || 1216;
         const isNonPortrait = Math.abs(w / hVal - 832 / 1216) > 0.08;
+        const isSelected = batchMode && selectedSet.has(imgPath);
 
         return h('div', {
           key: item.task_id || imgPath || idx,
-          className: `nai5-gallery-card ${isMasonry ? 'masonry-item' : ''}`,
+          className: `nai5-gallery-card ${isMasonry ? 'masonry-item' : ''} ${isSelected ? 'is-selected' : ''}`,
           style: extraStyle || undefined,
-          draggable: true,
-          onDragStart: (e) => onDragStart(e, item),
-          onClick: () => onOpenPreview(idx)
+          draggable: !batchMode,
+          onDragStart: (e) => !batchMode && onDragStart(e, item),
+          onClick: () => (batchMode ? toggleSelectPath(imgPath) : onOpenPreview(idx))
         },
           h('div', {
             className: `nai5-gallery-media ${isMasonry ? 'natural' : ''}`,
@@ -5633,14 +8421,27 @@ window.__ModuleLoader__.load({
               className: 'nai5-gallery-thumb',
               loading: 'lazy',
               decoding: 'async',
-              draggable: true,
-              onDragStart: (e) => onDragStart(e, item)
+              draggable: !batchMode,
+              onDragStart: (e) => !batchMode && onDragStart(e, item)
             }),
-            isNonPortrait && h('span', { className: 'nai5-gallery-ratio-tag' }, `${w}×${hVal}`),
+            batchMode && h('span', { className: `nai5-gallery-check ${isSelected ? 'checked' : ''}` }, isSelected ? '✓' : ''),
+            isNonPortrait && !batchMode && h('span', { className: 'nai5-gallery-ratio-tag' }, `${w}×${hVal}`),
             h('div', {
               className: 'nai5-gallery-top-tools',
               onClick: e => e.stopPropagation()
             },
+              h('button', {
+                type: 'button',
+                className: `nai5-gallery-icon-btn nai5-fav-btn ${item.isFavorite ? 'is-fav' : ''}`,
+                title: item.isFavorite ? '取消收藏' : '加入收藏夹',
+                onClick: () => onToggleFavorite && onToggleFavorite(imgPath)
+              }, item.isFavorite ? '★' : '☆'),
+              onSetAsBackdrop && h('button', {
+                type: 'button',
+                className: 'nai5-gallery-icon-btn',
+                title: '设为工坊背景画卷',
+                onClick: () => onSetAsBackdrop(item)
+              }, h(Icon, { name: 'image', size: 12 })),
               h('button', {
                 type: 'button',
                 className: 'nai5-gallery-icon-btn',
@@ -5654,7 +8455,7 @@ window.__ModuleLoader__.load({
                 onClick: () => onRevealInExplorer(imgPath)
               }, h(Icon, { name: 'folder', size: 12 }))
             ),
-            h('div', {
+            !batchMode && h('div', {
               className: 'nai5-gallery-hover-dock',
               onClick: e => e.stopPropagation()
             },
@@ -5664,12 +8465,24 @@ window.__ModuleLoader__.load({
                 title: '一键回灌全部参数与多角色框到工作台精修',
                 onClick: () => onForkToWorkbench(item)
               }, h(Icon, { name: 'zap', size: 11 }), '精修'),
+              onSendToImg2Img && h('button', {
+                type: 'button',
+                className: 'nai5-gallery-dock-btn',
+                title: '送入图生图模式微调',
+                onClick: () => onSendToImg2Img(item)
+              }, '图生图'),
+              onSendToInpaint && h('button', {
+                type: 'button',
+                className: 'nai5-gallery-dock-btn',
+                title: '送入局部重绘 (Inpaint) 涂抹修改',
+                onClick: () => onSendToInpaint(item)
+              }, '重绘'),
               h('button', {
                 type: 'button',
                 className: 'nai5-gallery-dock-btn',
-                title: '推送此图片与配方到 DSH 对话输入框继续续写',
+                title: '推送此图片与配方到 DSH 对话输入框继续续写下一幕',
                 onClick: () => onSendToChat(item)
-              }, '💬 续写')
+              }, '💬')
             )
           ),
           h('div', { className: 'nai5-gallery-meta' },
@@ -5686,6 +8499,7 @@ window.__ModuleLoader__.load({
         );
       };
 
+      // Compute virtualized natural-aspect masonry geometry
       const masonryLayout = React.useMemo(() => {
         if (galleryLayout !== 'masonry') return null;
         const minCardW = gridDensity === 'large' ? 235 : (gridDensity === 'compact' ? 142 : 184);
@@ -5729,22 +8543,36 @@ window.__ModuleLoader__.load({
       }, [galleryLayout, gridDensity, hostWidth, history, scrollState.top, scrollState.height]);
 
       return h('div', { ref: wrapRef, className: 'nai5-gallery-wrap', onScroll: handleScroll },
-        h('div', { className: 'nai5-card', style: { gap: '10px', flex: 'none' } },
-          h('div', { style: { display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' } },
+        h('div', { className: 'nai5-card nai5-gallery-toolbar-card', style: { gap: '10px', flex: 'none' } },
+          // Character Pills (no shrinking; collapsible full character list)
+          h('div', { className: `nai5-char-pills-row ${expandChars ? 'is-expanded' : ''}` },
             h('button', {
               type: 'button',
-              className: `nai5-btn xs ${filterChar === 'all' ? 'primary' : ''}`,
-              onClick: () => applyFilter({ character: 'all' })
+              className: `nai5-btn xs ${filterChar === 'all' && !filterFavorites ? 'primary' : ''}`,
+              onClick: () => applyFilter({ character: 'all', favorites: false })
             }, `全部角色 (${totalCount || 0})`),
-            galleryMeta.characters?.slice(0, 28).map(c =>
+            h('button', {
+              type: 'button',
+              className: `nai5-btn xs ${filterFavorites ? 'primary' : ''}`,
+              title: '只显示已标星收藏的作品',
+              onClick: () => applyFilter({ favorites: !filterFavorites })
+            }, `★ 仅看收藏 (${galleryMeta.favoritesCount || 0})`),
+            (expandChars ? (galleryMeta.characters || []) : (galleryMeta.characters || []).slice(0, 24)).map(c =>
               h('button', {
                 key: c.id,
                 type: 'button',
                 className: `nai5-btn xs ${filterChar === c.id ? 'primary' : ''}`,
                 onClick: () => applyFilter({ character: c.id })
               }, `${c.label} (${c.count})`)
-            )
+            ),
+            (galleryMeta.characters?.length || 0) > 24 && h('button', {
+              type: 'button',
+              className: 'nai5-btn xs',
+              style: { borderStyle: 'dashed', color: 'var(--fx-crimson-soft)' },
+              onClick: () => setExpandChars(v => !v)
+            }, expandChars ? '收起角色 ▴' : `展开全部 (${galleryMeta.characters.length}) ▾`)
           ),
+          // Secondary Filter Row + Layout Mode Switch
           h('div', { style: { display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' } },
             h('select', {
               className: 'nai5-select',
@@ -5755,12 +8583,12 @@ window.__ModuleLoader__.load({
               h('option', { value: 'all' }, '全部月份'),
               galleryMeta.months?.map(m => h('option', { key: m.id, value: m.id }, `${m.label} (${m.count})`))
             ),
-            h('div', { style: { display: 'inline-flex', gap: '3px', background: 'rgba(0,0,0,0.35)', padding: '3px', borderRadius: '7px' } },
+            h('div', { className: 'nai-seg-mini' },
               ['all', 'Safe', 'R18', 'X'].map(r =>
                 h('button', {
                   key: r,
                   type: 'button',
-                  className: `nai5-btn xs ${filterRating === r ? 'primary' : 'ghost'}`,
+                  className: `nai-seg-mini-btn ${filterRating === r ? 'active' : ''}`,
                   onClick: () => applyFilter({ rating: r })
                 }, r === 'all' ? '全部分级' : r)
               )
@@ -5788,22 +8616,24 @@ window.__ModuleLoader__.load({
               className: 'nai5-btn primary xs',
               onClick: () => applyFilter({ search: gallerySearch, showToast: true })
             }, h(Icon, { name: 'search', size: 12 }), '筛选'),
+            // Layout Toggle: Natural Masonry vs Uniform 2:3 Grid
             h('div', {
-              style: { display: 'inline-flex', gap: '2px', background: 'rgba(0,0,0,0.35)', padding: '2px', borderRadius: '7px' },
-              title: '切换画廊排布方式：原比例瀑布流或等高竖卡网格'
+              className: 'nai-seg-mini',
+              title: '切换画廊排布方式：原比例瀑布流不裁剪横图/方图；竖卡网格严格齐平'
             },
               h('button', {
                 type: 'button',
-                className: `nai5-btn xs ${galleryLayout === 'masonry' ? 'primary' : 'ghost'}`,
+                className: `nai-seg-mini-btn ${galleryLayout === 'masonry' ? 'active' : ''}`,
                 onClick: () => setGalleryLayout('masonry')
-              }, h(Icon, { name: 'masonry', size: 11 }), '瀑布流'),
+              }, h(Icon, { name: 'masonry', size: 11 }), ' 瀑布流'),
               h('button', {
                 type: 'button',
-                className: `nai5-btn xs ${galleryLayout === 'grid' ? 'primary' : 'ghost'}`,
+                className: `nai-seg-mini-btn ${galleryLayout === 'grid' ? 'active' : ''}`,
                 onClick: () => setGalleryLayout('grid')
-              }, h(Icon, { name: 'grid', size: 11 }), '竖卡')
+              }, h(Icon, { name: 'grid', size: 11 }), ' 竖卡')
             ),
-            h('div', { style: { display: 'inline-flex', gap: '2px', background: 'rgba(0,0,0,0.35)', padding: '2px', borderRadius: '7px' } },
+            // Density Toggle
+            h('div', { className: 'nai-seg-mini' },
               [
                 { id: 'large', label: '大图' },
                 { id: 'medium', label: '标配' },
@@ -5812,26 +8642,85 @@ window.__ModuleLoader__.load({
                 h('button', {
                   key: d.id,
                   type: 'button',
-                  className: `nai5-btn xs ${gridDensity === d.id ? 'primary' : 'ghost'}`,
+                  className: `nai-seg-mini-btn ${gridDensity === d.id ? 'active' : ''}`,
                   onClick: () => setGridDensity(d.id)
                 }, d.label)
               )
             ),
+            h('div', { style: { display: 'inline-flex', alignItems: 'center', gap: '5px', marginLeft: 'auto' } },
+              h('button', {
+                type: 'button',
+                className: `nai5-btn xs ${batchMode ? 'primary' : ''}`,
+                title: '批量勾选归类移动或删除图库作品',
+                onClick: () => {
+                  setBatchMode(v => !v);
+                  setSelectedPaths([]);
+                }
+              }, batchMode ? `退出批量 (${selectedPaths.length})` : '☑ 批量'),
+              h('div', { ref: manageMenuRef, className: 'nai-popover-anchor' },
+                h('button', {
+                  type: 'button',
+                  className: `nai5-btn xs ${showManageMenu ? 'primary' : ''}`,
+                  onClick: () => setShowManageMenu(v => !v)
+                }, '⚙ 库管理 ▾'),
+                showManageMenu && h('div', { className: 'nai-popover-down' },
+                  h('button', {
+                    type: 'button',
+                    className: 'nai-menu-item',
+                    onClick: () => { setShowManageMenu(false); onBackfillMetadata(); }
+                  }, h('strong', null, '🪄 后台补全元数据'), h('span', null, '为存量历史 PNG 提取提示词与尺寸')),
+                  h('button', {
+                    type: 'button',
+                    className: 'nai-menu-item',
+                    onClick: () => { setShowManageMenu(false); onRefreshGallery(); }
+                  }, h('strong', null, '♻ 重扫磁盘目录'), h('span', null, '即时同步磁盘增删文件'))
+                )
+              )
+            )
+          ),
+          batchMode && h('div', { className: 'nai5-batch-bar' },
+            h('span', { style: { fontSize: '12px', fontWeight: 600, color: 'var(--fx-crimson-soft)' } }, `已选中 ${selectedPaths.length} 张`),
             h('button', {
               type: 'button',
               className: 'nai5-btn xs',
-              title: '后台按需补全历史存量 PNG 提示词与分辨率索引',
-              onClick: onBackfillMetadata
-            }, h(Icon, { name: 'wand', size: 12 }), '补全索引'),
+              onClick: () => setSelectedPaths(history.map(x => x.source_path || x.filePath).filter(Boolean))
+            }, '全选当前页'),
             h('button', {
               type: 'button',
               className: 'nai5-btn xs',
-              title: '重新扫描磁盘并刷新画廊',
-              onClick: onRefreshGallery
-            }, h(Icon, { name: 'refresh', size: 12 }))
+              onClick: () => setSelectedPaths([])
+            }, '清空选择'),
+            h('input', {
+              type: 'text',
+              className: 'nai-input-mini',
+              style: { width: '140px' },
+              placeholder: '目标角色目录名...',
+              value: batchTargetChar,
+              onChange: e => setBatchTargetChar(e.target.value)
+            }),
+            h('button', {
+              type: 'button',
+              className: 'nai5-btn primary xs',
+              disabled: selectedPaths.length === 0 || !batchTargetChar.trim(),
+              onClick: async () => {
+                const res = await onBatchMove(selectedPaths, batchTargetChar.trim());
+                if (res?.ok) setSelectedPaths([]);
+              }
+            }, '批量归类移动'),
+            h('button', {
+              type: 'button',
+              className: 'nai5-btn danger xs',
+              disabled: selectedPaths.length === 0,
+              onClick: async () => {
+                if (!window.confirm(`确认永久删除选中的 ${selectedPaths.length} 张图像吗？此操作不可撤销！`)) return;
+                const res = await onBatchDelete(selectedPaths);
+                if (res?.ok) setSelectedPaths([]);
+              }
+            }, '批量物理删除')
           )
         ),
 
+        // Virtualized Natural-Aspect Masonry Mode
         galleryLayout === 'masonry' && masonryLayout
           ? h('div', {
               ref: hostRef,
@@ -5853,6 +8742,7 @@ window.__ModuleLoader__.load({
                 );
               })
             )
+          // Uniform 2:3 Grid Mode
           : h('div', { ref: hostRef, className: `nai5-gallery-grid density-${gridDensity}` },
               history.map((item, idx) => renderCard(item, idx, null, false))
             ),
@@ -5869,7 +8759,7 @@ window.__ModuleLoader__.load({
           }
         },
           h(Icon, { name: 'sparkles', size: 14 }),
-          '正在加载更多历史画卷...'
+          '正在极速加载更多历史画卷...'
         ),
         !hasMore && history.length > 0 && h('div', {
           style: {
@@ -5879,7 +8769,7 @@ window.__ModuleLoader__.load({
             fontSize: '11px',
             opacity: 0.75
           }
-        }, '已展示全部典藏画作')
+        }, '🍁 已展示全部典藏画作')
       );
     }
 
@@ -5988,18 +8878,11 @@ window.__ModuleLoader__.load({
               h('button', {
                 key: r.tag,
                 type: 'button',
-                className: 'nai5-btn xs',
-                style: {
-                  background: 'rgba(99, 102, 241, 0.12)',
-                  borderColor: 'rgba(99, 102, 241, 0.3)',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '5px'
-                },
+                className: 'nai5-btn xs nai5-danbooru-chip',
                 title: `点击追加: ${r.tag} (${r.cn_name || ''})`,
                 onClick: () => onAppendPositive(r.tag, `标签: ${r.tag}`)
               },
-                h('strong', { style: { color: '#e0e7ff', fontSize: '11px' } }, r.tag),
+                h('strong', { className: 'nai5-danbooru-tag' }, r.tag),
                 r.cn_name && h('span', { style: { color: 'var(--fx-text-secondary)', fontSize: '10px' } }, r.cn_name),
                 h(Icon, { name: 'plus', size: 10, style: { opacity: 0.75 } })
               )
@@ -6025,14 +8908,21 @@ window.__ModuleLoader__.load({
           ),
           (searchResults?.codex?.results?.length > 0) ? h('div', { className: 'nai5-codex-grid' },
             searchResults.codex.results.map((c, idx) => {
+              const isR18 = /r18|官能|涩涩|性|乳|交|nsfw/i.test((c.codex || '') + (c.name || '') + (c.category || ''));
               const isComp = /构图|视角|镜头|景深|光影|composition|lighting/i.test((c.codex || '') + (c.name || '') + (c.category || ''));
-              const isFashion = /穿搭|衣|服|outfit|dress|costume/i.test((c.codex || '') + (c.name || '') + (c.category || ''));
-              const badgeColor = isComp ? 'cyan' : isFashion ? 'emerald' : 'purple';
+              const isFashion = /人偶|穿搭|衣柜|衣|服|outfit|dress|costume/i.test((c.codex || '') + (c.name || '') + (c.category || ''));
+              const badgeColor = isR18 ? 'crimson' : isFashion ? 'emerald' : isComp ? 'cyan' : 'purple';
+              const charList = Array.isArray(c.characterPrompts) ? c.characterPrompts : [];
+              const hasChars = charList.length > 0;
+              const globalText = String(c.globalPrompt !== undefined ? c.globalPrompt : (!hasChars ? (c.prompt || '') : '')).trim();
+              const fullCopyText = formatCodexFullText(c);
+              const appendText = globalText || charList.map(cp => cp.prompt).filter(Boolean).join(', ') || fullCopyText;
 
               return h('div', { key: (c.id || '') + idx, className: 'nai5-codex-card' },
                 h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' } },
                   h('div', { style: { display: 'flex', alignItems: 'center', gap: '6px', overflow: 'hidden' } },
                     h('span', { className: `nai5-codex-badge ${badgeColor}` }, c.codex || '法典'),
+                    hasChars && h('span', { className: 'nai5-codex-badge purple', title: '包含 NovelAI V5 独立角色分框提示词' }, `${charList.length} 角色分框`),
                     h('strong', {
                       style: {
                         fontSize: '12px',
@@ -6056,7 +8946,16 @@ window.__ModuleLoader__.load({
                     title: c.category
                   }, c.category)
                 ),
-                h('div', { className: 'nai5-codex-snippet', title: c.prompt }, c.prompt),
+                globalText ? h('div', { className: 'nai5-codex-snippet', title: globalText }, globalText) : null,
+                hasChars ? h('div', { className: 'nai5-codex-char-list' },
+                  charList.map((cp, ci) =>
+                    h('div', { key: (cp.label || 'char') + ci, className: 'nai5-codex-char-item' },
+                      h('span', { className: 'nai5-codex-char-label' }, cp.label || `char${ci + 1}`),
+                      cp.prompt && h('div', { title: cp.prompt }, cp.prompt),
+                      cp.negative && h('div', { style: { fontSize: '10px', color: 'var(--fx-crimson-soft)' } }, `UC: ${cp.negative}`)
+                    )
+                  )
+                ) : (!globalText ? h('div', { className: 'nai5-codex-snippet', style: { opacity: 0.6 } }, c.prompt || '（暂无正向标签）') : null),
                 c.negative ? h('div', {
                   style: {
                     fontSize: '10px',
@@ -6082,14 +8981,14 @@ window.__ModuleLoader__.load({
                   h('button', {
                     type: 'button',
                     className: 'nai5-btn xs',
-                    title: '复制正向提示词到剪贴板',
-                    onClick: () => onCopyText(c.prompt, `法典配方: ${c.name}`)
+                    title: '复制完整提示词到剪贴板',
+                    onClick: () => onCopyText(fullCopyText, `法典配方: ${c.name}`)
                   }, h(Icon, { name: 'copy', size: 10 })),
                   h('button', {
                     type: 'button',
                     className: 'nai5-btn xs',
                     title: '追加此配方到当前正向提示词末尾',
-                    onClick: () => onAppendPositive(c.prompt, `配方: ${c.name}`)
+                    onClick: () => onAppendPositive(appendText, `配方: ${c.name}`)
                   }, h(Icon, { name: 'plus', size: 10 }), '追加正向'),
                   c.negative ? h('button', {
                     type: 'button',
@@ -6172,6 +9071,12 @@ window.__ModuleLoader__.load({
       handleDragStart,
       sendToChatComposer,
       handleForkToWorkbench,
+      onToggleFavorite,
+      onSetAsBackdrop,
+      onUpscale,
+      onDirector,
+      onSendToImg2Img,
+      onSendToInpaint,
       copyFullParams,
       copyImageToClipboard,
       handleRevealInExplorer,
@@ -6192,8 +9097,8 @@ window.__ModuleLoader__.load({
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '10px 18px',
-            background: 'rgba(13, 15, 22, 0.94)',
-            borderBottom: '1px solid rgba(255,255,255,0.12)'
+            background: 'rgba(8, 15, 23, 0.94)',
+            borderBottom: '1px solid rgba(214, 182, 124, 0.20)'
           },
           onClick: e => e.stopPropagation()
         },
@@ -6202,9 +9107,9 @@ window.__ModuleLoader__.load({
               style: {
                 fontSize: '11px',
                 fontWeight: 600,
-                color: '#fda4af',
-                background: 'rgba(209, 43, 74, 0.24)',
-                border: '1px solid rgba(251, 113, 133, 0.4)',
+                color: '#F3D299',
+                background: 'rgba(200, 35, 55, 0.24)',
+                border: '1px solid rgba(214, 182, 124, 0.45)',
                 padding: '2px 9px',
                 borderRadius: '999px'
               }
@@ -6380,20 +9285,20 @@ window.__ModuleLoader__.load({
               right: 0,
               bottom: 0,
               width: '360px',
-              background: 'rgba(14, 17, 24, 0.96)',
-              borderLeft: '1px solid rgba(255,255,255,0.14)',
+              background: 'rgba(9, 17, 26, 0.96)',
+              borderLeft: '1px solid rgba(214, 182, 124, 0.20)',
               padding: '16px',
               overflowY: 'auto',
               display: 'flex',
               flexDirection: 'column',
               gap: '10px',
               zIndex: 20,
-              color: '#f8fafc'
+              color: '#EFF5FA'
             },
             onClick: e => e.stopPropagation()
           },
-            h('strong', { style: { fontSize: '13px', color: '#ffffff' } }, '完整画面生成元数据'),
-            h('div', { style: { fontSize: '11px', color: '#cbd5e1', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' } },
+            h('strong', { style: { fontSize: '13px', color: '#F3D299' } }, '完整画面生成元数据'),
+            h('div', { style: { fontSize: '11px', color: '#BAC9D8', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' } },
               h('span', null, `尺寸: ${activeItem.width || 832}×${activeItem.height || 1216}`),
               h('span', null, `步数: ${activeItem.steps || 28}`),
               h('span', null, `CFG: ${activeItem.cfg || 5.5}`),
@@ -6401,17 +9306,17 @@ window.__ModuleLoader__.load({
               h('span', null, `采样: ${activeItem.sampler || 'k_euler_ancestral'}`),
               h('span', null, `分框: ${(activeItem.characterPrompts || []).length} 个`)
             ),
-            h('div', { className: 'nai5-card', style: { padding: '8px', background: 'rgba(24, 18, 28, 0.85)', borderColor: 'rgba(255,255,255,0.12)' } },
-              h('span', { style: { fontSize: '10.5px', color: '#fb7185', fontWeight: 600 } }, '正向提示词'),
-              h('div', { style: { fontSize: '11px', fontFamily: 'monospace', color: '#f8fafc', maxHeight: '140px', overflowY: 'auto' } }, activeItem.prompt)
+            h('div', { className: 'nai5-card', style: { padding: '8px', background: 'rgba(13, 24, 36, 0.86)', borderColor: 'rgba(214, 182, 124, 0.16)' } },
+              h('span', { style: { fontSize: '10.5px', color: '#E86A7D', fontWeight: 600 } }, '正向提示词'),
+              h('div', { style: { fontSize: '11px', fontFamily: 'monospace', color: '#EFF5FA', maxHeight: '140px', overflowY: 'auto' } }, activeItem.prompt)
             ),
-            activeItem.uc && h('div', { className: 'nai5-card', style: { padding: '8px', background: 'rgba(24, 18, 28, 0.85)', borderColor: 'rgba(255,255,255,0.12)' } },
-              h('span', { style: { fontSize: '10.5px', color: '#fca5a5', fontWeight: 600 } }, '负向排他词 (UC)'),
-              h('div', { style: { fontSize: '11px', fontFamily: 'monospace', color: '#cbd5e1', maxHeight: '90px', overflowY: 'auto' } }, activeItem.uc)
+            activeItem.uc && h('div', { className: 'nai5-card', style: { padding: '8px', background: 'rgba(13, 24, 36, 0.86)', borderColor: 'rgba(214, 182, 124, 0.16)' } },
+              h('span', { style: { fontSize: '10.5px', color: '#6CC7FF', fontWeight: 600 } }, '负向排他词 (UC)'),
+              h('div', { style: { fontSize: '11px', fontFamily: 'monospace', color: '#CBD5E1', maxHeight: '90px', overflowY: 'auto' } }, activeItem.uc)
             ),
-            activeItem.stylePrompt && h('div', { className: 'nai5-card', style: { padding: '8px', background: 'rgba(24, 18, 28, 0.85)', borderColor: 'rgba(255,255,255,0.12)' } },
-              h('span', { style: { fontSize: '10.5px', color: '#fb7185', fontWeight: 600 } }, '画风风格串'),
-              h('div', { style: { fontSize: '11px', fontFamily: 'monospace', color: '#cbd5e1', maxHeight: '90px', overflowY: 'auto' } }, activeItem.stylePrompt)
+            activeItem.stylePrompt && h('div', { className: 'nai5-card', style: { padding: '8px', background: 'rgba(13, 24, 36, 0.86)', borderColor: 'rgba(214, 182, 124, 0.16)' } },
+              h('span', { style: { fontSize: '10.5px', color: '#F3D299', fontWeight: 600 } }, '画师风格串'),
+              h('div', { style: { fontSize: '11px', fontFamily: 'monospace', color: '#CBD5E1', maxHeight: '90px', overflowY: 'auto' } }, activeItem.stylePrompt)
             )
           )
         ),
@@ -6422,22 +9327,61 @@ window.__ModuleLoader__.load({
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '10px 18px',
-            background: 'rgba(13, 15, 22, 0.94)',
-            borderTop: '1px solid rgba(255,255,255,0.12)'
+            background: 'rgba(8, 15, 23, 0.94)',
+            borderTop: '1px solid rgba(214, 182, 124, 0.20)'
           },
           onClick: e => e.stopPropagation()
         },
-          h('span', { style: { fontSize: '11.5px', color: '#cbd5e1' } }, '滚轮无级缩放 · 按住左键平移 · 双击放大 · 键盘 ← / → 切换图像'),
-          h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap' } },
+          h('span', { style: { fontSize: '11.5px', color: '#BAC9D8' } }, '滚轮无级缩放 · 按住左键平移 · 双击放大 · 键盘 ← / → 切换图像'),
+          h('div', {
+            style: {
+              display: 'flex',
+              gap: '7px',
+              flexWrap: 'nowrap',
+              overflowX: 'auto',
+              alignItems: 'center',
+              maxWidth: '78%'
+            }
+          },
             h('span', {
               className: 'nai5-btn',
               style: { cursor: 'grab' },
               draggable: true,
               onDragStart: (e) => handleDragStart(e, activeItem)
-            }, h(Icon, { name: 'external', size: 12 }), '拖拽原图'),
+            }, h(Icon, { name: 'external', size: 12 }), '拖入 QQ / 微信'),
             h('button', { type: 'button', className: 'nai5-btn primary', onClick: () => sendToChatComposer(activeItem) },
               '💬 送入对话继续演进'
             ),
+            onToggleFavorite && h('button', {
+              type: 'button',
+              className: `nai5-btn ${activeItem.isFavorite ? 'primary' : ''}`,
+              onClick: () => onToggleFavorite(imgPath)
+            }, activeItem.isFavorite ? '★ 已收藏' : '☆ 收藏'),
+            onSetAsBackdrop && h('button', {
+              type: 'button',
+              className: 'nai5-btn',
+              onClick: () => onSetAsBackdrop(activeItem)
+            }, h(Icon, { name: 'image', size: 12 }), '设为画卷'),
+            onUpscale && h('button', {
+              type: 'button',
+              className: 'nai5-btn',
+              onClick: () => onUpscale(activeItem, 2)
+            }, '2× 超分'),
+            onDirector && h('button', {
+              type: 'button',
+              className: 'nai5-btn',
+              onClick: () => onDirector(activeItem, { tool: 'bg-removal', defry: 0 })
+            }, '一键去背景'),
+            onSendToImg2Img && h('button', {
+              type: 'button',
+              className: 'nai5-btn',
+              onClick: () => onSendToImg2Img(activeItem)
+            }, '送入图生图'),
+            onSendToInpaint && h('button', {
+              type: 'button',
+              className: 'nai5-btn',
+              onClick: () => onSendToInpaint(activeItem)
+            }, '局部重绘'),
             h('button', { type: 'button', className: 'nai5-btn', onClick: () => handleForkToWorkbench(activeItem) },
               h(Icon, { name: 'zap', size: 12 }), '接管至工作台 (Fork)'
             ),
@@ -6468,9 +9412,23 @@ window.__ModuleLoader__.load({
 
       const { toast, showToast } = useToast();
       const { themePref, isLightTheme, themeClass, cycleThemePref } = useHostTheme(showToast);
+      const scene = useStudioScene(isLightTheme, Boolean(studioConfig?.hasWallpaper), showToast);
+      const [sceneMenuOpen, setSceneMenuOpen] = useState(false);
+      const sceneMenuRef = useRef(null);
       const geo = useWindowGeometry(setActiveTab);
       const accounts = useAccounts(showToast);
       const chars = useCharacterBoxes(showToast);
+
+      useEffect(() => {
+        if (!sceneMenuOpen) return;
+        const onDown = (e) => {
+          if (sceneMenuRef.current && !sceneMenuRef.current.contains(e.target)) {
+            setSceneMenuOpen(false);
+          }
+        };
+        document.addEventListener('mousedown', onDown);
+        return () => document.removeEventListener('mousedown', onDown);
+      }, [sceneMenuOpen]);
 
       // Optional Artist & OC Presets (loaded from user config/localStorage, empty by default)
       const [serverArtistPresets, setServerArtistPresets] = useState(DEFAULT_ARTIST_PRESETS);
@@ -6501,6 +9459,32 @@ window.__ModuleLoader__.load({
       const [cfgScale, setCfgScale] = useState(5.5);
       const [sampler, setSampler] = useState('k_euler_ancestral');
       const [cfgRescale, setCfgRescale] = useState(0);
+      const [model, setModel] = useState('nai-diffusion-5-full');
+      const [effort, setEffort] = useState('high');
+      const [noiseSchedule, setNoiseSchedule] = useState('karras');
+      const [variety, setVariety] = useState(false);
+      const [transparentBackground, setTransparentBackground] = useState(false);
+      const [batchCount, setBatchCount] = useState(1);
+
+      const [genMode, setGenMode] = useState('txt2img'); // 'txt2img' | 'img2img' | 'inpaint'
+      const [sourceImage, setSourceImage] = useState('');
+      const [sourceImagePreviewUrl, setSourceImagePreviewUrl] = useState('');
+      const [i2iStrength, setI2iStrength] = useState(0.55);
+      const [i2iNoise, setI2iNoise] = useState(0);
+      const [inpaintMask, setInpaintMask] = useState('');
+      const [inpaintStrength, setInpaintStrength] = useState(0.7);
+      const [colorCorrect, setColorCorrect] = useState(true);
+
+      const [refTab, setRefTab] = useState('vibe');
+      const [vibeReferences, setVibeReferences] = useState([]);
+      const [preciseReferences, setPreciseReferences] = useState([]);
+      const [showRefPanel, setShowRefPanel] = useState(false);
+      const [showChunksDrawer, setShowChunksDrawer] = useState(false);
+
+      const [compareBeforeItem, setCompareBeforeItem] = useState(null);
+      const [compareActive, setCompareActive] = useState(false);
+      const [busyPostAction, setBusyPostAction] = useState('');
+
       const [isGenerating, setIsGenerating] = useState(false);
       const [latestImage, setLatestImage] = useState(null);
 
@@ -6529,10 +9513,8 @@ window.__ModuleLoader__.load({
               const srvOcs = Array.isArray(preData.ocPresets) ? preData.ocPresets : [];
               setServerArtistPresets(srvArtists);
               setServerOcPresets(srvOcs);
-              const mergedArtists = mergePresetsWithBuiltins('dsh_nai5_artist_presets_v1', srvArtists);
-              const mergedOcs = mergePresetsWithBuiltins('dsh_nai5_oc_presets_v1', srvOcs);
-              setArtistPresets(mergedArtists);
-              setOcPresets(mergedOcs);
+              setArtistPresets(mergePresetsWithBuiltins('dsh_nai5_artist_presets_v1', srvArtists));
+              setOcPresets(mergePresetsWithBuiltins('dsh_nai5_oc_presets_v1', srvOcs));
             }
           }
         } catch (err) {
@@ -6631,7 +9613,23 @@ window.__ModuleLoader__.load({
 
       const handleGenerate = async () => {
         if (isGenerating) return;
+        if (genMode === 'img2img' && !sourceImage) {
+          showToast('请先选择或从成图送入一张底图后再运行图生图');
+          return;
+        }
+        if (genMode === 'inpaint') {
+          if (!sourceImage) {
+            showToast('请先选择底图后再进行局部重绘');
+            return;
+          }
+          if (!inpaintMask) {
+            showToast('请先用画笔涂抹需要重绘的区域');
+            return;
+          }
+        }
+
         setIsGenerating(true);
+        const prevSnapshot = latestImage;
         try {
           const activeCharBoxes = chars.characterPrompts
             .filter(c => c && c.prompt && c.prompt.trim().length > 0)
@@ -6649,38 +9647,70 @@ window.__ModuleLoader__.load({
             stylePrompt,
             width: Number(width),
             height: Number(height),
-            steps: Number(steps),
+            steps: effort === 'medium' ? 14 : Number(steps),
             cfgScale: Number(cfgScale),
             cfgRescale: Number(cfgRescale),
             sampler,
+            model,
+            effort,
+            noiseSchedule,
+            variety,
+            transparentBackground,
+            count: genMode === 'txt2img' ? Number(batchCount) || 1 : 1,
+            vibeReferences: preciseReferences.length > 0 ? [] : vibeReferences,
+            preciseReferences,
             characterPrompts: activeCharBoxes,
             seed: (seedMode === 'fixed' && seed !== '') ? Number(seed) : undefined
           };
-          const res = await fetch('/api/novelai/generate', {
+
+          let endpoint = '/api/novelai/generate';
+          if (genMode === 'img2img') {
+            endpoint = '/api/novelai/img2img';
+            payload.image = sourceImage;
+            payload.strength = Number(i2iStrength);
+            payload.noise = Number(i2iNoise);
+          } else if (genMode === 'inpaint') {
+            endpoint = '/api/novelai/inpaint';
+            payload.image = sourceImage;
+            payload.mask = inpaintMask;
+            payload.strength = Number(inpaintStrength);
+            payload.colorCorrect = Boolean(colorCorrect);
+          }
+
+          const res = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
           const data = await res.json();
           if (data.ok) {
-            const enriched = {
-              ...data,
-              source_path: data.filePath,
-              prompt: positivePrompt,
-              uc: negativePrompt,
-              stylePrompt,
-              cfg: cfgScale,
-              cfgRescale,
-              sampler,
+            const items = Array.isArray(data.results) && data.results.length > 0 ? data.results : [data];
+            const enrichedList = items.map(it => ({
+              ...it,
+              source_path: it.filePath,
+              prompt: it.prompt || positivePrompt,
+              uc: it.uc !== undefined ? it.uc : negativePrompt,
+              stylePrompt: it.stylePrompt !== undefined ? it.stylePrompt : stylePrompt,
+              cfg: it.cfg || cfgScale,
+              cfgRescale: it.cfgRescale !== undefined ? it.cfgRescale : cfgRescale,
+              sampler: it.sampler || sampler,
               characterPrompts: activeCharBoxes,
               _metaHydrated: true
-            };
-            setLatestImage(enriched);
+            }));
+            const primary = enrichedList[0];
+            if (genMode !== 'txt2img' && prevSnapshot) {
+              setCompareBeforeItem(prevSnapshot);
+            }
+            setLatestImage(primary);
+            setCompareActive(false);
             gallery.setHistory(prev => {
-              const p = enriched.source_path;
-              return prev.some(x => (x.source_path || x.filePath) === p) ? prev : [enriched, ...prev];
+              const seen = new Set(prev.map(x => x.source_path || x.filePath));
+              const fresh = enrichedList.filter(e => !seen.has(e.source_path));
+              return [...fresh, ...prev];
             });
-            showToast(`生成完成 · Seed: ${data.seed}`);
+            showToast(enrichedList.length > 1
+              ? `批量生成完成 (${enrichedList.length} 张) · 首图 Seed: ${primary.seed}`
+              : `生成完成 · Seed: ${primary.seed}`);
             accounts.fetchBalance();
             gallery.fetchGalleryMeta();
           } else {
@@ -6807,6 +9837,26 @@ window.__ModuleLoader__.load({
         }
       }, [geo.winMode, gallery.history.length, gallery.fetchGalleryMeta, gallery.fetchHistoryWithParams]);
 
+      const applyCodexToWorkbench = useCallback((c) => {
+        const posGlobal = String(c.globalPrompt !== undefined ? c.globalPrompt : (c.prompt || '')).trim();
+        setPositivePrompt(posGlobal);
+        if (c.negative) setNegativePrompt(c.negative.trim());
+        if (Array.isArray(c.characterPrompts) && c.characterPrompts.length > 0) {
+          chars.setCharacterPrompts(c.characterPrompts.map((cp, i) => ({
+            id: 'codex_' + Date.now() + '_' + i,
+            prompt: cp.prompt || cp.char_caption || '',
+            negativePrompt: cp.negative || cp.uc || '',
+            x: typeof cp.x === 'number' ? cp.x : 0.5,
+            y: typeof cp.y === 'number' ? cp.y : 0.5,
+            useCoords: cp.useCoords !== false
+          })));
+          chars.setShowCharBoxes(true);
+        } else {
+          chars.setCharacterPrompts([]);
+        }
+        return posGlobal;
+      }, [chars.setCharacterPrompts, chars.setShowCharBoxes]);
+
       const sendToChatComposer = useCallback(async (rawItem = null, isCodex = false) => {
         let target = rawItem || latestImage || {};
         if (!isCodex && target && !target.codex && !target.codexKey && !target._metaHydrated && (target.source_path || target.filePath)) {
@@ -6815,11 +9865,10 @@ window.__ModuleLoader__.load({
 
         let chatText = '';
         if (isCodex || target.codex || target.codexKey) {
-          const pos = (target.prompt || '').trim();
+          const fullText = formatCodexFullText(target);
           const neg = target.negative ? `\n负向排他：${target.negative.trim()}` : '';
-          chatText = `请以《${target.codex || '词库配方'}》【${target.name || '参考条目'}】为基准出图：\n${pos}${neg}\n请以此配方为骨架进行组装，并调用 generate_image 出图：`;
-          setPositivePrompt(pos);
-          if (target.negative) setNegativePrompt(target.negative.trim());
+          chatText = `请以《${target.codex || '权威法典'}》【${target.name || '经典配方'}】为基准出图：\n${fullText}${neg}\n👉 请以此法典配方为骨架进行精修组装，并直接调用 generate_image 出图：`;
+          applyCodexToWorkbench(target);
         } else {
           const targetSeed = target.seed || (seedMode === 'fixed' && seed ? seed : '随机');
           const targetW = target.width || width || 832;
@@ -6855,8 +9904,8 @@ window.__ModuleLoader__.load({
           const charCoordsInfo = Array.isArray(target.characterPrompts) && target.characterPrompts.length > 0
             ? `\n分框站位：${target.characterPrompts.map((c, idx) => `角色${String.fromCharCode(65 + idx)}(${c.x ?? 0.5},${c.y ?? 0.5}): ${c.prompt || ''}`).join(' | ')}`
             : '';
-          const pathLine = imgPath ? `\n参考路径：${imgPath}` : '';
-          chatText = `[NAI5 Studio 续写底模 · 角色: ${target.character || '当前角色'} | Seed: ${targetSeed} | 画幅: ${targetW}×${targetH} (已锁定同画风/同画幅)]${pathLine}\n基底提示词：${cleanPos}${charCoordsInfo}\n请保持上述角色外观与画风一致，在此基础上继续演进下一幕并调用 generate_image 出图：`;
+          const pathLine = imgPath ? `\n底模路径：${imgPath}` : '';
+          chatText = `[NAI5 Studio 续写底模 · 角色: ${target.character || '当前角色'} | Seed: ${targetSeed} | 画幅: ${targetW}×${targetH} (已锁定同画风/同画幅)]${pathLine}\n基底提示词：${cleanPos}${charCoordsInfo}\n👉 请保持上述角色外貌与画风一致，在此画面基础上继续演进下一幕并直接调用 generate_image 出图：`;
         }
 
         geo.updateWinMode('minimized');
@@ -6865,8 +9914,8 @@ window.__ModuleLoader__.load({
         lightbox.setPreviewCustomItem(null);
 
         showToast(dshComposerBridge.injectIntoChat(chatText)
-          ? '已推送至 DSH 对话输入框（已同步画风/画幅硬锁），输入下一幕即可回车生图'
-          : '续写指令已复制到剪贴板，在对话框 Ctrl+V 粘贴即可继续生图');
+          ? '💬 已推送至 DSH 对话输入框（已同步画风/画幅硬锁），输入下一幕剧情即可回车生图！'
+          : '💬 续写指令已复制到剪贴板，在对话框 Ctrl+V 粘贴即可继续生图');
       }, [latestImage, ensureRecordMetadata, seedMode, seed, width, height, positivePrompt, stylePrompt, negativePrompt, chars.characterPrompts, bridge.bridgeLocks, bridge.setBridgeLocks, bridge.setShowOrbHud, handleForkToWorkbench, geo.updateWinMode, lightbox.setPreviewIndex, lightbox.setPreviewCustomItem, showToast]);
 
       useEffect(() => {
@@ -6945,19 +9994,249 @@ window.__ModuleLoader__.load({
       }, [showToast]);
 
       const handleOverwriteStudio = useCallback((c) => {
-        setPositivePrompt((c.prompt || '').trim());
-        if (c.negative) setNegativePrompt(c.negative.trim());
+        applyCodexToWorkbench(c);
         setActiveTab('studio');
         showToast(`已载入《${c.codex || '词库'}》配方至绘卷工坊`);
-      }, [showToast]);
+      }, [applyCodexToWorkbench, showToast]);
 
-      const costInfo = estimateAnlasCost(width, height, steps);
-      const winStyleBase = geo.isMaximized
+      const handleUpscale = useCallback(async (targetItem, scale = 2) => {
+        const item = targetItem || latestImage;
+        const imgPath = item?.source_path || item?.filePath;
+        if (!imgPath || busyPostAction) return;
+        setBusyPostAction(`upscale${scale}`);
+        showToast(`正在执行 NovelAI ${scale}× 无损超分...`);
+        try {
+          const res = await fetch('/api/novelai/upscale', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image: imgPath, scale, character: item.character, topic: item.topic })
+          });
+          const data = await res.json();
+          if (data.ok) {
+            const enriched = { ...data, source_path: data.filePath, _metaHydrated: true };
+            setCompareBeforeItem(item);
+            setLatestImage(enriched);
+            setCompareActive(true);
+            gallery.setHistory(prev => [enriched, ...prev.filter(x => (x.source_path || x.filePath) !== enriched.source_path)]);
+            gallery.fetchGalleryMeta();
+            accounts.fetchBalance();
+            showToast(`✨ ${scale}× 超分完成 (${data.width}×${data.height})`);
+          } else {
+            showToast(`超分失败: ${data.error || '未知错误'}`);
+          }
+        } catch (err) {
+          showToast(`超分异常: ${err.message}`);
+        } finally {
+          setBusyPostAction('');
+        }
+      }, [latestImage, busyPostAction, gallery, accounts, showToast]);
+
+      const handleDirector = useCallback(async (targetItem, opts = {}) => {
+        const item = targetItem || latestImage;
+        const imgPath = item?.source_path || item?.filePath;
+        if (!imgPath || busyPostAction) return;
+        const tool = opts.tool || 'bg-removal';
+        setBusyPostAction(`director:${tool}`);
+        showToast(`正在运行导演工具 [${tool}]...`);
+        try {
+          const res = await fetch('/api/novelai/director', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              image: imgPath,
+              tool,
+              defry: opts.defry ?? 0,
+              prompt: opts.prompt || '',
+              emotion: opts.emotion || 'neutral',
+              emotionLevel: opts.emotionLevel || 'normal',
+              character: item.character,
+              topic: item.topic
+            })
+          });
+          const data = await res.json();
+          if (data.ok) {
+            const enriched = { ...data, source_path: data.filePath, _metaHydrated: true };
+            setCompareBeforeItem(item);
+            setLatestImage(enriched);
+            setCompareActive(true);
+            gallery.setHistory(prev => [enriched, ...prev.filter(x => (x.source_path || x.filePath) !== enriched.source_path)]);
+            gallery.fetchGalleryMeta();
+            accounts.fetchBalance();
+            showToast(`🎨 导演工具 [${tool}] 处理完成`);
+          } else {
+            showToast(`导演处理失败: ${data.error || '未知错误'}`);
+          }
+        } catch (err) {
+          showToast(`导演处理异常: ${err.message}`);
+        } finally {
+          setBusyPostAction('');
+        }
+      }, [latestImage, busyPostAction, gallery, accounts, showToast]);
+
+      const handleSendToImg2Img = useCallback(async (rawItem) => {
+        const item = rawItem && !rawItem._metaHydrated ? await ensureRecordMetadata(rawItem) : (rawItem || latestImage);
+        const imgPath = item?.source_path || item?.filePath;
+        if (!imgPath) return;
+        setSourceImage(imgPath);
+        setSourceImagePreviewUrl(getImageUrl(imgPath, false));
+        setGenMode('img2img');
+        setCompareActive(false);
+        if (rawItem) await handleForkToWorkbench(item, true);
+        geo.updateWinMode('open');
+        setActiveTab('studio');
+        lightbox.setPreviewIndex(null);
+        lightbox.setPreviewCustomItem(null);
+        showToast('已将图像送入图生图 (Img2Img) 模式');
+      }, [latestImage, ensureRecordMetadata, handleForkToWorkbench, geo.updateWinMode, lightbox.setPreviewIndex, lightbox.setPreviewCustomItem, showToast]);
+
+      const handleSendToInpaint = useCallback(async (rawItem) => {
+        const item = rawItem && !rawItem._metaHydrated ? await ensureRecordMetadata(rawItem) : (rawItem || latestImage);
+        const imgPath = item?.source_path || item?.filePath;
+        if (!imgPath) return;
+        setSourceImage(imgPath);
+        setSourceImagePreviewUrl(getImageUrl(imgPath, false));
+        setInpaintMask('');
+        setGenMode('inpaint');
+        setCompareActive(false);
+        if (rawItem) await handleForkToWorkbench(item, true);
+        geo.updateWinMode('open');
+        setActiveTab('studio');
+        lightbox.setPreviewIndex(null);
+        lightbox.setPreviewCustomItem(null);
+        showToast('已进入局部重绘 (Inpaint)，请用画笔涂抹待重绘区域');
+      }, [latestImage, ensureRecordMetadata, handleForkToWorkbench, geo.updateWinMode, lightbox.setPreviewIndex, lightbox.setPreviewCustomItem, showToast]);
+
+      const handleUploadSourceImage = useCallback((dataUrl) => {
+        setSourceImage(dataUrl);
+        setSourceImagePreviewUrl(dataUrl);
+        setInpaintMask('');
+        const img = new Image();
+        img.onload = () => {
+          if (img.naturalWidth && img.naturalHeight) {
+            setWidth(Math.max(64, Math.min(2048, Math.round(img.naturalWidth / 64) * 64)));
+            setHeight(Math.max(64, Math.min(2048, Math.round(img.naturalHeight / 64) * 64)));
+            setPixelTier('custom');
+          }
+        };
+        img.src = dataUrl;
+      }, []);
+
+      const handleRepairPrompt = useCallback(async () => {
+        try {
+          const res = await fetch('/api/novelai/repair-prompt', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: positivePrompt })
+          });
+          const data = await res.json();
+          if (data.ok && typeof data.repaired === 'string') {
+            setPositivePrompt(data.repaired);
+            showToast('✨ V5 权重语法与标点已一键修复');
+          }
+        } catch (err) {
+          showToast(`语法修复失败: ${err.message}`);
+        }
+      }, [positivePrompt, showToast]);
+
+      const handleInspectDroppedFile = useCallback((file) => {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async () => {
+          const dataUrl = reader.result;
+          if (typeof dataUrl !== 'string') return;
+          try {
+            const res = await fetch('/api/novelai/inspect-upload', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ image: dataUrl })
+            });
+            const data = await res.json();
+            if (data.ok && data.meta && (data.meta.prompt || data.meta.positivePrompt)) {
+              const m = data.meta;
+              let cleanPos = m.prompt || m.positivePrompt || '';
+              if (m.stylePrompt && cleanPos.startsWith(m.stylePrompt)) {
+                cleanPos = cleanPos.slice(m.stylePrompt.length).replace(/^,\s*/, '');
+              }
+              if (cleanPos) setPositivePrompt(cleanPos);
+              if (m.uc) setNegativePrompt(m.uc);
+              if (m.stylePrompt) setStylePrompt(m.stylePrompt);
+              if (data.width) setWidth(Math.round(Number(data.width) / 64) * 64);
+              if (data.height) setHeight(Math.round(Number(data.height) / 64) * 64);
+              if (m.steps) setSteps(Number(m.steps));
+              if (m.cfg || m.scale) setCfgScale(Number(m.cfg || m.scale));
+              if (m.sampler) setSampler(m.sampler);
+              if (m.seed !== undefined) { setSeedMode('fixed'); setSeed(m.seed); }
+              if (Array.isArray(m.characterPrompts) && m.characterPrompts.length > 0) {
+                chars.setCharacterPrompts(m.characterPrompts.map((cp, i) => ({
+                  id: 'drop_' + Date.now() + '_' + i,
+                  prompt: cp.prompt || cp.char_caption || '',
+                  negativePrompt: cp.negativePrompt || cp.uc || '',
+                  x: typeof cp.x === 'number' ? cp.x : 0.5,
+                  y: typeof cp.y === 'number' ? cp.y : 0.5,
+                  useCoords: cp.useCoords !== false
+                })));
+                chars.setShowCharBoxes(true);
+              }
+              showToast('📥 已解析拖入 PNG 元数据并回灌完整参数');
+            } else {
+              handleUploadSourceImage(dataUrl);
+              if (genMode === 'txt2img') setGenMode('img2img');
+              showToast('已载入图片至底图槽位（未检测到 NAI 元数据）');
+            }
+          } catch (err) {
+            showToast(`拖入解析失败: ${err.message}`);
+          }
+        };
+        reader.readAsDataURL(file);
+      }, [chars.setCharacterPrompts, chars.setShowCharBoxes, genMode, handleUploadSourceImage, showToast]);
+
+      const handleUseCurrentCanvasAsRef = useCallback(async (kind = 'vibe') => {
+        const imgPath = latestImage?.source_path || latestImage?.filePath;
+        if (!imgPath) {
+          showToast('当前画布暂无成品图可抓取');
+          return;
+        }
+        try {
+          const resp = await fetch(getImageUrl(imgPath, false));
+          const blob = await resp.blob();
+          const dataUrl = await new Promise((resolve) => {
+            const r = new FileReader();
+            r.onload = () => resolve(r.result);
+            r.readAsDataURL(blob);
+          });
+          if (typeof dataUrl !== 'string') return;
+          if (kind === 'precise') {
+            setPreciseReferences(prev => [...prev, { image: dataUrl, name: 'canvas_ref.png', type: 'character&style', strength: 1.0, fidelity: 1.0 }].slice(0, 4));
+          } else {
+            setVibeReferences(prev => [...prev, { image: dataUrl, name: 'canvas_vibe.png', strength: 0.6, infoExtracted: 1.0 }].slice(0, 6));
+          }
+          showToast('已将当前预览图加入参考槽位');
+        } catch (err) {
+          showToast(`抓取失败: ${err.message}`);
+        }
+      }, [latestImage, showToast]);
+
+      const handleToggleFavorite = useCallback(async (imgPath) => {
+        const nextFav = await gallery.toggleFavorite(imgPath);
+        if (nextFav !== null) {
+          lightbox.setPreviewCustomItem(prev => (prev && (prev.source_path || prev.filePath) === imgPath ? { ...prev, isFavorite: nextFav } : prev));
+        }
+      }, [gallery, lightbox]);
+
+      const handleSetBackdrop = useCallback((item) => {
+        const p = item?.source_path || item?.filePath;
+        if (p) scene.setCustomBackdrop(p, item.character || '典藏画卷');
+      }, [scene.setCustomBackdrop]);
+
+      const effStepsForCost = effort === 'medium' ? 14 : steps;
+      const costInfoRaw = estimateAnlasCost(width, height, effStepsForCost);
+      const costCount = genMode === 'txt2img' ? (Number(batchCount) || 1) : 1;
+      const costInfo = costCount > 1 && costInfoRaw.cost > 0
+        ? { ...costInfoRaw, cost: costInfoRaw.cost * costCount, label: `约 ${costInfoRaw.cost * costCount} Anlas (${costCount}张)` }
+        : costInfoRaw;
+      const winStyle = geo.isMaximized
         ? { top: 'calc(var(--dsh-frame-chrome-top, var(--dsh-windows-titlebar-height, 36px)) + 8px)', left: '12px', right: '12px', bottom: '12px' }
         : { left: `${geo.winRect.x}px`, top: `${geo.winRect.y}px`, width: `${geo.winRect.w}px`, height: `${geo.winRect.h}px` };
-      const winStyle = studioConfig?.hasWallpaper
-        ? { ...winStyleBase, '--nai5-wallpaper': 'url("/api/novelai/wallpaper")' }
-        : winStyleBase;
 
       const isBusyGenerating = isGenerating || bridge.agentGenStatus === 'generating';
       const latestThumbUrl = latestImage ? getImageUrl(latestImage.source_path || latestImage.filePath || '', true) : null;
@@ -7007,9 +10286,10 @@ window.__ModuleLoader__.load({
 
         geo.winMode === 'open' && h('div', {
           className: `nai5-floating-window ${themeClass} ${geo.isMaximized ? 'maximized' : ''} ${peekArt ? 'peek-art' : ''}`,
+          'data-bg-intensity': scene.bgIntensity,
           style: winStyle
         },
-          h(StudioBackdrop),
+          h(StudioBackdrop, { bgUrl: scene.activeBgUrl, bgPos: scene.activeBgPos, bgGradient: scene.activeBgGradient }),
 
           !geo.isMaximized && h(React.Fragment, null,
             ['e', 'w', 's', 'se', 'sw'].map(dir =>
@@ -7023,12 +10303,18 @@ window.__ModuleLoader__.load({
             onDoubleClick: () => geo.setIsMaximized(m => !m)
           },
             h('div', { className: 'nai5-win-brand' },
-              h('div', { className: 'nai5-hanko-seal', title: 'NAI5 Studio' }, 'N5'),
+              h('div', { className: 'nai5-hanko-seal', title: 'NAI5 Studio · Frost & Maple Atelier' }, 'N5'),
               h('span', { className: 'nai5-brand-title' }, 'NAI5 Studio'),
               h('span', { className: 'nai5-brand-sub' },
-                h(Icon, { name: 'sakura', size: 11, style: { marginRight: '3px', verticalAlign: '-1px' } }),
-                '绘卷工坊'
-              )
+                h(Icon, { name: 'maple', size: 11, style: { marginRight: '3px', verticalAlign: '-1px' } }),
+                '枫霜画室'
+              ),
+              bridge.bridgeLocks.enabled && h('span', {
+                className: 'nai5-lock-chip active',
+                style: { marginLeft: '4px', cursor: 'pointer' },
+                title: 'DSH 对话硬件锁已开启，点击关闭或前往 参数与协同 标签管理',
+                onClick: () => bridge.toggleBridgeLock('enabled')
+              }, '🔗 协同锁')
             ),
 
             h('div', { className: 'nai5-seg-nav' },
@@ -7036,7 +10322,7 @@ window.__ModuleLoader__.load({
                 type: 'button',
                 className: `nai5-seg-btn ${activeTab === 'studio' ? 'active' : ''}`,
                 onClick: () => setActiveTab('studio')
-              }, h(Icon, { name: 'sakura', size: 13 }), '绘卷工坊'),
+              }, h(Icon, { name: 'maple', size: 13 }), '绘卷工坊'),
               h('button', {
                 type: 'button',
                 className: `nai5-seg-btn ${activeTab === 'gallery' ? 'active' : ''}`,
@@ -7053,36 +10339,129 @@ window.__ModuleLoader__.load({
             ),
 
             h('div', { className: 'nai5-win-actions' },
-              studioConfig?.hasWallpaper && h('button', {
+              h('div', {
+                ref: sceneMenuRef,
+                className: 'nai5-scene-wrap',
+                onMouseDown: e => e.stopPropagation()
+              },
+                h('button', {
+                  type: 'button',
+                  className: `nai5-btn xs ${sceneMenuOpen ? 'primary' : ''}`,
+                  title: `切换工坊背景画卷 · 当前：《${scene.activeTitle}》`,
+                  onClick: () => setSceneMenuOpen(v => !v)
+                }, h(Icon, { name: 'image', size: 12 }), h('span', null, '景致 ▾')),
+                sceneMenuOpen && h('div', {
+                  className: 'nai5-scene-popover',
+                  onClick: e => e.stopPropagation()
+                },
+                  h('div', { className: 'nai5-scene-pop-head' },
+                    h('span', { className: 'nai5-scene-pop-title' },
+                      h(Icon, { name: 'maple', size: 12, style: { color: 'var(--fx-crimson-soft)' } }),
+                      '画卷景致 · 精选收藏'
+                    ),
+                    h('button', {
+                      type: 'button',
+                      className: `nai5-btn xs ${scene.scenePref === 'auto' ? 'primary' : ''}`,
+                      onClick: () => { scene.selectScene('auto'); setSceneMenuOpen(false); }
+                    }, '随明暗自动')
+                  ),
+                  h('div', { className: 'nai5-scene-intensity-row' },
+                    h('span', { className: 'nai5-scene-intensity-label' }, '画卷通透'),
+                    h('div', { className: 'nai-seg-mini' },
+                      [
+                        { id: 'soft', label: '静谧' },
+                        { id: 'balanced', label: '平衡' },
+                        { id: 'vivid', label: '浓映' }
+                      ].map(lv =>
+                        h('button', {
+                          key: lv.id,
+                          type: 'button',
+                          className: `nai-seg-mini-btn ${scene.bgIntensity === lv.id ? 'active' : ''}`,
+                          onClick: () => scene.updateBgIntensity(lv.id)
+                        }, lv.label)
+                      )
+                    )
+                  ),
+                  scene.customBgPath && h('div', { className: 'nai5-scene-custom-bar' },
+                    h('img', {
+                      src: getImageUrl(scene.customBgPath, true),
+                      className: 'nai5-scene-custom-thumb'
+                    }),
+                    h('div', { style: { flex: 1, minWidth: 0 } },
+                      h('div', { style: { fontSize: '11px', fontWeight: 700, color: 'var(--fx-text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } },
+                        `自选：${scene.customBgLabel || '典藏画卷'}`
+                      ),
+                      h('div', { style: { fontSize: '9.5px', color: 'var(--fx-text-muted)' } }, '从画廊或暗房设为工坊背景')
+                    ),
+                    scene.scenePref !== 'custom' && h('button', {
+                      type: 'button',
+                      className: 'nai5-btn xs primary',
+                      onClick: () => { scene.selectScene('custom'); setSceneMenuOpen(false); }
+                    }, '启用'),
+                    h('button', {
+                      type: 'button',
+                      className: 'nai5-btn xs',
+                      title: '移除自定义画卷',
+                      onClick: () => scene.clearCustomBackdrop()
+                    }, '清除')
+                  ),
+                  h('div', { className: 'nai5-scene-grid' },
+                    STUDIO_SCENES.map(sc => {
+                      const isActive = scene.scenePref === sc.id || (scene.scenePref === 'auto' && scene.activeScene.id === sc.id);
+                      return h('button', {
+                        key: sc.id,
+                        type: 'button',
+                        className: `nai5-scene-card ${isActive ? 'is-active' : ''}`,
+                        onClick: () => { scene.selectScene(sc.id); setSceneMenuOpen(false); }
+                      },
+                        h('div', { className: 'nai5-scene-thumb-wrap' },
+                          h('div', {
+                            className: 'nai5-scene-thumb',
+                            style: {
+                              backgroundImage: sc.gradient,
+                              backgroundPosition: sc.pos,
+                              backgroundSize: 'cover'
+                            }
+                          }),
+                          isActive && h('span', { className: 'nai5-scene-badge' }, scene.scenePref === 'auto' ? '自动' : '当前')
+                        ),
+                        h('div', { className: 'nai5-scene-meta' },
+                          h('strong', null, sc.title),
+                          h('span', null, sc.subtitle)
+                        )
+                      );
+                    })
+                  )
+                )
+              ),
+              h('button', {
                 type: 'button',
                 className: `nai5-btn xs ${peekArt ? 'primary' : ''}`,
-                title: '透视欣赏自定义背景原画',
+                title: '透视隐藏工作区界面，全身欣赏工坊精选景致画卷（支持 ◀ ▶ 切景 · 点击画布随时返回）',
                 onClick: () => setPeekArt(p => !p)
-              }, h(Icon, { name: 'sakura', size: 12 }), h('span', null, '赏画')),
+              }, h(Icon, { name: 'eye', size: 12 }), h('span', null, peekArt ? '退出赏画' : '赏画')),
               h('button', {
                 type: 'button',
                 className: 'nai5-btn xs',
-                title: `当前色调模式: ${themePref === 'auto' ? '跟随系统' : themePref === 'light' ? '雪昼浅色' : '绯夜深色'}（点击切换）`,
+                title: `当前色调模式: ${themePref === 'auto' ? '跟随系统' : themePref === 'light' ? '霜晓浅色' : '玄月深色'}（点击切换）`,
                 onClick: cycleThemePref
               },
                 h(Icon, { name: isLightTheme ? 'sun' : 'moon', size: 12 }),
-                h('span', null, themePref === 'auto' ? '随系统' : (isLightTheme ? '雪昼' : '绯夜'))
+                h('span', null, themePref === 'auto' ? '随系统' : (isLightTheme ? '霜晓' : '玄月'))
               ),
               h(AccountPopover, accounts),
               h('button', {
                 type: 'button',
                 className: 'nai5-btn xs',
-                title: accounts.accountInfo.endpoint ? `点击刷新账户状态 (${accounts.accountInfo.endpoint})` : '点击刷新账户状态',
+                title: accounts.accountInfo.endpoint ? `点击刷新账户状态 (${accounts.accountInfo.endpoint})` : '点击刷新账户 Anlas 余额',
                 onClick: accounts.fetchBalance
               },
-                h(Icon, { name: 'zap', size: 12, style: { color: '#e0284f' } }),
+                h(Icon, { name: 'zap', size: 12, style: { color: 'var(--fx-gold)' } }),
                 h('span', null, accounts.loadingBalance
                   ? '...'
-                  : (accounts.accountInfo.configured === false
-                    ? '未配置'
-                    : (accounts.accountInfo.balanceSupported === false
-                      ? (accounts.accountInfo.tier || '中转已连')
-                      : (accounts.balance !== null ? `${accounts.balance} Anlas` : 'Anlas'))))
+                  : (accounts.accountInfo.balanceSupported === false
+                    ? (accounts.accountInfo.tier || '中转已连')
+                    : (accounts.balance !== null ? `${accounts.balance} Anlas` : 'Anlas')))
               ),
               h('button', { type: 'button', className: 'nai5-win-ctrl', title: '收起为悬浮球 (Alt+N)', onClick: () => geo.updateWinMode('minimized') }, h(Icon, { name: 'minus', size: 14 })),
               h('button', { type: 'button', className: 'nai5-win-ctrl', title: geo.isMaximized ? '还原窗口尺寸' : '最大化窗口', onClick: () => geo.setIsMaximized(m => !m) }, h(Icon, { name: geo.isMaximized ? 'minimize' : 'maximize', size: 13 })),
@@ -7108,6 +10487,31 @@ window.__ModuleLoader__.load({
             seedMode, setSeedMode, seed, setSeed,
             steps, setSteps, cfgScale, setCfgScale,
             sampler, setSampler, cfgRescale, setCfgRescale,
+            model, setModel, effort, setEffort,
+            noiseSchedule, setNoiseSchedule,
+            variety, setVariety,
+            transparentBackground, setTransparentBackground,
+            batchCount, setBatchCount,
+            genMode, setGenMode,
+            sourceImage, setSourceImage,
+            sourceImagePreviewUrl, setSourceImagePreviewUrl,
+            i2iStrength, setI2iStrength,
+            i2iNoise, setI2iNoise,
+            inpaintMask, setInpaintMask,
+            inpaintStrength, setInpaintStrength,
+            colorCorrect, setColorCorrect,
+            refTab, setRefTab,
+            vibeReferences, setVibeReferences,
+            preciseReferences, setPreciseReferences,
+            showRefPanel, setShowRefPanel,
+            showChunksDrawer, setShowChunksDrawer,
+            compareBeforeItem, compareActive, setCompareActive,
+            busyPostAction,
+            handleUpscale, handleDirector,
+            handleSendToImg2Img, handleSendToInpaint,
+            handleUploadSourceImage, handleRepairPrompt,
+            handleInspectDroppedFile, handleUseCurrentCanvasAsRef,
+            onToggleFavorite: handleToggleFavorite,
             latestImage, latestFullUrl, setLatestImage,
             artistPresets, serverArtistPresets, setArtistPresets, selectedArtistId, setSelectedArtistId,
             ocPresets, serverOcPresets, setOcPresets, selectedOcId, setSelectedOcId,
@@ -7141,6 +10545,7 @@ window.__ModuleLoader__.load({
             filterMonth: gallery.filterMonth,
             filterRating: gallery.filterRating,
             filterTopic: gallery.filterTopic,
+            filterFavorites: gallery.filterFavorites,
             gallerySearch: gallery.gallerySearch,
             setGallerySearch: gallery.setGallerySearch,
             galleryMeta: gallery.galleryMeta,
@@ -7148,13 +10553,20 @@ window.__ModuleLoader__.load({
             onRefreshGallery: gallery.handleRefreshGallery,
             onBackfillMetadata: gallery.handleBackfillMetadata,
             onLoadMore: gallery.handleLoadMore,
+            onToggleFavorite: handleToggleFavorite,
+            onBatchMove: gallery.batchMove,
+            onBatchDelete: gallery.batchDelete,
+            onSendToImg2Img: handleSendToImg2Img,
+            onSendToInpaint: handleSendToInpaint,
             onOpenPreview: lightbox.handleOpenPreview,
             onDragStart: handleDragStart,
             onCopyImage: copyImageToClipboard,
             onRevealInExplorer: handleRevealInExplorer,
             onForkToWorkbench: handleForkToWorkbench,
             onSendToChat: sendToChatComposer,
-            onCopyText: copyToClipboard
+            onSetAsBackdrop: handleSetBackdrop,
+            onCopyText: copyToClipboard,
+            showToast
           }),
 
           activeTab === 'codex' && h(CodexView, {
@@ -7164,7 +10576,30 @@ window.__ModuleLoader__.load({
             onOverwriteStudio: handleOverwriteStudio,
             onCopyText: copyToClipboard,
             onSendToChat: sendToChatComposer
-          })
+          }),
+
+          peekArt && h('div', {
+            className: 'nai5-peek-overlay',
+            onClick: () => setPeekArt(false),
+            title: '点击任意区域退出赏画模式'
+          },
+            h('div', { className: 'nai5-peek-pill' },
+              h('button', {
+                type: 'button',
+                className: 'nai5-peek-nav-btn',
+                title: '上一幅精选景致',
+                onClick: (e) => { e.stopPropagation(); scene.cycleCuratedScene(-1); }
+              }, h(Icon, { name: 'chevronLeft', size: 13 })),
+              h(Icon, { name: 'maple', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
+              h('span', null, `赏画 · 《${scene.activeTitle}》 · 点击画布返回`),
+              h('button', {
+                type: 'button',
+                className: 'nai5-peek-nav-btn',
+                title: '下一幅精选景致',
+                onClick: (e) => { e.stopPropagation(); scene.cycleCuratedScene(1); }
+              }, h(Icon, { name: 'chevronRight', size: 13 }))
+            )
+          )
         ),
 
         lightbox.activeItem && h(LightboxOverlay, {
@@ -7173,25 +10608,21 @@ window.__ModuleLoader__.load({
           handleDragStart,
           sendToChatComposer,
           handleForkToWorkbench,
+          onToggleFavorite: handleToggleFavorite,
+          onSetAsBackdrop: handleSetBackdrop,
+          onUpscale: handleUpscale,
+          onDirector: handleDirector,
+          onSendToImg2Img: handleSendToImg2Img,
+          onSendToInpaint: handleSendToInpaint,
           copyFullParams,
           copyImageToClipboard,
           handleRevealInExplorer,
           handleDeleteImage
         }),
 
-        toast && h('div', {
-          style: {
-            position: 'fixed', bottom: '24px', right: '24px',
-            background: 'rgba(15, 18, 26, 0.96)', color: '#f8fafc',
-            padding: '9px 15px', borderRadius: '9px',
-            border: '1px solid rgba(99, 102, 241, 0.45)',
-            boxShadow: '0 16px 36px -8px rgba(0, 0, 0, 0.85)',
-            fontSize: '12px', zIndex: 1000000,
-            display: 'flex', alignItems: 'center', gap: '8px'
-          }
-        },
-          h(Icon, { name: 'sparkles', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
-          toast
+        toast && h('div', { className: `nai5-toast-pill ${themeClass}` },
+          h(Icon, { name: 'maple', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
+          h('span', null, toast)
         )
       );
     }
@@ -7247,8 +10678,8 @@ window.__ModuleLoader__.load({
           h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px' } },
             h('div', { className: 'nai5-hanko-seal' }, 'N5'),
             h('div', null,
-              h('div', { style: { fontSize: '13px', fontWeight: 700, color: 'var(--fx-text-primary)' } }, 'NAI5 Studio 悬浮工作台'),
-              h('div', { style: { fontSize: '11px', color: 'var(--fx-text-muted)' } }, '独立毛玻璃悬浮窗 · 色调随系统自适应')
+              h('div', { style: { fontSize: '13px', fontWeight: 700, color: 'var(--fx-text-primary)' } }, 'NAI5 Studio · 枫霜工坊'),
+              h('div', { style: { fontSize: '11px', color: 'var(--fx-text-muted)' } }, '独立毛玻璃悬浮窗 · 枫霜金石美学 · 随系统自适应')
             )
           ),
           h('div', { style: { fontSize: '11.5px', color: 'var(--fx-text-secondary)', lineHeight: 1.6 } },
@@ -7260,7 +10691,7 @@ window.__ModuleLoader__.load({
               className: 'nai5-btn primary',
               style: { padding: '9px', justifyContent: 'center' },
               onClick: () => studioBus.emit({ type: 'OPEN', tab: 'studio' })
-            }, h(Icon, { name: 'sakura', size: 13 }), '展开 NAI5 Studio 工坊 (Alt+N)'),
+            }, h(Icon, { name: 'maple', size: 13 }), '展开 NAI5 Studio 工坊 (Alt+N)'),
             h('button', {
               type: 'button',
               className: 'nai5-btn',
@@ -7281,7 +10712,7 @@ window.__ModuleLoader__.load({
     function NovelAiSidebarTitle({ CSS_STYLES }) {
       return h('span', { style: { display: 'inline-flex', alignItems: 'center', gap: '6px' } },
         h(GlobalFloatingHost, { CSS_STYLES }),
-        h(Icon, { name: 'sakura', size: 13, style: { color: '#e0284f' } }),
+        h(Icon, { name: 'maple', size: 13, style: { color: '#D4243D' } }),
         h('span', null, 'NAI5 Studio')
       );
     }
@@ -7328,9 +10759,9 @@ window.__ModuleLoader__.load({
                     id: 'novelai-workbench',
                     commandId: 'novelai.workbench',
                     order: 5,
-                    title: () => 'NAI5 Studio 悬浮工作台',
-                    description: () => 'NovelAI V5 直连生图、2D 角色站位与宽屏高清画廊',
-                    icon: () => h(Icon, { name: 'sakura', size: 22, style: { color: '#e0284f' } })
+                    title: () => 'NAI5 Studio · 枫霜工作台',
+                    description: () => '枫霜浮世绘毛玻璃背景、金线菱格纹纱、2D 角色站位与高清画廊',
+                    icon: () => h(Icon, { name: 'maple', size: 22, style: { color: '#D4243D' } })
                   }]
                 });
                 uiCtx.slots.inject('sidebar.right.pane.tab', () => uiCtx.slots.register({

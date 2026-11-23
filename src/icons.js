@@ -1,8 +1,21 @@
-// Crisp Linear & Japanese Sakura Vector SVG Icon System
+// Crisp Linear & Frost-Maple Vector SVG Icon System
 const ICON_PATHS = {
   sakura: [
     ['path', { d: 'M12 2c1.3 2.1 2 4.2 1.4 6.2 1.9-.9 4-.6 5.9.5-1.4 1.9-3.2 3.1-5.2 3.1 1.4 1.6 1.7 3.7 1.1 5.9-2.1-.8-3.7-2.2-4.3-4.1-.6 1.9-2.2 3.3-4.3 4.1-.6-2.2-.3-4.3 1.1-5.9-2 0-3.8-1.2-5.2-3.1 1.9-1.1 4-1.4 5.9-.5-.6-2 .1-4.1 1.6-6.2z' }],
     ['circle', { cx: 12, cy: 12, r: 1.4 }]
+  ],
+  maple: [
+    ['path', { d: 'M12 2L14 7.2L19.2 5.2L16.2 10L21.8 11.2L16.8 14.2L18.5 17.6L13.2 16.4L12 18.2L10.8 16.4L5.5 17.6L7.2 14.2L2.2 11.2L7.8 10L4.8 5.2L10 7.2Z' }],
+    ['path', { d: 'M12 8.5v13.5' }]
+  ],
+  snowflake: [
+    ['path', { d: 'M12 2v20M4.93 7l14.14 10M19.07 7L4.93 17' }],
+    ['path', { d: 'M9.5 4.5L12 7l2.5-2.5M9.5 19.5L12 17l2.5 2.5M5.5 10.5L8 11.5L6.5 14M18.5 10.5L16 11.5l1.5 2.5' }]
+  ],
+  image: [
+    ['rect', { x: 3, y: 3, width: 18, height: 18, rx: 2 }],
+    ['circle', { cx: 8.5, cy: 8.5, r: 1.5 }],
+    ['path', { d: 'M21 15l-5-5L5 21' }]
   ],
   sun: [
     ['circle', { cx: 12, cy: 12, r: 4 }],
@@ -149,44 +162,92 @@ function Icon({ name, size = 14, style = {} }) {
   }, shapes.map(([tag, attrs], i) => h(tag, { key: i, ...attrs })));
 }
 
-const SAKURA_PETALS = [
-  { left: '14%', delay: '0s', dur: '14s', size: 13 },
-  { left: '34%', delay: '3.5s', dur: '17s', size: 10 },
-  { left: '56%', delay: '1.8s', dur: '15s', size: 14 },
-  { left: '74%', delay: '5.2s', dur: '18s', size: 11 },
-  { left: '88%', delay: '2.4s', dur: '13s', size: 15 },
-  { left: '95%', delay: '7.0s', dur: '16s', size: 12 }
+const STUDIO_SCENES = [
+  {
+    id: 'moonblade',
+    title: '朔月寒霜',
+    subtitle: '玄冰冷月 · 绯枫映夜',
+    tone: 'dark',
+    pos: '52% 28%',
+    gradient: 'radial-gradient(ellipse 90% 65% at 72% 24%, rgba(164, 212, 240, 0.22) 0%, rgba(212, 54, 72, 0.14) 36%, transparent 72%), radial-gradient(ellipse 65% 55% at 22% 78%, rgba(212, 54, 72, 0.18) 0%, rgba(28, 38, 66, 0.28) 52%, transparent 80%), linear-gradient(135deg, #0d111a 0%, #161826 48%, #1d141b 100%)'
+  },
+  {
+    id: 'dawn-snow',
+    title: '霜晓素雪',
+    subtitle: '素雪朱檐 · 晨曦微明',
+    tone: 'light',
+    pos: '54% 24%',
+    gradient: 'radial-gradient(ellipse 85% 60% at 74% 22%, rgba(212, 54, 72, 0.14) 0%, rgba(186, 152, 82, 0.10) 40%, transparent 74%), radial-gradient(ellipse 70% 55% at 20% 80%, rgba(132, 184, 214, 0.18) 0%, transparent 72%), linear-gradient(145deg, #f8f6f7 0%, #eef2f7 52%, #f9f1f2 100%)'
+  },
+  {
+    id: 'maple-ink',
+    title: '孤枫水墨',
+    subtitle: '极简素韵 · 一叶惊绯',
+    tone: 'both',
+    pos: '60% 22%',
+    gradient: 'radial-gradient(ellipse 75% 58% at 68% 28%, rgba(208, 42, 62, 0.18) 0%, rgba(155, 29, 44, 0.08) 44%, transparent 75%), radial-gradient(ellipse 80% 60% at 32% 72%, rgba(92, 112, 138, 0.14) 0%, transparent 70%), linear-gradient(150deg, rgba(160, 170, 188, 0.16) 0%, rgba(212, 54, 72, 0.08) 100%)'
+  },
+  {
+    id: 'lantern-dusk',
+    title: '雪暮金灯',
+    subtitle: '金灯暖雪 · 绯袖流影',
+    tone: 'both',
+    pos: '56% 24%',
+    gradient: 'radial-gradient(ellipse 70% 55% at 70% 26%, rgba(226, 180, 92, 0.24) 0%, rgba(212, 54, 72, 0.14) 42%, transparent 74%), radial-gradient(ellipse 75% 60% at 25% 75%, rgba(132, 178, 212, 0.14) 0%, transparent 72%), linear-gradient(135deg, rgba(44, 30, 32, 0.35) 0%, rgba(196, 136, 74, 0.12) 100%)'
+  }
 ];
 
-function StudioBackdrop() {
+const STUDIO_PARTICLES = [
+  { kind: 'maple', left: '16%', delay: '0s', dur: '16s', size: 13 },
+  { kind: 'snow', left: '26%', delay: '2.2s', dur: '13s', size: 9 },
+  { kind: 'maple', left: '44%', delay: '4.1s', dur: '18s', size: 11 },
+  { kind: 'snow', left: '53%', delay: '1.1s', dur: '12s', size: 8 },
+  { kind: 'maple', left: '66%', delay: '6.3s', dur: '15s', size: 14 },
+  { kind: 'snow', left: '72%', delay: '3.6s', dur: '14s', size: 10 },
+  { kind: 'maple', left: '84%', delay: '2.7s', dur: '17s', size: 12 },
+  { kind: 'snow', left: '89%', delay: '5.5s', dur: '11s', size: 8 },
+  { kind: 'maple', left: '94%', delay: '7.4s', dur: '16s', size: 11 },
+  { kind: 'snow', left: '38%', delay: '6.8s', dur: '15s', size: 9 },
+  { kind: 'snow', left: '61%', delay: '8.2s', dur: '13s', size: 7 }
+];
+
+function StudioBackdrop({ bgUrl, bgPos, bgGradient } = {}) {
+  const resolvedBg = bgUrl ? `url("${bgUrl}")` : (bgGradient || '');
+  const artStyle = (resolvedBg || bgPos)
+    ? {
+        ...(resolvedBg ? { backgroundImage: resolvedBg } : {}),
+        ...(bgPos ? { backgroundPosition: bgPos } : {})
+      }
+    : undefined;
+
   return h(React.Fragment, null,
-    h('div', { className: 'nai5-studio-bg-art' }),
+    h('div', { className: 'nai5-studio-bg-art', style: artStyle }),
     h('div', { className: 'nai5-studio-bg-veil' }),
     h('div', { className: 'nai5-studio-ukiyo-pattern' }),
     h('svg', {
-      viewBox: '0 0 400 140',
+      viewBox: '0 0 420 140',
       style: {
         position: 'absolute',
-        right: '-10px',
-        bottom: '-8px',
-        width: '340px',
+        right: '-6px',
+        bottom: '-6px',
+        width: '360px',
         height: '120px',
         zIndex: 1,
-        opacity: 0.16,
-        pointerEvents: 'none',
-        color: 'var(--fx-crimson-soft)'
+        opacity: 0.22,
+        pointerEvents: 'none'
       }
     },
-      h('path', { d: 'M20 120 Q80 60 150 105 T280 85 T390 110', fill: 'none', stroke: 'currentColor', strokeWidth: 2 }),
-      h('path', { d: 'M60 135 Q130 75 200 115 T340 95 T410 125', fill: 'none', stroke: 'currentColor', strokeWidth: 1.2 })
+      h('path', { d: 'M18 122 L152 94 L274 72 L408 44', fill: 'none', stroke: 'var(--fx-gold)', strokeWidth: 1.2, strokeDasharray: '5 4' }),
+      h('path', { d: 'M72 136 Q212 96 414 68', fill: 'none', stroke: 'var(--fx-ice-soft)', strokeWidth: 1.1 }),
+      h('path', { d: 'M140 138 Q276 112 418 96', fill: 'none', stroke: 'var(--fx-crimson-soft)', strokeWidth: 0.9, opacity: 0.7 })
     ),
     h('div', { className: 'nai5-sakura-layer' },
-      SAKURA_PETALS.map((p, i) =>
+      STUDIO_PARTICLES.map((p, i) =>
         h('div', {
           key: i,
-          className: 'nai5-petal',
+          className: `nai5-petal ${p.kind === 'snow' ? 'is-snow' : 'is-maple'}`,
           style: { left: p.left, animationDelay: p.delay, animationDuration: p.dur }
-        }, h(Icon, { name: 'sakura', size: p.size }))
+        }, h(Icon, { name: p.kind === 'snow' ? 'snowflake' : 'maple', size: p.size }))
       )
     )
   );

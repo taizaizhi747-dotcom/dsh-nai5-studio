@@ -1,75 +1,99 @@
 /* ============================================================
-   NAI5 Studio — 浮世落樱毛玻璃主题 (Ukiyo Sakura Glassmorphism)
-   支持跟随系统/DSH亮暗色调自动切换 (Dark: 绯夜玄冬 / Light: 雪昼和纸)
-   支持自定义背景壁纸 (--nai5-wallpaper) + 浮世绘青海波暗纹 + 飘落绯樱 + 磨砂毛玻璃
+   NAI5 Studio v4.0 — NAI5 Studio · 枫霜画室毛玻璃主题 (Frost & Scarlet Maple Atelier)
+   源自极简东方金石与浮世绘霜月美学基因：玄月寒霜 · 素雪鸟居 · 绯枫落雪 · 金线菱格透纱
+   支持自动 / 手动切换 (Dark: 玄月·寒霜绯刃 / Light: 霜晓·素雪鸟居)
    ============================================================ */
 
-/* ---------- 1. 主题色板变量：默认深色「绯夜 · 玄冬残雪」 ---------- */
+/* ---------- 1. 深色色板：「玄月 · 寒霜绯刃」 ---------- */
 .nai5-theme-dark {
-  --fx-window-tint: rgba(14, 13, 19, 0.58);
+  --fx-window-tint: rgba(8, 16, 24, 0.56);
   --fx-window-overlay:
-    linear-gradient(105deg, rgba(12, 12, 18, 0.86) 0%, rgba(15, 14, 22, 0.68) 48%, rgba(18, 12, 20, 0.38) 100%),
-    linear-gradient(180deg, rgba(10, 10, 16, 0.72) 0%, rgba(12, 11, 18, 0.35) 55%, rgba(28, 10, 18, 0.55) 100%);
+    linear-gradient(106deg, rgba(7, 13, 21, 0.88) 0%, rgba(10, 19, 30, 0.66) 44%, rgba(10, 18, 28, 0.34) 100%),
+    linear-gradient(180deg, rgba(7, 13, 21, 0.72) 0%, rgba(9, 17, 26, 0.28) 54%, rgba(18, 10, 16, 0.48) 100%);
   --fx-art-opacity: 0.78;
-  --fx-art-filter: saturate(1.08) contrast(1.04) brightness(0.92);
+  --fx-art-filter: saturate(1.06) contrast(1.03) brightness(0.94);
 
-  --fx-glass-card: rgba(20, 19, 28, 0.56);
-  --fx-glass-card-hover: rgba(28, 25, 38, 0.66);
-  --fx-glass-header: rgba(16, 15, 23, 0.68);
-  --fx-glass-input: rgba(10, 10, 16, 0.58);
-  --fx-glass-popover: rgba(20, 18, 27, 0.90);
+  --fx-glass-card: rgba(12, 22, 33, 0.60);
+  --fx-glass-card-hover: rgba(17, 30, 44, 0.72);
+  --fx-glass-header: rgba(9, 17, 26, 0.74);
+  --fx-glass-input: rgba(7, 13, 21, 0.62);
+  --fx-glass-popover: rgba(11, 20, 30, 0.94);
 
-  --fx-border-outer: rgba(255, 195, 210, 0.20);
-  --fx-border-card: rgba(255, 215, 225, 0.12);
-  --fx-border-subtle: rgba(255, 215, 225, 0.08);
-  --fx-border-focus: rgba(230, 46, 82, 0.72);
-  --fx-inner-highlight: rgba(255, 230, 236, 0.12);
+  --fx-border-outer: rgba(214, 182, 124, 0.28);
+  --fx-border-card: rgba(205, 222, 240, 0.14);
+  --fx-border-subtle: rgba(205, 222, 240, 0.08);
+  --fx-border-gold: rgba(214, 182, 124, 0.36);
+  --fx-border-focus: rgba(224, 48, 72, 0.72);
+  --fx-inner-highlight: rgba(226, 238, 250, 0.12);
 
-  --fx-text-primary: #f7f2f4;
-  --fx-text-secondary: #c4b6be;
-  --fx-text-muted: #8c7d87;
+  --fx-text-primary: #eff5fa;
+  --fx-text-secondary: #bac9d8;
+  --fx-text-muted: #7c91a6;
 
-  --fx-crimson: #e0284f;
-  --fx-crimson-soft: #ff5c7c;
-  --fx-crimson-deep: #9e1130;
-  --fx-sakura: #ffb3c6;
-  --fx-gold: #e2b887;
-  --fx-shadow-main: 0 34px 84px -16px rgba(0, 0, 0, 0.88), 0 0 40px -14px rgba(216, 31, 67, 0.35);
-  --fx-ukiyo-stroke: rgba(255, 190, 205, 0.055);
+  --fx-crimson: #d4243d;
+  --fx-crimson-soft: #e84a5f;
+  --fx-crimson-deep: #8f1024;
+  --fx-maple: #e84a5f;
+  --fx-snow: #dcebfb;
+  --fx-sakura: #e84a5f;
+  --fx-gold: #d6b67c;
+  --fx-ice-soft: #6cc7ff;
+  --fx-shadow-main: 0 34px 84px -16px rgba(2, 6, 12, 0.88), 0 0 42px -16px rgba(108, 199, 255, 0.18), 0 0 34px -14px rgba(212, 36, 61, 0.28);
+  --fx-mesh-stroke: rgba(214, 182, 124, 0.055);
+  --fx-ukiyo-stroke: rgba(214, 182, 124, 0.055);
 }
 
-/* ---------- 2. 浅色模式色板：「雪昼 · 绯樱和纸」 ---------- */
+/* ---------- 2. 浅色色板：「霜晓 · 素雪鸟居」 ---------- */
 .nai5-theme-light {
-  --fx-window-tint: rgba(252, 247, 249, 0.52);
+  --fx-window-tint: rgba(238, 243, 247, 0.56);
   --fx-window-overlay:
-    linear-gradient(105deg, rgba(255, 250, 252, 0.88) 0%, rgba(252, 244, 247, 0.72) 50%, rgba(250, 238, 243, 0.42) 100%),
-    linear-gradient(180deg, rgba(255, 252, 253, 0.76) 0%, rgba(255, 245, 248, 0.38) 55%, rgba(242, 215, 224, 0.56) 100%);
-  --fx-art-opacity: 0.72;
-  --fx-art-filter: saturate(1.06) contrast(1.01) brightness(1.04);
+    linear-gradient(106deg, rgba(244, 248, 252, 0.88) 0%, rgba(238, 244, 250, 0.70) 48%, rgba(232, 240, 248, 0.36) 100%),
+    linear-gradient(180deg, rgba(248, 251, 254, 0.78) 0%, rgba(240, 246, 252, 0.36) 54%, rgba(224, 232, 242, 0.52) 100%);
+  --fx-art-opacity: 0.74;
+  --fx-art-filter: saturate(1.06) contrast(1.02) brightness(1.02);
 
-  --fx-glass-card: rgba(255, 255, 255, 0.60);
-  --fx-glass-card-hover: rgba(255, 255, 255, 0.75);
-  --fx-glass-header: rgba(255, 250, 252, 0.74);
-  --fx-glass-input: rgba(255, 255, 255, 0.70);
-  --fx-glass-popover: rgba(255, 250, 252, 0.94);
+  --fx-glass-card: rgba(251, 253, 255, 0.68);
+  --fx-glass-card-hover: rgba(255, 255, 255, 0.82);
+  --fx-glass-header: rgba(246, 249, 252, 0.78);
+  --fx-glass-input: rgba(255, 255, 255, 0.76);
+  --fx-glass-popover: rgba(249, 251, 254, 0.96);
 
-  --fx-border-outer: rgba(216, 31, 67, 0.24);
-  --fx-border-card: rgba(216, 31, 67, 0.14);
-  --fx-border-subtle: rgba(160, 110, 125, 0.14);
-  --fx-border-focus: rgba(216, 31, 67, 0.68);
-  --fx-inner-highlight: rgba(255, 255, 255, 0.75);
+  --fx-border-outer: rgba(169, 131, 68, 0.32);
+  --fx-border-card: rgba(48, 72, 98, 0.14);
+  --fx-border-subtle: rgba(48, 72, 98, 0.09);
+  --fx-border-gold: rgba(169, 131, 68, 0.38);
+  --fx-border-focus: rgba(194, 28, 52, 0.68);
+  --fx-inner-highlight: rgba(255, 255, 255, 0.85);
 
-  --fx-text-primary: #22191e;
-  --fx-text-secondary: #5e4b55;
-  --fx-text-muted: #917b86;
+  --fx-text-primary: #151e29;
+  --fx-text-secondary: #435569;
+  --fx-text-muted: #72859b;
 
-  --fx-crimson: #d41c43;
-  --fx-crimson-soft: #e0284f;
-  --fx-crimson-deep: #9e1130;
-  --fx-sakura: #d81f43;
-  --fx-gold: #b5834c;
-  --fx-shadow-main: 0 28px 72px -16px rgba(60, 20, 35, 0.28), 0 0 32px -12px rgba(216, 31, 67, 0.18);
-  --fx-ukiyo-stroke: rgba(216, 31, 67, 0.065);
+  --fx-crimson: #c21c34;
+  --fx-crimson-soft: #d4243d;
+  --fx-crimson-deep: #8a1123;
+  --fx-maple: #c21c34;
+  --fx-snow: #4e86b8;
+  --fx-sakura: #c21c34;
+  --fx-gold: #a98344;
+  --fx-ice-soft: #1d7ec2;
+  --fx-shadow-main: 0 28px 72px -16px rgba(15, 28, 46, 0.24), 0 0 32px -12px rgba(194, 28, 52, 0.14);
+  --fx-mesh-stroke: rgba(169, 131, 68, 0.065);
+  --fx-ukiyo-stroke: rgba(169, 131, 68, 0.065);
+}
+
+/* 画卷背景通透度三档 (静谧 / 平衡 / 浓映) */
+.nai5-floating-window[data-bg-intensity="soft"] {
+  --fx-art-opacity: 0.42;
+}
+.nai5-floating-window[data-bg-intensity="soft"] .nai5-studio-bg-veil {
+  opacity: 0.98;
+}
+.nai5-floating-window[data-bg-intensity="vivid"] {
+  --fx-art-opacity: 0.94;
+}
+.nai5-floating-window[data-bg-intensity="vivid"] .nai5-studio-bg-veil {
+  opacity: 0.56;
 }
 
 .nai5-floating-window,
@@ -90,7 +114,7 @@
   box-sizing: border-box;
 }
 
-/* ---------- 3. 独立悬浮窗主体与背景画卷 ---------- */
+/* ---------- 3. 独立悬浮窗主体与底层工坊画卷 ---------- */
 .nai5-floating-window {
   position: fixed;
   z-index: 99990;
@@ -112,23 +136,23 @@
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* 最底层：渐变氛围与可选自定义壁纸背景层 */
+/* 最底层：枫霜氛围画卷背景层 (随景致与明暗主题切换) */
 .nai5-studio-bg-art {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-image: var(--nai5-wallpaper, radial-gradient(900px 600px at 82% 22%, rgba(224, 40, 79, 0.22), transparent 62%), radial-gradient(700px 520px at 18% 82%, rgba(226, 184, 135, 0.14), transparent 60%));
+  background-image: radial-gradient(ellipse 90% 65% at 72% 24%, rgba(164, 212, 240, 0.22) 0%, rgba(212, 54, 72, 0.14) 36%, transparent 72%), radial-gradient(ellipse 65% 55% at 22% 78%, rgba(212, 54, 72, 0.18) 0%, rgba(28, 38, 66, 0.28) 52%, transparent 80%), linear-gradient(135deg, #0d111a 0%, #161826 48%, #1d141b 100%);
   background-size: cover;
-  background-position: 68% 28%;
+  background-position: 52% 28%;
   background-repeat: no-repeat;
   opacity: var(--fx-art-opacity);
   filter: var(--fx-art-filter);
   transform: scale(1.015);
-  transition: opacity 0.35s ease, filter 0.35s ease, transform 0.5s ease;
+  transition: background-image 0.4s ease, background-position 0.4s ease, opacity 0.35s ease, filter 0.35s ease, transform 0.5s ease;
   pointer-events: none;
 }
 
-/* 渐晕柔化层：保持左侧编辑区与卡片温润通透 */
+/* 渐晕柔化层：让左侧编辑区温润通透、右侧与下方画卷景致自然浮现 */
 .nai5-studio-bg-veil {
   position: absolute;
   inset: 0;
@@ -138,35 +162,95 @@
   pointer-events: none;
 }
 
-/* 浮世绘青海波 (Seigaiha) 与和式云纹装饰层 */
+/* 和风织金「金线菱格透纱 (Gold Diamond Lattice Gauze)」底纹层 */
 .nai5-studio-ukiyo-pattern {
   position: absolute;
   inset: 0;
   z-index: 1;
-  opacity: 0.85;
-  background-image: radial-gradient(circle at 100% 100%, transparent 18px, var(--fx-ukiyo-stroke) 19px, var(--fx-ukiyo-stroke) 20px, transparent 21px),
-                    radial-gradient(circle at 0% 100%, transparent 18px, var(--fx-ukiyo-stroke) 19px, var(--fx-ukiyo-stroke) 20px, transparent 21px),
-                    radial-gradient(circle at 50% 100%, transparent 10px, var(--fx-ukiyo-stroke) 11px, transparent 12px);
-  background-size: 48px 24px;
+  opacity: 0.9;
+  background-image:
+    repeating-linear-gradient(45deg, transparent 0, transparent 22px, var(--fx-mesh-stroke) 22px, var(--fx-mesh-stroke) 23px),
+    repeating-linear-gradient(-45deg, transparent 0, transparent 22px, var(--fx-mesh-stroke) 22px, var(--fx-mesh-stroke) 23px);
   pointer-events: none;
 }
 
-/* 赏画模式 (Peeking Mode)：突出自定义壁纸清晰度，卡片化为薄冰晶 */
+/* 赏画模式 (Peeking Mode)：完整透现底层工坊画卷，全标签内容统一退让并支持点击任意处返回 */
+.nai5-floating-window.peek-art .nai5-win-header {
+  z-index: 60;
+  background: var(--fx-glass-header);
+}
 .nai5-floating-window.peek-art .nai5-studio-bg-art {
-  opacity: 0.98;
-  filter: saturate(1.12) contrast(1.05) brightness(1.02);
+  opacity: 1 !important;
+  filter: saturate(1.06) contrast(1.02) brightness(1.0);
   transform: scale(1.0);
+  background-position: center 22% !important;
 }
 .nai5-floating-window.peek-art .nai5-studio-bg-veil {
-  opacity: 0.22;
+  opacity: 0.03 !important;
 }
-.nai5-floating-window.peek-art .nai5-card,
-.nai5-floating-window.peek-art .nai5-col-right {
-  opacity: 0.28;
+.nai5-floating-window.peek-art .nai5-studio-ukiyo-pattern {
+  opacity: 0.14;
+}
+.nai5-floating-window.peek-art .nai5-workbench-body,
+.nai5-floating-window.peek-art .nai5-gallery-wrap,
+.nai5-floating-window.peek-art .nai5-codex-card,
+.nai5-floating-window.peek-art .nai5-gallery-card {
+  opacity: 0.05;
+  pointer-events: none;
   transition: opacity 0.25s ease;
 }
 
-/* 飘落樱花花瓣动画层 */
+.nai5-peek-overlay {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 28;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 18px;
+  cursor: pointer;
+}
+
+.nai5-peek-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--fx-glass-popover);
+  border: 1px solid var(--fx-border-gold);
+  box-shadow: var(--fx-shadow-main);
+  backdrop-filter: blur(18px);
+  color: var(--fx-text-primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.nai5-peek-nav-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.14s ease;
+}
+
+.nai5-peek-nav-btn:hover {
+  border-color: var(--fx-gold);
+  color: var(--fx-crimson-soft);
+  background: rgba(212, 36, 61, 0.14);
+}
+
+/* 绯枫飘落与冬雪微尘双轨动效层 */
 .nai5-sakura-layer {
   position: absolute;
   inset: 0;
@@ -178,17 +262,35 @@
 .nai5-petal {
   position: absolute;
   top: -24px;
-  color: var(--fx-sakura);
-  opacity: 0.45;
-  animation: nai5SakuraFall linear infinite;
-  filter: drop-shadow(0 2px 6px rgba(216, 31, 67, 0.25));
 }
 
-@keyframes nai5SakuraFall {
-  0% { transform: translate3d(0, -20px, 0) rotate(0deg) scale(0.85); opacity: 0; }
-  15% { opacity: 0.55; }
-  85% { opacity: 0.45; }
-  100% { transform: translate3d(-90px, 780px, 0) rotate(320deg) scale(1.05); opacity: 0; }
+.nai5-petal.is-maple {
+  color: var(--fx-maple);
+  opacity: 0.42;
+  animation: nai5MapleDrift linear infinite;
+  filter: drop-shadow(0 2px 6px rgba(194, 28, 52, 0.28));
+}
+
+.nai5-petal.is-snow {
+  color: var(--fx-snow);
+  opacity: 0.36;
+  animation: nai5SnowDrift linear infinite;
+  filter: drop-shadow(0 0 4px rgba(108, 199, 255, 0.35));
+}
+
+@keyframes nai5MapleDrift {
+  0% { transform: translate3d(0, -24px, 0) rotate(0deg) scale(0.86); opacity: 0; }
+  14% { opacity: 0.50; }
+  50% { transform: translate3d(-55px, 370px, 0) rotate(140deg) scale(1.0); }
+  86% { opacity: 0.42; }
+  100% { transform: translate3d(-115px, 780px, 0) rotate(290deg) scale(0.92); opacity: 0; }
+}
+
+@keyframes nai5SnowDrift {
+  0% { transform: translate3d(0, -18px, 0) rotate(0deg) scale(0.75); opacity: 0; }
+  18% { opacity: 0.44; }
+  84% { opacity: 0.32; }
+  100% { transform: translate3d(-32px, 780px, 0) rotate(180deg) scale(0.95); opacity: 0; }
 }
 
 /* ---------- 4. 缩放手柄 ---------- */
@@ -198,10 +300,10 @@
 .nai5-resize-se { position: absolute; right: 0; bottom: 0; width: 16px; height: 16px; cursor: nwse-resize; z-index: 31; }
 .nai5-resize-sw { position: absolute; left: 0; bottom: 0; width: 16px; height: 16px; cursor: nesw-resize; z-index: 31; }
 
-/* ---------- 5. 顶部和式毛玻璃标题栏与朱印 ---------- */
+/* ---------- 5. 顶部和式毛玻璃标题栏与和风朱印 ---------- */
 .nai5-win-header {
   position: relative;
-  z-index: 10;
+  z-index: 60;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -211,40 +313,40 @@
   backdrop-filter: blur(18px) saturate(160%);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
   border-bottom: 1px solid var(--fx-border-card);
-  box-shadow: 0 1px 0 rgba(216, 31, 67, 0.12);
+  box-shadow: 0 1px 0 rgba(214, 182, 124, 0.14);
   cursor: move;
   flex: none;
-  gap: 10px;
+  gap: 8px;
 }
 
-/* 水引 (Mizuhiki) 底部装饰金红细线 */
+/* 霜刃水引装饰线 (Ice-Gold-Crimson Edge Line) */
 .nai5-win-header::after {
   content: '';
   position: absolute;
-  left: 18px;
-  right: 18px;
+  left: 16px;
+  right: 16px;
   bottom: -1px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--fx-crimson-soft), var(--fx-gold), var(--fx-crimson-soft), transparent);
-  opacity: 0.55;
+  background: linear-gradient(90deg, transparent 3%, var(--fx-ice-soft) 18%, var(--fx-gold) 38%, var(--fx-crimson-soft) 50%, var(--fx-gold) 62%, var(--fx-ice-soft) 82%, transparent 97%);
+  opacity: 0.62;
   pointer-events: none;
 }
 
 .nai5-win-brand {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   min-width: 0;
 }
 
-/* 和式朱印 (Hanko Stamp) 徽章 */
+/* 和式朱印 (Hanko Stamp) + 古典描金边框 */
 .nai5-hanko-seal {
   width: 26px;
   height: 26px;
   border-radius: 6px;
-  background: linear-gradient(135deg, #e0284f 0%, #9e1130 100%);
-  border: 1px solid rgba(255, 220, 228, 0.45);
-  box-shadow: 0 3px 12px rgba(216, 31, 67, 0.45), inset 0 0 0 1.5px rgba(255, 255, 255, 0.18);
+  background: linear-gradient(135deg, var(--fx-crimson) 0%, var(--fx-crimson-deep) 100%);
+  border: 1px solid rgba(214, 182, 124, 0.58);
+  box-shadow: 0 4px 14px rgba(194, 28, 52, 0.45), inset 0 0 0 1px rgba(255, 240, 215, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -268,11 +370,17 @@
   font-weight: 600;
   padding: 1.5px 8px;
   border-radius: 999px;
-  background: rgba(224, 40, 79, 0.14);
-  border: 1px solid rgba(224, 40, 79, 0.34);
-  color: var(--fx-crimson-soft);
+  background: rgba(214, 182, 124, 0.12);
+  border: 1px solid var(--fx-border-gold);
+  color: var(--fx-gold);
   letter-spacing: 0.06em;
   white-space: nowrap;
+}
+
+@media (max-width: 1040px) {
+  .nai5-brand-sub {
+    display: none;
+  }
 }
 
 /* 顶部中段切换器 */
@@ -305,14 +413,14 @@
 
 .nai5-seg-btn:hover {
   color: var(--fx-text-primary);
-  background: rgba(224, 40, 79, 0.08);
+  background: rgba(212, 36, 61, 0.09);
 }
 
 .nai5-seg-btn.active {
-  background: linear-gradient(135deg, #e0284f 0%, #b01537 100%);
+  background: linear-gradient(135deg, var(--fx-crimson) 0%, var(--fx-crimson-deep) 100%);
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 4px 12px -4px rgba(216, 31, 67, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  box-shadow: 0 4px 14px -4px rgba(194, 28, 52, 0.72), inset 0 1px 0 rgba(255, 242, 220, 0.34);
 }
 
 .nai5-win-actions {
@@ -337,17 +445,17 @@
 }
 
 .nai5-win-ctrl:hover {
-  background: rgba(224, 40, 79, 0.14);
-  border-color: rgba(224, 40, 79, 0.32);
+  background: rgba(212, 36, 61, 0.14);
+  border-color: var(--fx-border-gold);
   color: var(--fx-text-primary);
 }
 
 .nai5-win-ctrl.danger:hover {
-  background: rgba(224, 40, 79, 0.24);
-  color: #ff4d6d;
+  background: rgba(212, 36, 61, 0.24);
+  color: var(--fx-crimson-soft);
 }
 
-/* ---------- 6. 落樱毛玻璃桌面悬浮球 (Floating Orb) ---------- */
+/* ---------- 6. NAI5 Studio · 枫霜毛玻璃桌面悬浮球 (Floating Orb) ---------- */
 .nai5-floating-orb {
   position: relative;
   display: flex;
@@ -361,7 +469,7 @@
   border: 1px solid var(--fx-border-outer);
   box-shadow:
     0 18px 42px -10px rgba(0, 0, 0, 0.65),
-    0 0 26px -6px rgba(216, 31, 67, 0.45),
+    0 0 26px -6px rgba(212, 36, 61, 0.38),
     inset 0 1px 0 var(--fx-inner-highlight);
   cursor: pointer;
   user-select: none;
@@ -369,10 +477,10 @@
 }
 
 .nai5-floating-orb:hover {
-  border-color: var(--fx-crimson-soft);
+  border-color: var(--fx-gold);
   box-shadow:
     0 22px 48px -10px rgba(0, 0, 0, 0.75),
-    0 0 32px -4px rgba(216, 31, 67, 0.7),
+    0 0 32px -4px rgba(212, 36, 61, 0.58),
     inset 0 1px 0 var(--fx-inner-highlight);
   transform: translateY(-2px) scale(1.02);
 }
@@ -381,11 +489,11 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-image: radial-gradient(circle at 35% 30%, #ff758f 0%, #e0284f 52%, #7a0c26 100%);
-  background-size: 240%;
-  background-position: 62% 24%;
-  border: 1.5px solid var(--fx-crimson-soft);
-  box-shadow: 0 0 10px rgba(216, 31, 67, 0.55);
+  background-image: radial-gradient(circle at 32% 28%, rgba(243, 210, 153, 0.92), rgba(200, 35, 55, 0.94) 55%, rgba(28, 12, 18, 0.96) 100%);
+  background-size: cover;
+  background-position: center 20%;
+  border: 1.5px solid var(--fx-gold);
+  box-shadow: 0 0 12px rgba(212, 36, 61, 0.50), 0 0 0 1px rgba(212, 36, 61, 0.35);
   position: relative;
   flex: none;
 }
@@ -407,16 +515,156 @@
   container-type: inline-size;
 }
 
-.nai5-col-left {
-  min-width: 360px;
-  overflow-y: auto;
-  padding: var(--fx-pad);
+/* v3.0 Left Docked 3-Layer Creation Inspector */
+.nai5-inspector {
+  min-width: 340px;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--fx-gap);
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.04);
 }
 
-/* 主工作台左右分栏拖拽条 (调节左栏提示词与右栏舞台预览比例) */
+.nai5-inspector-tabs {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 8px var(--fx-pad) 6px;
+  border-bottom: 1px solid var(--fx-border-subtle);
+  background: var(--fx-glass-header);
+  backdrop-filter: blur(12px);
+}
+
+.nai5-insp-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--fx-text-secondary);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.nai5-insp-tab:hover {
+  color: var(--fx-text-primary);
+  background: rgba(224, 40, 79, 0.08);
+}
+
+.nai5-insp-tab.active {
+  background: var(--fx-glass-card);
+  border-color: rgba(224, 40, 79, 0.42);
+  color: var(--fx-crimson-soft);
+  box-shadow: 0 3px 10px -4px rgba(216, 31, 67, 0.35), inset 0 1px 0 var(--fx-inner-highlight);
+}
+
+.nai5-tab-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(224, 40, 79, 0.22);
+  color: var(--fx-crimson-soft);
+}
+
+.nai5-tab-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--fx-crimson-soft);
+  box-shadow: 0 0 6px var(--fx-crimson-soft);
+}
+
+.nai5-inspector-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 10px var(--fx-pad);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nai5-inspector-footer {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 9px var(--fx-pad) 11px;
+  border-top: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-header);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: 0 -8px 24px -14px rgba(0, 0, 0, 0.35);
+}
+
+.nai5-quick-chips {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.nai5-status-chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 2.5px 8px;
+  font-size: 10.5px;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.14s ease;
+}
+
+.nai5-status-chip:hover {
+  border-color: rgba(224, 40, 79, 0.45);
+  color: var(--fx-text-primary);
+}
+
+.nai5-status-chip.is-accent {
+  border-color: rgba(224, 40, 79, 0.48);
+  background: rgba(224, 40, 79, 0.14);
+  color: var(--fx-crimson-soft);
+}
+
+.nai5-generate-cta {
+  width: 100%;
+  padding: 10px 15px !important;
+  font-size: 13px !important;
+  border-radius: 10px !important;
+  justify-content: space-between !important;
+}
+
+.nai5-cta-cost {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.28);
+  color: #fce7f3;
+  font-weight: 500;
+}
+
+.nai5-cta-cost.free {
+  background: rgba(16, 185, 129, 0.25);
+  color: #a7f3d0;
+}
+
+/* 主工作台左右分栏拖拽条 */
 .nai5-main-col-splitter {
   width: 10px;
   margin: 0 -2px;
@@ -447,23 +695,200 @@
   box-shadow: 0 0 10px rgba(224, 40, 79, 0.7);
 }
 
-.nai5-col-right {
+/* v3.0 Right Expansive Hero Canvas Stage */
+.nai5-stage-col {
   flex: 1;
   min-width: 320px;
-  overflow-y: auto;
-  padding: var(--fx-pad);
+  height: 100%;
+  overflow: hidden;
+  padding: 9px var(--fx-pad) 10px;
   display: flex;
   flex-direction: column;
-  gap: var(--fx-gap);
-  background: rgba(0, 0, 0, 0.045);
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.025);
 }
 
-/* 右栏下半部参数自适应双列网格 (宽屏/全屏时自动并排，节省纵向空间给预览舞台) */
-.nai5-params-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
-  gap: var(--fx-gap);
+.nai5-stage-hud {
   flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.nai-seg-mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2.5px;
+  border-radius: 8px;
+  background: var(--fx-glass-input);
+  border: 1px solid var(--fx-border-card);
+}
+
+.nai-seg-mini-btn {
+  padding: 3.5px 10px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--fx-text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.14s ease;
+}
+
+.nai-seg-mini-btn:hover {
+  color: var(--fx-text-primary);
+}
+
+.nai-seg-mini-btn.active {
+  background: linear-gradient(135deg, var(--fx-crimson) 0%, var(--fx-crimson-deep) 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 8px -2px rgba(194, 28, 52, 0.65), inset 0 1px 0 rgba(255, 240, 215, 0.28);
+}
+
+.nai5-stage-subbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 6px 10px;
+  border-radius: 9px;
+  background: var(--fx-glass-card);
+  border: 1px solid var(--fx-border-card);
+  backdrop-filter: blur(12px);
+}
+
+.nai-subbar-slider {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--fx-text-secondary);
+}
+
+.nai-subbar-slider input[type="range"] {
+  width: 90px;
+}
+
+.nai5-stage-viewport {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  border-radius: 12px;
+  background: var(--fx-glass-input);
+  border: 1px solid var(--fx-border-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 10px;
+  box-shadow: inset 0 1px 0 var(--fx-inner-highlight);
+}
+
+.nai5-stage-viewport::before,
+.nai5-stage-viewport::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.72;
+}
+
+.nai5-stage-viewport::before {
+  top: 7px;
+  left: 7px;
+  border-top: 1.5px solid var(--fx-border-gold);
+  border-left: 1.5px solid var(--fx-border-gold);
+  border-top-left-radius: 3px;
+}
+
+.nai5-stage-viewport::after {
+  bottom: 7px;
+  right: 7px;
+  border-bottom: 1.5px solid var(--fx-border-gold);
+  border-right: 1.5px solid var(--fx-border-gold);
+  border-bottom-right-radius: 3px;
+}
+
+.nai5-stage-img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  filter: drop-shadow(0 14px 32px rgba(0, 0, 0, 0.45));
+  cursor: zoom-in;
+  display: block;
+  transition: transform 0.18s ease;
+}
+
+.nai5-stage-img:hover {
+  transform: scale(1.008);
+}
+
+.nai5-stage-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  padding: 20px;
+}
+
+.nai5-stage-loading {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: var(--fx-glass-popover);
+  border: 1px solid rgba(224, 40, 79, 0.55);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+  color: var(--fx-text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 25;
+  backdrop-filter: blur(16px);
+}
+
+.nai5-filmstrip-wrap {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: 9px;
+  background: var(--fx-glass-card);
+  border: 1px solid var(--fx-border-card);
+}
+
+.nai5-film-toggle {
+  flex: none;
+  padding: 4px 7px;
+  border-radius: 6px;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-secondary);
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nai5-film-toggle:hover {
+  border-color: rgba(224, 40, 79, 0.5);
+  color: var(--fx-crimson-soft);
 }
 
 /* 磨砂毛玻璃卡片 + 和式花菱纹理细节 */
@@ -506,14 +931,14 @@
   color: var(--fx-text-primary);
 }
 
-/* 日式武田菱 (Hishi) 绯红小角标 */
+/* 日式武田菱 (Hishi) 金红双色微章 */
 .nai5-label-title::before {
   content: '';
   width: 5px;
   height: 5px;
-  background: linear-gradient(135deg, var(--fx-crimson-soft), var(--fx-crimson-deep));
+  background: linear-gradient(135deg, var(--fx-gold), var(--fx-crimson));
   transform: rotate(45deg);
-  box-shadow: 0 0 6px rgba(224, 40, 79, 0.65);
+  box-shadow: 0 0 7px rgba(212, 36, 61, 0.48);
   flex: none;
 }
 
@@ -558,6 +983,7 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
+  flex-shrink: 0;
   padding: 5px 10px;
   border-radius: 8px;
   border: 1px solid var(--fx-border-card);
@@ -571,8 +997,8 @@
 }
 
 .nai5-btn:hover:not(:disabled) {
-  background: rgba(224, 40, 79, 0.14);
-  border-color: rgba(224, 40, 79, 0.45);
+  background: rgba(212, 36, 61, 0.13);
+  border-color: var(--fx-border-gold);
   color: var(--fx-text-primary);
 }
 
@@ -590,17 +1016,17 @@
 .nai5-btn.primary {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #e62a4f 0%, #a81232 100%);
-  border-color: rgba(255, 220, 228, 0.28);
+  background: linear-gradient(135deg, var(--fx-crimson) 0%, var(--fx-crimson-deep) 100%);
+  border-color: rgba(214, 182, 124, 0.42);
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 6px 18px -6px rgba(216, 31, 67, 0.78), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  box-shadow: 0 6px 18px -6px rgba(194, 28, 52, 0.72), inset 0 1px 0 rgba(255, 240, 215, 0.32);
 }
 
 .nai5-btn.primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #ff3d63 0%, #c0163b 100%);
+  background: linear-gradient(135deg, var(--fx-crimson-soft) 0%, var(--fx-crimson) 100%);
   color: #ffffff;
-  box-shadow: 0 8px 22px -6px rgba(216, 31, 67, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.36);
+  box-shadow: 0 8px 22px -6px rgba(194, 28, 52, 0.88), inset 0 1px 0 rgba(255, 244, 224, 0.42);
 }
 
 .nai5-btn.ghost {
@@ -615,10 +1041,16 @@
 }
 
 /* ---------- 9. 2D 角色坐标画布与 6 角色自适应矩阵 ---------- */
-.nai5-stage2d-wrap {
+.nai5-stage2d-wrap.is-stacked {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.nai5-char-cards-stack {
   display: flex;
-  gap: 12px;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .nai5-char-cards-grid {
@@ -783,7 +1215,7 @@
   width: 100%;
   height: 4px;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--fx-crimson) 0%, rgba(224, 40, 79, 0.25) 100%);
+  background: linear-gradient(90deg, var(--fx-crimson) 0%, rgba(214, 182, 124, 0.28) 100%);
   outline: none;
   cursor: pointer;
 }
@@ -795,7 +1227,7 @@
   border-radius: 50%;
   background: #ffffff;
   border: 2px solid var(--fx-crimson);
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(214, 182, 124, 0.35);
   cursor: pointer;
   transition: transform 0.12s ease;
 }
@@ -852,6 +1284,37 @@
   padding-right: 2px;
 }
 
+.nai5-gallery-toolbar-card {
+  position: relative;
+  z-index: 45;
+}
+
+.nai5-card:has(.nai-popover-down),
+.nai5-card:has(.nai-popover-up) {
+  z-index: 45;
+}
+
+.nai5-char-pills-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 2px 0 6px;
+  scrollbar-width: thin;
+}
+
+.nai5-char-pills-row.is-expanded {
+  flex-wrap: wrap;
+  overflow-x: visible;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.nai5-char-pills-row > * {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
 /* ---------- 13. 画廊与灯箱 (全局容器自适应多列) ---------- */
 .nai5-gallery-wrap {
   position: relative;
@@ -893,8 +1356,8 @@
 
 .nai5-gallery-card:hover {
   transform: translateY(-3px) translateZ(0);
-  border-color: var(--fx-crimson-soft);
-  box-shadow: 0 16px 32px -12px rgba(216, 31, 67, 0.42);
+  border-color: var(--fx-gold);
+  box-shadow: 0 16px 32px -12px rgba(0, 0, 0, 0.40), 0 0 0 1px var(--fx-border-gold);
 }
 
 .nai5-gallery-media {
@@ -919,7 +1382,7 @@
   transform: scale(1.045) translateZ(0);
 }
 
-/* 顶部右上角悬停工具圆钮 (复制图片 / 文件管理器定位) */
+/* 顶部右上角悬停工具圆钮 (复制图片 / 资源管理器定位) */
 .nai5-gallery-top-tools {
   position: absolute;
   top: 7px;
@@ -943,11 +1406,11 @@
   width: 27px;
   height: 27px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  background: rgba(16, 14, 24, 0.76);
+  border: 1px solid rgba(214, 182, 124, 0.32);
+  background: rgba(8, 15, 23, 0.78);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  color: #f8fafc;
+  color: #eff5fa;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -959,7 +1422,7 @@
 
 .nai5-gallery-icon-btn:hover {
   background: var(--fx-crimson);
-  border-color: #ff8fa3;
+  border-color: var(--fx-gold);
   color: #ffffff;
   transform: scale(1.06);
 }
@@ -971,11 +1434,11 @@
   right: 0;
   bottom: 0;
   z-index: 4;
-  padding: 26px 8px 8px;
+  padding: 18px 6px 6px;
   background: linear-gradient(to top, rgba(12, 10, 18, 0.90) 0%, rgba(12, 10, 18, 0.56) 58%, transparent 100%);
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px;
+  gap: 4px;
   opacity: 0;
   transform: translateY(6px);
   pointer-events: none;
@@ -989,17 +1452,17 @@
 }
 
 .nai5-gallery-dock-btn {
-  height: 27px;
-  border-radius: 7px;
-  font-size: 11px;
+  height: 23px;
+  border-radius: 6px;
+  font-size: 10.5px;
   font-weight: 600;
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 3px;
   cursor: pointer;
-  padding: 0 6px;
+  padding: 0 5px;
   transition: all 0.14s ease;
   border: 1px solid rgba(255, 255, 255, 0.24);
   background: rgba(24, 21, 34, 0.82);
@@ -1015,10 +1478,10 @@
 }
 
 .nai5-gallery-dock-btn.primary {
-  background: linear-gradient(135deg, #e62a4f 0%, #b01435 100%);
-  border-color: rgba(255, 200, 212, 0.45);
+  background: linear-gradient(135deg, var(--fx-crimson) 0%, var(--fx-crimson-deep) 100%);
+  border-color: rgba(214, 182, 124, 0.45);
   color: #ffffff;
-  box-shadow: 0 3px 10px rgba(216, 31, 67, 0.45);
+  box-shadow: 0 3px 10px rgba(194, 28, 52, 0.45);
 }
 
 .nai5-gallery-dock-btn.primary:hover {
@@ -1063,19 +1526,21 @@
 .nai5-gallery-seed {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 10.5px;
-  color: var(--fx-crimson-soft);
-  opacity: 0.9;
+  color: var(--fx-gold);
+  opacity: 0.94;
   white-space: nowrap;
   flex: none;
-  padding: 1px 5px;
+  padding: 1px 6px;
   border-radius: 5px;
-  background: rgba(224, 40, 79, 0.08);
-  transition: background 0.14s ease, color 0.14s ease;
+  background: rgba(214, 182, 124, 0.12);
+  border: 1px solid rgba(214, 182, 124, 0.22);
+  transition: background 0.14s ease, color 0.14s ease, border-color 0.14s ease;
 }
 
 .nai5-gallery-seed:hover {
-  background: rgba(224, 40, 79, 0.2);
-  color: var(--fx-crimson);
+  background: rgba(212, 36, 61, 0.18);
+  border-color: var(--fx-border-gold);
+  color: var(--fx-crimson-soft);
 }
 
 /* ---------- 自适应弹性卡片与可拖拽分割条 (Resizable & Adaptive Cards) ---------- */
@@ -1177,34 +1642,34 @@
   right: 0;
   bottom: 0;
   background:
-    radial-gradient(900px 500px at 50% 0%, rgba(216, 31, 67, 0.14), transparent 65%),
-    rgba(10, 9, 14, 0.94);
+    radial-gradient(900px 500px at 50% 0%, rgba(108, 199, 255, 0.10), transparent 65%),
+    rgba(6, 12, 19, 0.94);
   backdrop-filter: blur(22px);
   z-index: 999999;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   user-select: none;
-  color: #f8fafc;
+  color: #eff5fa;
 }
 
 .nai5-lightbox-overlay .nai5-btn {
   background: rgba(255, 255, 255, 0.10);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  color: #f8fafc;
+  border: 1px solid rgba(214, 182, 124, 0.28);
+  color: #eff5fa;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
 .nai5-lightbox-overlay .nai5-btn:hover:not(:disabled) {
-  background: rgba(224, 40, 79, 0.28);
-  border-color: #ff5c7c;
+  background: rgba(212, 36, 61, 0.28);
+  border-color: #d6b67c;
   color: #ffffff;
-  box-shadow: 0 4px 14px rgba(216, 31, 67, 0.5);
+  box-shadow: 0 4px 14px rgba(194, 28, 52, 0.45);
 }
 
 .nai5-lightbox-overlay .nai5-btn.primary {
-  background: linear-gradient(135deg, #e62a4f 0%, #a81232 100%);
-  border-color: rgba(255, 220, 228, 0.38);
+  background: linear-gradient(135deg, #d4243d 0%, #8f1024 100%);
+  border-color: rgba(214, 182, 124, 0.45);
   color: #ffffff;
 }
 
@@ -1215,8 +1680,8 @@
   width: 44px;
   height: 76px;
   border-radius: 12px;
-  background: rgba(22, 20, 30, 0.82);
-  border: 1px solid rgba(255, 210, 220, 0.28);
+  background: rgba(9, 17, 26, 0.84);
+  border: 1px solid rgba(214, 182, 124, 0.34);
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -1229,10 +1694,10 @@
 }
 
 .nai5-lightbox-nav-arrow:hover {
-  background: linear-gradient(135deg, rgba(224, 40, 79, 0.85), rgba(158, 17, 48, 0.9));
-  border-color: #ffb3c6;
+  background: linear-gradient(135deg, rgba(212, 36, 61, 0.88), rgba(143, 16, 36, 0.92));
+  border-color: #d6b67c;
   transform: translateY(-50%) scale(1.06);
-  box-shadow: 0 12px 32px rgba(216, 31, 67, 0.65);
+  box-shadow: 0 12px 32px rgba(194, 28, 52, 0.6);
 }
 
 .nai5-lightbox-nav-arrow.prev { left: 20px; }
@@ -1298,16 +1763,16 @@
   0%, 100% {
     box-shadow:
       0 18px 42px -10px rgba(0, 0, 0, 0.65),
-      0 0 22px 2px rgba(224, 40, 79, 0.55),
+      0 0 22px 2px rgba(212, 36, 61, 0.52),
       inset 0 1px 0 var(--fx-inner-highlight);
-    border-color: #ff4d6d;
+    border-color: var(--fx-crimson-soft);
   }
   50% {
     box-shadow:
       0 18px 48px -8px rgba(0, 0, 0, 0.75),
-      0 0 38px 8px rgba(224, 40, 79, 0.92),
+      0 0 38px 8px rgba(214, 182, 124, 0.65),
       inset 0 1px 0 var(--fx-inner-highlight);
-    border-color: #ffb3c6;
+    border-color: var(--fx-gold);
   }
 }
 
@@ -1495,6 +1960,41 @@
   word-break: break-all;
   white-space: pre-wrap;
   scrollbar-width: thin;
+}
+.nai5-codex-char-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 120px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.nai5-codex-char-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 6px 8px;
+  border-radius: 7px;
+  background: var(--fx-glass-input);
+  border: 1px solid var(--fx-border-card);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--fx-text-primary);
+  word-break: break-all;
+}
+.nai5-codex-char-label {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: rgba(139, 92, 246, 0.16);
+  color: #a78bfa;
+  border: 1px solid rgba(139, 92, 246, 0.3);
 }
 
 /* ==================== VIRTUALIZED NATURAL-ASPECT MASONRY GALLERY ==================== */
@@ -1696,5 +2196,846 @@
 .nai5-account-input:focus {
   border-color: var(--fx-crimson-soft);
 }
+
+/* ============================================================
+   NAI5 Workbench v2.0 Extensions (Inpaint / Compare / PostProcess / Refs / Chunks / Batch)
+   Cohesive with Frost & Maple Glassmorphism (--fx-* tokens, dark & light)
+   ============================================================ */
+
+.nai-mode-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: var(--fx-glass-card);
+  border: 1px solid var(--fx-border-card);
+  backdrop-filter: blur(12px);
+}
+
+.nai-drop-hint {
+  font-size: 10.5px;
+  color: var(--fx-text-muted);
+}
+
+.nai-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.nai-pill-btn:hover:not(:disabled) {
+  border-color: rgba(224, 40, 79, 0.5);
+  color: var(--fx-text-primary);
+}
+
+.nai-pill-btn.is-active {
+  background: linear-gradient(135deg, var(--fx-crimson) 0%, var(--fx-crimson-deep) 100%);
+  border-color: var(--fx-border-gold);
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(194, 28, 52, 0.35);
+}
+
+.nai-pill-btn.is-danger:hover {
+  border-color: rgba(239, 68, 68, 0.65);
+  color: #fda4af;
+}
+
+.nai-pill-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.nai-input-mini,
+.nai-select-mini {
+  padding: 4px 8px;
+  font-size: 11px;
+  border-radius: 7px;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-primary);
+  outline: none;
+}
+
+.nai-input-mini:focus,
+.nai-select-mini:focus {
+  border-color: var(--fx-border-focus);
+}
+
+/* ---------- Full-Stage Inpaint Canvas Editor ---------- */
+.nai-inpaint-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.nai-inpaint-toolbar {
+  flex: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: var(--fx-glass-header);
+  border: 1px solid var(--fx-border-card);
+}
+
+.nai-inpaint-size {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--fx-text-secondary);
+  margin: 0 4px;
+}
+
+.nai-inpaint-size input[type="range"] {
+  width: 82px;
+  accent-color: var(--fx-crimson);
+}
+
+.nai-inpaint-stage-host {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.nai-inpaint-stage {
+  position: relative;
+  display: inline-flex;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--fx-border-card);
+  user-select: none;
+}
+
+.nai-inpaint-base {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.nai-inpaint-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.nai-inpaint-cursor {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1.5px solid var(--fx-crimson-soft);
+  box-shadow: 0 0 6px rgba(224, 40, 79, 0.55);
+  pointer-events: none;
+}
+
+.nai-inpaint-empty {
+  width: 100%;
+  flex: 1;
+  min-height: 180px;
+  border-radius: 10px;
+  border: 1.5px dashed var(--fx-border-card);
+  background: var(--fx-glass-input);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.nai-inpaint-empty-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fx-text-primary);
+}
+
+.nai-inpaint-empty-sub {
+  font-size: 10.5px;
+  color: var(--fx-text-muted);
+}
+
+/* ---------- Full-Stage A/B Compare Slider ---------- */
+.nai-compare-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: ew-resize;
+  user-select: none;
+  touch-action: none;
+}
+
+.nai-compare-img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}
+
+.nai-compare-before {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nai-compare-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--fx-crimson-soft);
+  box-shadow: 0 0 12px rgba(255, 92, 124, 0.85);
+  pointer-events: none;
+}
+
+.nai-compare-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--fx-crimson);
+  color: #fff;
+  border: 2px solid #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nai-compare-badge {
+  position: absolute;
+  top: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(14, 13, 19, 0.78);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.nai-compare-badge.is-left { left: 8px; }
+.nai-compare-badge.is-right { right: 8px; }
+
+/* ---------- Single-Row Glass Action Dock & Popovers ---------- */
+.nai-action-dock {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 9px;
+  border-radius: 10px;
+  background: var(--fx-glass-card);
+  border: 1px solid var(--fx-border-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  position: relative;
+  z-index: 30;
+}
+
+.nai-dock-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: nowrap;
+}
+
+.nai-popover-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.nai-popover-up,
+.nai-popover-down {
+  position: absolute;
+  right: 0;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 9px;
+  border-radius: 11px;
+  background: var(--fx-glass-popover);
+  border: 1px solid var(--fx-border-outer);
+  box-shadow: var(--fx-shadow-main);
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+}
+
+.nai-popover-up {
+  bottom: calc(100% + 8px);
+}
+
+.nai-popover-down {
+  top: calc(100% + 6px);
+  min-width: 215px;
+}
+
+.nai-popover-up.is-narrow {
+  min-width: 205px;
+}
+
+.nai-popover-up.is-wide {
+  min-width: 310px;
+}
+
+.nai-popover-up-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.nai-popover-up-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--fx-crimson-soft);
+}
+
+.nai-defry-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--fx-text-secondary);
+}
+
+.nai-defry-inline input[type="range"] {
+  width: 70px;
+}
+
+.nai-menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  padding: 6px 9px;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  background: var(--fx-glass-input);
+  color: var(--fx-text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.14s ease;
+}
+
+.nai-menu-item strong {
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.nai-menu-item span {
+  font-size: 10px;
+  color: var(--fx-text-muted);
+}
+
+.nai-menu-item:hover {
+  border-color: rgba(224, 40, 79, 0.45);
+  background: rgba(224, 40, 79, 0.12);
+}
+
+.nai-menu-item.is-danger:hover {
+  border-color: rgba(239, 68, 68, 0.55);
+  color: #ff4d6d;
+}
+
+.nai-director-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.nai-menu-chip {
+  padding: 5px 8px;
+  border-radius: 7px;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-input);
+  color: var(--fx-text-primary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.14s ease;
+}
+
+.nai-menu-chip:hover {
+  border-color: rgba(224, 40, 79, 0.55);
+  color: var(--fx-crimson-soft);
+}
+
+.nai-director-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nai5-btn.is-fav-active {
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.48);
+  background: rgba(245, 158, 11, 0.14);
+}
+
+/* ---------- Reference Images Panel ---------- */
+.nai-ref-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 9px 10px;
+  border-radius: 9px;
+  background: var(--fx-glass-popover);
+  border: 1px solid var(--fx-border-card);
+}
+
+.nai-ref-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.nai-ref-hint {
+  font-size: 10.5px;
+  color: var(--fx-crimson-soft);
+}
+
+.nai-ref-empty {
+  font-size: 11px;
+  color: var(--fx-text-muted);
+  padding: 8px;
+  border-radius: 7px;
+  border: 1px dashed var(--fx-border-card);
+  text-align: center;
+}
+
+.nai-ref-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+.nai-ref-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: var(--fx-glass-card);
+  border: 1px solid var(--fx-border-card);
+}
+
+.nai-ref-thumb {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex: none;
+}
+
+.nai-ref-controls {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nai-ref-slider {
+  display: flex;
+  flex-direction: column;
+  font-size: 10px;
+  color: var(--fx-text-secondary);
+}
+
+.nai-ref-slider input[type="range"] {
+  accent-color: var(--fx-crimson);
+  width: 100%;
+}
+
+.nai-ref-del {
+  flex: none;
+  border: none;
+  background: transparent;
+  color: var(--fx-text-muted);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px;
+}
+
+.nai-ref-del:hover {
+  color: var(--fx-crimson-soft);
+}
+
+/* ---------- Prompt Chunks Drawer ---------- */
+.nai-chunks-drawer {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: var(--fx-glass-popover);
+  border: 1px solid var(--fx-border-card);
+}
+
+.nai-chunks-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.nai-chunks-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fx-text-secondary);
+}
+
+.nai-chunks-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.nai-chunk-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--fx-glass-card);
+  border: 1px solid var(--fx-border-card);
+  font-size: 11px;
+  max-width: 240px;
+}
+
+.nai-chunk-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--fx-text-primary);
+}
+
+.nai-chunk-op {
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--fx-text-secondary);
+  border-radius: 4px;
+  width: 16px;
+  height: 16px;
+  line-height: 14px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 0;
+}
+
+.nai-chunk-op:hover {
+  background: rgba(224, 40, 79, 0.25);
+  color: var(--fx-crimson-soft);
+}
+
+/* ---------- Gallery Favorites & Batch Bar ---------- */
+.nai5-fav-btn.is-fav {
+  color: #fbbf24 !important;
+  background: rgba(212, 36, 61, 0.25) !important;
+}
+
+.nai5-gallery-card.is-selected {
+  outline: 2px solid var(--fx-gold);
+  box-shadow: 0 0 18px rgba(212, 36, 61, 0.40);
+}
+
+.nai5-gallery-check {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: rgba(8, 15, 23, 0.72);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+}
+
+.nai5-gallery-check.checked {
+  background: var(--fx-crimson);
+  border-color: var(--fx-gold);
+}
+
+.nai5-batch-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 7px 10px;
+  border-radius: 9px;
+  background: var(--fx-glass-popover);
+  border: 1px solid var(--fx-border-gold);
+}
+
+/* ---------- 16. 枫霜景致画卷选择器 (Curated Scene Switcher Popover) ---------- */
+.nai5-scene-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nai5-scene-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 380px;
+  max-width: calc(100vw - 28px);
+  z-index: 340;
+  cursor: default;
+  background: var(--fx-glass-popover);
+  border: 1px solid var(--fx-border-gold);
+  border-radius: 14px;
+  padding: 11px;
+  box-shadow: var(--fx-shadow-main), inset 0 1px 0 var(--fx-inner-highlight);
+  backdrop-filter: blur(26px) saturate(175%);
+  -webkit-backdrop-filter: blur(26px) saturate(175%);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  animation: fxHudSlideUp 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nai5-scene-pop-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--fx-border-card);
+}
+
+.nai5-scene-pop-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--fx-text-primary);
+}
+
+.nai5-scene-intensity-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.nai5-scene-intensity-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fx-text-secondary);
+}
+
+.nai5-scene-custom-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 9px;
+  background: rgba(212, 36, 61, 0.10);
+  border: 1px solid var(--fx-border-gold);
+}
+
+.nai5-scene-custom-thumb {
+  width: 44px;
+  height: 30px;
+  border-radius: 5px;
+  object-fit: cover;
+  border: 1px solid var(--fx-border-gold);
+  flex: none;
+}
+
+.nai5-scene-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  max-height: 330px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.nai5-scene-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--fx-border-card);
+  background: var(--fx-glass-card);
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.nai5-scene-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--fx-gold);
+}
+
+.nai5-scene-card.is-active {
+  border-color: var(--fx-crimson-soft);
+  box-shadow: 0 0 0 1px var(--fx-border-gold), 0 8px 20px -10px rgba(194, 28, 52, 0.55);
+}
+
+.nai5-scene-thumb-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--fx-glass-input);
+}
+
+.nai5-scene-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  display: block;
+}
+
+.nai5-scene-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 9.5px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--fx-crimson) 0%, var(--fx-crimson-deep) 100%);
+  border: 1px solid rgba(214, 182, 124, 0.55);
+  color: #ffffff;
+}
+
+.nai5-scene-meta {
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nai5-scene-meta strong {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--fx-text-primary);
+}
+
+.nai5-scene-meta span {
+  font-size: 9.5px;
+  color: var(--fx-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- 17. Danbooru 双语词条 & 全局雅致 Toast ---------- */
+.nai5-danbooru-chip {
+  background: rgba(108, 199, 255, 0.10);
+  border-color: rgba(108, 199, 255, 0.28);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nai5-danbooru-chip:hover:not(:disabled) {
+  background: rgba(108, 199, 255, 0.18);
+  border-color: var(--fx-ice-soft);
+}
+
+.nai5-danbooru-tag {
+  color: var(--fx-text-primary);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.nai5-theme-dark .nai5-danbooru-tag {
+  color: #e2f2ff;
+}
+
+.nai5-theme-light .nai5-danbooru-chip {
+  background: rgba(29, 126, 194, 0.09);
+  border-color: rgba(29, 126, 194, 0.28);
+}
+
+.nai5-toast-pill {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--fx-glass-popover);
+  color: var(--fx-text-primary);
+  padding: 9px 15px;
+  border-radius: 10px;
+  border: 1px solid var(--fx-border-gold);
+  box-shadow: var(--fx-shadow-main), inset 0 1px 0 var(--fx-inner-highlight);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 1000000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 
 

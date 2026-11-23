@@ -102,18 +102,11 @@ function CodexView({
           h('button', {
             key: r.tag,
             type: 'button',
-            className: 'nai5-btn xs',
-            style: {
-              background: 'rgba(99, 102, 241, 0.12)',
-              borderColor: 'rgba(99, 102, 241, 0.3)',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '5px'
-            },
+            className: 'nai5-btn xs nai5-danbooru-chip',
             title: `点击追加: ${r.tag} (${r.cn_name || ''})`,
             onClick: () => onAppendPositive(r.tag, `标签: ${r.tag}`)
           },
-            h('strong', { style: { color: '#e0e7ff', fontSize: '11px' } }, r.tag),
+            h('strong', { className: 'nai5-danbooru-tag' }, r.tag),
             r.cn_name && h('span', { style: { color: 'var(--fx-text-secondary)', fontSize: '10px' } }, r.cn_name),
             h(Icon, { name: 'plus', size: 10, style: { opacity: 0.75 } })
           )
@@ -139,14 +132,21 @@ function CodexView({
       ),
       (searchResults?.codex?.results?.length > 0) ? h('div', { className: 'nai5-codex-grid' },
         searchResults.codex.results.map((c, idx) => {
+          const isR18 = /r18|官能|涩涩|性|乳|交|nsfw/i.test((c.codex || '') + (c.name || '') + (c.category || ''));
           const isComp = /构图|视角|镜头|景深|光影|composition|lighting/i.test((c.codex || '') + (c.name || '') + (c.category || ''));
-          const isFashion = /穿搭|衣|服|outfit|dress|costume/i.test((c.codex || '') + (c.name || '') + (c.category || ''));
-          const badgeColor = isComp ? 'cyan' : isFashion ? 'emerald' : 'purple';
+          const isFashion = /人偶|穿搭|衣柜|衣|服|outfit|dress|costume/i.test((c.codex || '') + (c.name || '') + (c.category || ''));
+          const badgeColor = isR18 ? 'crimson' : isFashion ? 'emerald' : isComp ? 'cyan' : 'purple';
+          const charList = Array.isArray(c.characterPrompts) ? c.characterPrompts : [];
+          const hasChars = charList.length > 0;
+          const globalText = String(c.globalPrompt !== undefined ? c.globalPrompt : (!hasChars ? (c.prompt || '') : '')).trim();
+          const fullCopyText = formatCodexFullText(c);
+          const appendText = globalText || charList.map(cp => cp.prompt).filter(Boolean).join(', ') || fullCopyText;
 
           return h('div', { key: (c.id || '') + idx, className: 'nai5-codex-card' },
             h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' } },
               h('div', { style: { display: 'flex', alignItems: 'center', gap: '6px', overflow: 'hidden' } },
                 h('span', { className: `nai5-codex-badge ${badgeColor}` }, c.codex || '法典'),
+                hasChars && h('span', { className: 'nai5-codex-badge purple', title: '包含 NovelAI V5 独立角色分框提示词' }, `${charList.length} 角色分框`),
                 h('strong', {
                   style: {
                     fontSize: '12px',
@@ -170,7 +170,16 @@ function CodexView({
                 title: c.category
               }, c.category)
             ),
-            h('div', { className: 'nai5-codex-snippet', title: c.prompt }, c.prompt),
+            globalText ? h('div', { className: 'nai5-codex-snippet', title: globalText }, globalText) : null,
+            hasChars ? h('div', { className: 'nai5-codex-char-list' },
+              charList.map((cp, ci) =>
+                h('div', { key: (cp.label || 'char') + ci, className: 'nai5-codex-char-item' },
+                  h('span', { className: 'nai5-codex-char-label' }, cp.label || `char${ci + 1}`),
+                  cp.prompt && h('div', { title: cp.prompt }, cp.prompt),
+                  cp.negative && h('div', { style: { fontSize: '10px', color: 'var(--fx-crimson-soft)' } }, `UC: ${cp.negative}`)
+                )
+              )
+            ) : (!globalText ? h('div', { className: 'nai5-codex-snippet', style: { opacity: 0.6 } }, c.prompt || '（暂无正向标签）') : null),
             c.negative ? h('div', {
               style: {
                 fontSize: '10px',
@@ -196,14 +205,14 @@ function CodexView({
               h('button', {
                 type: 'button',
                 className: 'nai5-btn xs',
-                title: '复制正向提示词到剪贴板',
-                onClick: () => onCopyText(c.prompt, `法典配方: ${c.name}`)
+                title: '复制完整提示词到剪贴板',
+                onClick: () => onCopyText(fullCopyText, `法典配方: ${c.name}`)
               }, h(Icon, { name: 'copy', size: 10 })),
               h('button', {
                 type: 'button',
                 className: 'nai5-btn xs',
                 title: '追加此配方到当前正向提示词末尾',
-                onClick: () => onAppendPositive(c.prompt, `配方: ${c.name}`)
+                onClick: () => onAppendPositive(appendText, `配方: ${c.name}`)
               }, h(Icon, { name: 'plus', size: 10 }), '追加正向'),
               c.negative ? h('button', {
                 type: 'button',

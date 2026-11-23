@@ -59,11 +59,149 @@ function useHostTheme(showToast) {
     } catch (err) {
       warnSilent('theme.savePref', err);
     }
-    const labelMap = { auto: '跟随系统与宿主色调', dark: '固定「绯夜」深色模式', light: '固定「雪昼」浅色模式' };
+    const labelMap = { auto: '跟随系统与宿主色调', dark: '固定「玄月·寒霜」深色', light: '固定「霜晓·素雪」浅色' };
     showToast(`已切换外观色调：${labelMap[next]}`);
   }, [themePref, showToast]);
 
   return { themePref, isLightTheme, themeClass, cycleThemePref };
+}
+
+function useStudioScene(isLightTheme, hasWallpaper, showToast) {
+  const [scenePref, setScenePref] = useState(() => {
+    try {
+      return localStorage.getItem('dsh_nai5_scene_pref_v1') || 'auto';
+    } catch (err) {
+      warnSilent('scene.readPref', err);
+      return 'auto';
+    }
+  });
+  const [customBgPath, setCustomBgPath] = useState(() => {
+    try {
+      return localStorage.getItem('dsh_nai5_custom_bg_v1') || '';
+    } catch (err) {
+      warnSilent('scene.readCustomPath', err);
+      return '';
+    }
+  });
+  const [customBgLabel, setCustomBgLabel] = useState(() => {
+    try {
+      return localStorage.getItem('dsh_nai5_custom_bg_label_v1') || '';
+    } catch (err) {
+      warnSilent('scene.readCustomLabel', err);
+      return '';
+    }
+  });
+  const [bgIntensity, setBgIntensity] = useState(() => {
+    try {
+      const val = localStorage.getItem('dsh_nai5_bg_intensity_v1');
+      return ['soft', 'balanced', 'vivid'].includes(val) ? val : 'balanced';
+    } catch (err) {
+      warnSilent('scene.readIntensity', err);
+      return 'balanced';
+    }
+  });
+
+  const selectScene = useCallback((id) => {
+    const nextId = id || 'auto';
+    setScenePref(nextId);
+    try {
+      localStorage.setItem('dsh_nai5_scene_pref_v1', nextId);
+    } catch (err) {
+      warnSilent('scene.savePref', err);
+    }
+    if (showToast) {
+      if (nextId === 'auto') {
+        showToast('画卷景致：已设为随明暗主题自动匹配');
+      } else {
+        const hit = STUDIO_SCENES.find(s => s.id === nextId);
+        if (hit) showToast(`画卷已切换：《${hit.title}》`);
+      }
+    }
+  }, [showToast]);
+
+  const setCustomBackdrop = useCallback((imgPath, label = '典藏画卷') => {
+    if (!imgPath) return;
+    setCustomBgPath(imgPath);
+    setCustomBgLabel(label || '典藏画卷');
+    setScenePref('custom');
+    try {
+      localStorage.setItem('dsh_nai5_custom_bg_v1', imgPath);
+      localStorage.setItem('dsh_nai5_custom_bg_label_v1', label || '典藏画卷');
+      localStorage.setItem('dsh_nai5_scene_pref_v1', 'custom');
+    } catch (err) {
+      warnSilent('scene.saveCustom', err);
+    }
+    if (showToast) showToast(`已将「${label || '典藏画卷'}」设为工坊背景画卷`);
+  }, [showToast]);
+
+  const clearCustomBackdrop = useCallback(() => {
+    setCustomBgPath('');
+    setCustomBgLabel('');
+    setScenePref('auto');
+    try {
+      localStorage.removeItem('dsh_nai5_custom_bg_v1');
+      localStorage.removeItem('dsh_nai5_custom_bg_label_v1');
+      localStorage.setItem('dsh_nai5_scene_pref_v1', 'auto');
+    } catch (err) {
+      warnSilent('scene.clearCustom', err);
+    }
+    if (showToast) showToast('已恢复工坊内置精选画卷');
+  }, [showToast]);
+
+  const updateBgIntensity = useCallback((level) => {
+    if (!['soft', 'balanced', 'vivid'].includes(level)) return;
+    setBgIntensity(level);
+    try {
+      localStorage.setItem('dsh_nai5_bg_intensity_v1', level);
+    } catch (err) {
+      warnSilent('scene.saveIntensity', err);
+    }
+  }, []);
+
+  const isCustomActive = scenePref === 'custom' && Boolean(customBgPath);
+  const useConfigWallpaper = scenePref === 'auto' && Boolean(hasWallpaper);
+  const resolvedCurated = isCustomActive
+    ? null
+    : (scenePref === 'auto'
+      ? STUDIO_SCENES.find(s => s.id === (isLightTheme ? 'dawn-snow' : 'moonblade'))
+      : (STUDIO_SCENES.find(s => s.id === scenePref) || STUDIO_SCENES[0]));
+
+  const activeScene = resolvedCurated || STUDIO_SCENES[0];
+  const activeBgUrl = isCustomActive
+    ? getImageUrl(customBgPath, false)
+    : (useConfigWallpaper ? '/api/novelai/wallpaper' : '');
+  const activeBgGradient = (isCustomActive || useConfigWallpaper) ? '' : (activeScene.gradient || '');
+  const activeBgPos = (isCustomActive || useConfigWallpaper) ? 'center 24%' : activeScene.pos;
+  const activeTitle = isCustomActive ? (customBgLabel || '典藏画卷') : (useConfigWallpaper ? '自定义壁纸' : activeScene.title);
+
+  const cycleCuratedScene = useCallback((delta = 1) => {
+    const idx = STUDIO_SCENES.findIndex(s => s.id === activeScene.id);
+    const nextIdx = (idx + delta + STUDIO_SCENES.length) % STUDIO_SCENES.length;
+    const nextScene = STUDIO_SCENES[nextIdx];
+    setScenePref(nextScene.id);
+    try {
+      localStorage.setItem('dsh_nai5_scene_pref_v1', nextScene.id);
+    } catch (err) {
+      warnSilent('scene.cycle', err);
+    }
+  }, [activeScene]);
+
+  return {
+    scenePref,
+    customBgPath,
+    customBgLabel,
+    bgIntensity,
+    activeScene,
+    activeBgUrl,
+    activeBgGradient,
+    activeBgPos,
+    activeTitle,
+    selectScene,
+    setCustomBackdrop,
+    clearCustomBackdrop,
+    cycleCuratedScene,
+    updateBgIntensity
+  };
 }
 
 function useWindowGeometry(setActiveTab) {
@@ -165,7 +303,7 @@ function useWindowGeometry(setActiveTab) {
     };
   }, [setActiveTab, updateWinMode]);
 
-  const [mainColSplitX, setMainColSplitX] = useState(57);
+  const [mainColSplitX, setMainColSplitX] = useState(41);
   const [styleSplitX, setStyleSplitX] = useState(50);
   const [vertSplitRatio, setVertSplitRatio] = useState(1.05);
   const workbenchBodyRef = useRef(null);
@@ -602,8 +740,9 @@ function useGalleryState(showToast, setLatestImage) {
   const [filterMonth, setFilterMonth] = useState('all');
   const [filterRating, setFilterRating] = useState('all');
   const [filterTopic, setFilterTopic] = useState('all');
+  const [filterFavorites, setFilterFavorites] = useState(false);
   const [gallerySearch, setGallerySearch] = useState('');
-  const [galleryMeta, setGalleryMeta] = useState({ characters: [], months: [], ratings: [], topics: [], total: 0 });
+  const [galleryMeta, setGalleryMeta] = useState({ characters: [], months: [], ratings: [], topics: [], total: 0, favoritesCount: 0 });
 
   const fetchGalleryMeta = useCallback(async () => {
     try {
@@ -627,6 +766,7 @@ function useGalleryState(showToast, setLatestImage) {
     const ra = opts.rating !== undefined ? opts.rating : filterRating;
     const top = opts.topic !== undefined ? opts.topic : filterTopic;
     const q = opts.search !== undefined ? opts.search : gallerySearch;
+    const fav = opts.favorites !== undefined ? opts.favorites : filterFavorites;
 
     const pageSize = 24;
     const queryOffset = isReset ? 0 : historyLenRef.current;
@@ -646,7 +786,8 @@ function useGalleryState(showToast, setLatestImage) {
         month: mo,
         rating: ra,
         topic: top,
-        search: q
+        search: q,
+        favorites: fav ? '1' : ''
       });
       const res = await fetch(`/api/novelai/history?${queryParams}`);
       if (res.ok) {
@@ -678,7 +819,7 @@ function useGalleryState(showToast, setLatestImage) {
       setLoadingHistory(false);
       setLoadingMore(false);
     }
-  }, [filterChar, filterMonth, filterRating, filterTopic, gallerySearch, showToast, setLatestImage]);
+  }, [filterChar, filterMonth, filterRating, filterTopic, filterFavorites, gallerySearch, showToast, setLatestImage]);
 
   const applyFilter = useCallback((patch = {}) => {
     const nextChar = patch.character !== undefined ? patch.character : filterChar;
@@ -686,12 +827,14 @@ function useGalleryState(showToast, setLatestImage) {
     const nextRating = patch.rating !== undefined ? patch.rating : filterRating;
     const nextTopic = patch.topic !== undefined ? patch.topic : filterTopic;
     const nextSearch = patch.search !== undefined ? patch.search : gallerySearch;
+    const nextFav = patch.favorites !== undefined ? patch.favorites : filterFavorites;
 
     if (patch.character !== undefined) setFilterChar(patch.character);
     if (patch.month !== undefined) setFilterMonth(patch.month);
     if (patch.rating !== undefined) setFilterRating(patch.rating);
     if (patch.topic !== undefined) setFilterTopic(patch.topic);
     if (patch.search !== undefined) setGallerySearch(patch.search);
+    if (patch.favorites !== undefined) setFilterFavorites(patch.favorites);
 
     fetchHistoryWithParams({
       character: nextChar,
@@ -699,10 +842,11 @@ function useGalleryState(showToast, setLatestImage) {
       rating: nextRating,
       topic: nextTopic,
       search: nextSearch,
+      favorites: nextFav,
       isReset: true,
       showToastMsg: patch.showToast ? '找到 {count} 张匹配图片' : undefined
     });
-  }, [filterChar, filterMonth, filterRating, filterTopic, gallerySearch, fetchHistoryWithParams]);
+  }, [filterChar, filterMonth, filterRating, filterTopic, filterFavorites, gallerySearch, fetchHistoryWithParams]);
 
   const handleRefreshGallery = useCallback(async () => {
     try {
@@ -713,7 +857,7 @@ function useGalleryState(showToast, setLatestImage) {
           setGalleryMeta(data);
           setTotalCount(data.total || 0);
           await fetchHistoryWithParams({ isReset: true });
-          showToast(`已重扫目录，共索引 ${data.total || 0} 张图像`);
+          showToast(`🔄 已重扫目录，共索引 ${data.total || 0} 张图像`);
           return;
         }
       }
@@ -729,9 +873,9 @@ function useGalleryState(showToast, setLatestImage) {
       if (res.ok) {
         const data = await res.json();
         if (data.ok) {
-          if (data.started) showToast(`已启动后台提取（待补全 ${data.totalPending || 0} 张 PNG 元数据）`);
-          else if (data.running) showToast(`后台正在提取剩余 ${data.totalPending || 0} 张元数据...`);
-          else showToast('全部图片尺寸与 PNG 元数据均已完整缓存');
+          if (data.started) showToast(`🧩 已启动后台提取（待补全 ${data.totalPending || 0} 张 PNG 元数据）`);
+          else if (data.running) showToast(`⏳ 后台正在提取剩余 ${data.totalPending || 0} 张元数据...`);
+          else showToast('✅ 全部图片尺寸与 PNG 元数据均已完整缓存');
           return;
         }
       }
@@ -746,6 +890,75 @@ function useGalleryState(showToast, setLatestImage) {
       fetchHistoryWithParams({ isReset: false });
     }
   }, [hasMore, loadingHistory, loadingMore, fetchHistoryWithParams]);
+
+  const toggleFavorite = useCallback(async (imgPath) => {
+    if (!imgPath) return null;
+    try {
+      const res = await fetch('/api/novelai/favorites/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: imgPath })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setHistory(prev => prev.map(x => ((x.source_path || x.filePath) === imgPath ? { ...x, isFavorite: data.isFavorite } : x)));
+        setLatestImage(cur => (cur && (cur.source_path || cur.filePath) === imgPath ? { ...cur, isFavorite: data.isFavorite } : cur));
+        setGalleryMeta(prev => ({ ...prev, favoritesCount: data.count !== undefined ? data.count : prev.favoritesCount }));
+        showToast(data.isFavorite ? '★ 已加入收藏夹' : '☆ 已取消收藏');
+        if (filterFavorites && !data.isFavorite) {
+          fetchHistoryWithParams({ isReset: true });
+        }
+        return data.isFavorite;
+      }
+    } catch (err) {
+      showToast(`收藏操作失败: ${err.message}`);
+    }
+    return null;
+  }, [filterFavorites, fetchHistoryWithParams, setLatestImage, showToast]);
+
+  const batchMove = useCallback(async (paths = [], targetCharacter = '综合创作') => {
+    if (!Array.isArray(paths) || paths.length === 0) return { ok: false };
+    try {
+      const res = await fetch('/api/novelai/gallery/batch-move', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paths, targetCharacter })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        showToast(`📂 已将 ${data.movedCount || 0} 张归类至 [${data.targetCharacter || targetCharacter}]`);
+        await fetchGalleryMeta();
+        await fetchHistoryWithParams({ isReset: true });
+        return data;
+      }
+      showToast(`批量移动失败: ${data.error || '未知错误'}`);
+    } catch (err) {
+      showToast(`批量移动异常: ${err.message}`);
+    }
+    return { ok: false };
+  }, [fetchGalleryMeta, fetchHistoryWithParams, showToast]);
+
+  const batchDelete = useCallback(async (paths = []) => {
+    if (!Array.isArray(paths) || paths.length === 0) return { ok: false };
+    try {
+      const res = await fetch('/api/novelai/gallery/batch-delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paths })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        showToast(`🗑 已永久删除 ${data.deletedCount || 0} 张图像`);
+        await fetchGalleryMeta();
+        await fetchHistoryWithParams({ isReset: true });
+        return data;
+      }
+      showToast(`批量删除失败: ${data.error || '未知错误'}`);
+    } catch (err) {
+      showToast(`批量删除异常: ${err.message}`);
+    }
+    return { ok: false };
+  }, [fetchGalleryMeta, fetchHistoryWithParams, showToast]);
 
   return {
     history,
@@ -765,6 +978,7 @@ function useGalleryState(showToast, setLatestImage) {
     filterMonth,
     filterRating,
     filterTopic,
+    filterFavorites,
     gallerySearch,
     setGallerySearch,
     galleryMeta,
@@ -773,7 +987,10 @@ function useGalleryState(showToast, setLatestImage) {
     applyFilter,
     handleRefreshGallery,
     handleBackfillMetadata,
-    handleLoadMore
+    handleLoadMore,
+    toggleFavorite,
+    batchMove,
+    batchDelete
   };
 }
 

@@ -31,6 +31,8 @@ const MODULE_ORDER = [
   'components.js',
   'account_popover.js',
   'orb_hud.js',
+  'inpaint_editor.js',
+  'postprocess_bar.js',
   'workbench.js',
   'gallery.js',
   'codex.js',

@@ -48,8 +48,8 @@ function NovelAiSidebarBody({ CSS_STYLES }) {
       h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px' } },
         h('div', { className: 'nai5-hanko-seal' }, 'N5'),
         h('div', null,
-          h('div', { style: { fontSize: '13px', fontWeight: 700, color: 'var(--fx-text-primary)' } }, 'NAI5 Studio 悬浮工作台'),
-          h('div', { style: { fontSize: '11px', color: 'var(--fx-text-muted)' } }, '独立毛玻璃悬浮窗 · 色调随系统自适应')
+          h('div', { style: { fontSize: '13px', fontWeight: 700, color: 'var(--fx-text-primary)' } }, 'NAI5 Studio · 枫霜工坊'),
+          h('div', { style: { fontSize: '11px', color: 'var(--fx-text-muted)' } }, '独立毛玻璃悬浮窗 · 枫霜金石美学 · 随系统自适应')
         )
       ),
       h('div', { style: { fontSize: '11.5px', color: 'var(--fx-text-secondary)', lineHeight: 1.6 } },
@@ -61,7 +61,7 @@ function NovelAiSidebarBody({ CSS_STYLES }) {
           className: 'nai5-btn primary',
           style: { padding: '9px', justifyContent: 'center' },
           onClick: () => studioBus.emit({ type: 'OPEN', tab: 'studio' })
-        }, h(Icon, { name: 'sakura', size: 13 }), '展开 NAI5 Studio 工坊 (Alt+N)'),
+        }, h(Icon, { name: 'maple', size: 13 }), '展开 NAI5 Studio 工坊 (Alt+N)'),
         h('button', {
           type: 'button',
           className: 'nai5-btn',
@@ -82,7 +82,7 @@ function NovelAiSidebarBody({ CSS_STYLES }) {
 function NovelAiSidebarTitle({ CSS_STYLES }) {
   return h('span', { style: { display: 'inline-flex', alignItems: 'center', gap: '6px' } },
     h(GlobalFloatingHost, { CSS_STYLES }),
-    h(Icon, { name: 'sakura', size: 13, style: { color: '#e0284f' } }),
+    h(Icon, { name: 'maple', size: 13, style: { color: '#D4243D' } }),
     h('span', null, 'NAI5 Studio')
   );
 }
@@ -129,9 +129,9 @@ return {
                 id: 'novelai-workbench',
                 commandId: 'novelai.workbench',
                 order: 5,
-                title: () => 'NAI5 Studio 悬浮工作台',
-                description: () => 'NovelAI V5 直连生图、2D 角色站位与宽屏高清画廊',
-                icon: () => h(Icon, { name: 'sakura', size: 22, style: { color: '#e0284f' } })
+                title: () => 'NAI5 Studio · 枫霜工作台',
+                description: () => '枫霜浮世绘毛玻璃背景、金线菱格纹纱、2D 角色站位与高清画廊',
+                icon: () => h(Icon, { name: 'maple', size: 22, style: { color: '#D4243D' } })
               }]
             });
             uiCtx.slots.inject('sidebar.right.pane.tab', () => uiCtx.slots.register({

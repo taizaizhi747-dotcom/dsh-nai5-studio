@@ -113,3 +113,21 @@ function formatPromptText(text) {
     .replace(/^,\s*|\s*,\s*$/g, '')
     .trim();
 }
+
+function formatCodexFullText(entry) {
+  if (!entry || typeof entry !== 'object') return '';
+  const globalText = String(entry.globalPrompt !== undefined ? entry.globalPrompt : (entry.prompt || '')).trim();
+  const chars = Array.isArray(entry.characterPrompts) ? entry.characterPrompts : [];
+  if (!chars.length) return globalText || String(entry.prompt || '').trim();
+  const charLines = chars
+    .map((cp, idx) => {
+      const lbl = String(cp?.label || `char${idx + 1}`).trim();
+      const pr = String(cp?.prompt || cp?.char_caption || '').trim();
+      const uc = String(cp?.negative || cp?.uc || cp?.negativePrompt || '').trim();
+      if (!pr && !uc) return '';
+      return `[${lbl}] ${pr}${uc ? ` (UC: ${uc})` : ''}`;
+    })
+    .filter(Boolean);
+  if (!charLines.length) return globalText || String(entry.prompt || '').trim();
+  return globalText ? `${globalText}\n${charLines.join('\n')}` : charLines.join('\n');
+}

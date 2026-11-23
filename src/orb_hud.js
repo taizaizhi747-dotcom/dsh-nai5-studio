@@ -48,8 +48,8 @@ function OrbCompanionHud({
     },
       h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px' } },
         h('span', { style: { display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '12px', fontWeight: 700 } },
-          h(Icon, { name: 'sakura', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
-          'NAI5 Studio · 对话伴侣 HUD'
+          h(Icon, { name: 'maple', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
+          'NAI5 Studio · 枫霜伴侣 HUD'
         ),
         h('button', {
           type: 'button',
@@ -201,7 +201,7 @@ function OrbCompanionHud({
           type: 'button',
           className: 'nai5-btn xs',
           onClick: () => { setActiveTab('studio'); updateWinMode('open'); }
-        }, h(Icon, { name: 'sakura', size: 11 }), '绘卷工坊'),
+        }, h(Icon, { name: 'maple', size: 11 }), '绘卷工坊'),
         h('button', {
           type: 'button',
           className: 'nai5-btn xs',
@@ -243,8 +243,8 @@ function OrbCompanionHud({
         } : undefined
       }),
       h('span', { style: { display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '12px', fontWeight: 700, color: 'var(--fx-text-primary)', letterSpacing: '0.02em' } },
-        h(Icon, { name: 'sakura', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
-        isBusyGenerating ? 'AI 绘卷渲染中...' : (bridgeLocks.enabled ? 'NAI5 · 已锁同步' : 'NAI5 Studio')
+        h(Icon, { name: 'maple', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
+        isBusyGenerating ? 'AI 绘卷渲染中...' : (bridgeLocks.enabled ? 'NAI5 · 已锁伴侣' : 'NAI5 Studio')
       ),
       (accountInfo.configured === false
         ? h('span', {
@@ -252,8 +252,8 @@ function OrbCompanionHud({
               fontSize: '10.5px',
               padding: '1px 7px',
               borderRadius: '999px',
-              background: 'rgba(224, 40, 79, 0.14)',
-              border: '1px solid rgba(224, 40, 79, 0.3)',
+              background: 'rgba(200, 35, 55, 0.14)',
+              border: '1px solid rgba(200, 35, 55, 0.35)',
               color: 'var(--fx-crimson-soft)',
               fontWeight: 600
             }
@@ -263,9 +263,9 @@ function OrbCompanionHud({
               fontSize: '10.5px',
               padding: '1px 7px',
               borderRadius: '999px',
-              background: 'rgba(224, 40, 79, 0.14)',
-              border: '1px solid rgba(224, 40, 79, 0.3)',
-              color: 'var(--fx-crimson-soft)',
+              background: 'rgba(200, 35, 55, 0.14)',
+              border: '1px solid var(--fx-border-gold)',
+              color: 'var(--fx-gold)',
               fontWeight: 600
             }
           }, accountInfo.balanceSupported === false ? '中转' : `${balance}`))

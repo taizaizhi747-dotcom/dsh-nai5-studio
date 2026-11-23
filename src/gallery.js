@@ -12,6 +12,7 @@ function GalleryView({
   filterMonth,
   filterRating,
   filterTopic,
+  filterFavorites,
   gallerySearch,
   setGallerySearch,
   galleryMeta,
@@ -19,12 +20,18 @@ function GalleryView({
   onRefreshGallery,
   onBackfillMetadata,
   onLoadMore,
+  onToggleFavorite,
+  onBatchMove,
+  onBatchDelete,
+  onSendToImg2Img,
+  onSendToInpaint,
   onOpenPreview,
   onDragStart,
   onCopyImage,
   onRevealInExplorer,
   onForkToWorkbench,
   onSendToChat,
+  onSetAsBackdrop,
   onCopyText
 }) {
   const wrapRef = useRef(null);
@@ -32,6 +39,29 @@ function GalleryView({
   const [hostWidth, setHostWidth] = useState(960);
   const [scrollState, setScrollState] = useState({ top: 0, height: 720 });
   const scrollRafRef = useRef(false);
+  const [batchMode, setBatchMode] = useState(false);
+  const [selectedPaths, setSelectedPaths] = useState([]);
+  const [batchTargetChar, setBatchTargetChar] = useState('');
+  const [expandChars, setExpandChars] = useState(false);
+  const [showManageMenu, setShowManageMenu] = useState(false);
+  const manageMenuRef = useRef(null);
+
+  useEffect(() => {
+    if (!showManageMenu) return;
+    const onDown = (e) => {
+      if (manageMenuRef.current && !manageMenuRef.current.contains(e.target)) {
+        setShowManageMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', onDown);
+    return () => document.removeEventListener('mousedown', onDown);
+  }, [showManageMenu]);
+
+  const selectedSet = React.useMemo(() => new Set(selectedPaths), [selectedPaths]);
+  const toggleSelectPath = useCallback((p) => {
+    if (!p) return;
+    setSelectedPaths(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
+  }, []);
 
   useEffect(() => {
     const el = hostRef.current;
@@ -81,14 +111,15 @@ function GalleryView({
     const w = Number(item.width) || 832;
     const hVal = Number(item.height) || 1216;
     const isNonPortrait = Math.abs(w / hVal - 832 / 1216) > 0.08;
+    const isSelected = batchMode && selectedSet.has(imgPath);
 
     return h('div', {
       key: item.task_id || imgPath || idx,
-      className: `nai5-gallery-card ${isMasonry ? 'masonry-item' : ''}`,
+      className: `nai5-gallery-card ${isMasonry ? 'masonry-item' : ''} ${isSelected ? 'is-selected' : ''}`,
       style: extraStyle || undefined,
-      draggable: true,
-      onDragStart: (e) => onDragStart(e, item),
-      onClick: () => onOpenPreview(idx)
+      draggable: !batchMode,
+      onDragStart: (e) => !batchMode && onDragStart(e, item),
+      onClick: () => (batchMode ? toggleSelectPath(imgPath) : onOpenPreview(idx))
     },
       h('div', {
         className: `nai5-gallery-media ${isMasonry ? 'natural' : ''}`,
@@ -99,14 +130,27 @@ function GalleryView({
           className: 'nai5-gallery-thumb',
           loading: 'lazy',
           decoding: 'async',
-          draggable: true,
-          onDragStart: (e) => onDragStart(e, item)
+          draggable: !batchMode,
+          onDragStart: (e) => !batchMode && onDragStart(e, item)
         }),
-        isNonPortrait && h('span', { className: 'nai5-gallery-ratio-tag' }, `${w}×${hVal}`),
+        batchMode && h('span', { className: `nai5-gallery-check ${isSelected ? 'checked' : ''}` }, isSelected ? '✓' : ''),
+        isNonPortrait && !batchMode && h('span', { className: 'nai5-gallery-ratio-tag' }, `${w}×${hVal}`),
         h('div', {
           className: 'nai5-gallery-top-tools',
           onClick: e => e.stopPropagation()
         },
+          h('button', {
+            type: 'button',
+            className: `nai5-gallery-icon-btn nai5-fav-btn ${item.isFavorite ? 'is-fav' : ''}`,
+            title: item.isFavorite ? '取消收藏' : '加入收藏夹',
+            onClick: () => onToggleFavorite && onToggleFavorite(imgPath)
+          }, item.isFavorite ? '★' : '☆'),
+          onSetAsBackdrop && h('button', {
+            type: 'button',
+            className: 'nai5-gallery-icon-btn',
+            title: '设为工坊背景画卷',
+            onClick: () => onSetAsBackdrop(item)
+          }, h(Icon, { name: 'image', size: 12 })),
           h('button', {
             type: 'button',
             className: 'nai5-gallery-icon-btn',
@@ -120,7 +164,7 @@ function GalleryView({
             onClick: () => onRevealInExplorer(imgPath)
           }, h(Icon, { name: 'folder', size: 12 }))
         ),
-        h('div', {
+        !batchMode && h('div', {
           className: 'nai5-gallery-hover-dock',
           onClick: e => e.stopPropagation()
         },
@@ -130,12 +174,24 @@ function GalleryView({
             title: '一键回灌全部参数与多角色框到工作台精修',
             onClick: () => onForkToWorkbench(item)
           }, h(Icon, { name: 'zap', size: 11 }), '精修'),
+          onSendToImg2Img && h('button', {
+            type: 'button',
+            className: 'nai5-gallery-dock-btn',
+            title: '送入图生图模式微调',
+            onClick: () => onSendToImg2Img(item)
+          }, '图生图'),
+          onSendToInpaint && h('button', {
+            type: 'button',
+            className: 'nai5-gallery-dock-btn',
+            title: '送入局部重绘 (Inpaint) 涂抹修改',
+            onClick: () => onSendToInpaint(item)
+          }, '重绘'),
           h('button', {
             type: 'button',
             className: 'nai5-gallery-dock-btn',
-            title: '推送此图片与配方到 DSH 对话输入框继续续写',
+            title: '推送此图片与配方到 DSH 对话输入框继续续写下一幕',
             onClick: () => onSendToChat(item)
-          }, '💬 续写')
+          }, '💬')
         )
       ),
       h('div', { className: 'nai5-gallery-meta' },
@@ -152,6 +208,7 @@ function GalleryView({
     );
   };
 
+  // Compute virtualized natural-aspect masonry geometry
   const masonryLayout = React.useMemo(() => {
     if (galleryLayout !== 'masonry') return null;
     const minCardW = gridDensity === 'large' ? 235 : (gridDensity === 'compact' ? 142 : 184);
@@ -195,22 +252,36 @@ function GalleryView({
   }, [galleryLayout, gridDensity, hostWidth, history, scrollState.top, scrollState.height]);
 
   return h('div', { ref: wrapRef, className: 'nai5-gallery-wrap', onScroll: handleScroll },
-    h('div', { className: 'nai5-card', style: { gap: '10px', flex: 'none' } },
-      h('div', { style: { display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' } },
+    h('div', { className: 'nai5-card nai5-gallery-toolbar-card', style: { gap: '10px', flex: 'none' } },
+      // Character Pills (no shrinking; collapsible full character list)
+      h('div', { className: `nai5-char-pills-row ${expandChars ? 'is-expanded' : ''}` },
         h('button', {
           type: 'button',
-          className: `nai5-btn xs ${filterChar === 'all' ? 'primary' : ''}`,
-          onClick: () => applyFilter({ character: 'all' })
+          className: `nai5-btn xs ${filterChar === 'all' && !filterFavorites ? 'primary' : ''}`,
+          onClick: () => applyFilter({ character: 'all', favorites: false })
         }, `全部角色 (${totalCount || 0})`),
-        galleryMeta.characters?.slice(0, 28).map(c =>
+        h('button', {
+          type: 'button',
+          className: `nai5-btn xs ${filterFavorites ? 'primary' : ''}`,
+          title: '只显示已标星收藏的作品',
+          onClick: () => applyFilter({ favorites: !filterFavorites })
+        }, `★ 仅看收藏 (${galleryMeta.favoritesCount || 0})`),
+        (expandChars ? (galleryMeta.characters || []) : (galleryMeta.characters || []).slice(0, 24)).map(c =>
           h('button', {
             key: c.id,
             type: 'button',
             className: `nai5-btn xs ${filterChar === c.id ? 'primary' : ''}`,
             onClick: () => applyFilter({ character: c.id })
           }, `${c.label} (${c.count})`)
-        )
+        ),
+        (galleryMeta.characters?.length || 0) > 24 && h('button', {
+          type: 'button',
+          className: 'nai5-btn xs',
+          style: { borderStyle: 'dashed', color: 'var(--fx-crimson-soft)' },
+          onClick: () => setExpandChars(v => !v)
+        }, expandChars ? '收起角色 ▴' : `展开全部 (${galleryMeta.characters.length}) ▾`)
       ),
+      // Secondary Filter Row + Layout Mode Switch
       h('div', { style: { display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' } },
         h('select', {
           className: 'nai5-select',
@@ -221,12 +292,12 @@ function GalleryView({
           h('option', { value: 'all' }, '全部月份'),
           galleryMeta.months?.map(m => h('option', { key: m.id, value: m.id }, `${m.label} (${m.count})`))
         ),
-        h('div', { style: { display: 'inline-flex', gap: '3px', background: 'rgba(0,0,0,0.35)', padding: '3px', borderRadius: '7px' } },
+        h('div', { className: 'nai-seg-mini' },
           ['all', 'Safe', 'R18', 'X'].map(r =>
             h('button', {
               key: r,
               type: 'button',
-              className: `nai5-btn xs ${filterRating === r ? 'primary' : 'ghost'}`,
+              className: `nai-seg-mini-btn ${filterRating === r ? 'active' : ''}`,
               onClick: () => applyFilter({ rating: r })
             }, r === 'all' ? '全部分级' : r)
           )
@@ -254,22 +325,24 @@ function GalleryView({
           className: 'nai5-btn primary xs',
           onClick: () => applyFilter({ search: gallerySearch, showToast: true })
         }, h(Icon, { name: 'search', size: 12 }), '筛选'),
+        // Layout Toggle: Natural Masonry vs Uniform 2:3 Grid
         h('div', {
-          style: { display: 'inline-flex', gap: '2px', background: 'rgba(0,0,0,0.35)', padding: '2px', borderRadius: '7px' },
-          title: '切换画廊排布方式：原比例瀑布流或等高竖卡网格'
+          className: 'nai-seg-mini',
+          title: '切换画廊排布方式：原比例瀑布流不裁剪横图/方图；竖卡网格严格齐平'
         },
           h('button', {
             type: 'button',
-            className: `nai5-btn xs ${galleryLayout === 'masonry' ? 'primary' : 'ghost'}`,
+            className: `nai-seg-mini-btn ${galleryLayout === 'masonry' ? 'active' : ''}`,
             onClick: () => setGalleryLayout('masonry')
-          }, h(Icon, { name: 'masonry', size: 11 }), '瀑布流'),
+          }, h(Icon, { name: 'masonry', size: 11 }), ' 瀑布流'),
           h('button', {
             type: 'button',
-            className: `nai5-btn xs ${galleryLayout === 'grid' ? 'primary' : 'ghost'}`,
+            className: `nai-seg-mini-btn ${galleryLayout === 'grid' ? 'active' : ''}`,
             onClick: () => setGalleryLayout('grid')
-          }, h(Icon, { name: 'grid', size: 11 }), '竖卡')
+          }, h(Icon, { name: 'grid', size: 11 }), ' 竖卡')
         ),
-        h('div', { style: { display: 'inline-flex', gap: '2px', background: 'rgba(0,0,0,0.35)', padding: '2px', borderRadius: '7px' } },
+        // Density Toggle
+        h('div', { className: 'nai-seg-mini' },
           [
             { id: 'large', label: '大图' },
             { id: 'medium', label: '标配' },
@@ -278,26 +351,85 @@ function GalleryView({
             h('button', {
               key: d.id,
               type: 'button',
-              className: `nai5-btn xs ${gridDensity === d.id ? 'primary' : 'ghost'}`,
+              className: `nai-seg-mini-btn ${gridDensity === d.id ? 'active' : ''}`,
               onClick: () => setGridDensity(d.id)
             }, d.label)
           )
         ),
+        h('div', { style: { display: 'inline-flex', alignItems: 'center', gap: '5px', marginLeft: 'auto' } },
+          h('button', {
+            type: 'button',
+            className: `nai5-btn xs ${batchMode ? 'primary' : ''}`,
+            title: '批量勾选归类移动或删除图库作品',
+            onClick: () => {
+              setBatchMode(v => !v);
+              setSelectedPaths([]);
+            }
+          }, batchMode ? `退出批量 (${selectedPaths.length})` : '☑ 批量'),
+          h('div', { ref: manageMenuRef, className: 'nai-popover-anchor' },
+            h('button', {
+              type: 'button',
+              className: `nai5-btn xs ${showManageMenu ? 'primary' : ''}`,
+              onClick: () => setShowManageMenu(v => !v)
+            }, '⚙ 库管理 ▾'),
+            showManageMenu && h('div', { className: 'nai-popover-down' },
+              h('button', {
+                type: 'button',
+                className: 'nai-menu-item',
+                onClick: () => { setShowManageMenu(false); onBackfillMetadata(); }
+              }, h('strong', null, '🪄 后台补全元数据'), h('span', null, '为存量历史 PNG 提取提示词与尺寸')),
+              h('button', {
+                type: 'button',
+                className: 'nai-menu-item',
+                onClick: () => { setShowManageMenu(false); onRefreshGallery(); }
+              }, h('strong', null, '♻ 重扫磁盘目录'), h('span', null, '即时同步磁盘增删文件'))
+            )
+          )
+        )
+      ),
+      batchMode && h('div', { className: 'nai5-batch-bar' },
+        h('span', { style: { fontSize: '12px', fontWeight: 600, color: 'var(--fx-crimson-soft)' } }, `已选中 ${selectedPaths.length} 张`),
         h('button', {
           type: 'button',
           className: 'nai5-btn xs',
-          title: '后台按需补全历史存量 PNG 提示词与分辨率索引',
-          onClick: onBackfillMetadata
-        }, h(Icon, { name: 'wand', size: 12 }), '补全索引'),
+          onClick: () => setSelectedPaths(history.map(x => x.source_path || x.filePath).filter(Boolean))
+        }, '全选当前页'),
         h('button', {
           type: 'button',
           className: 'nai5-btn xs',
-          title: '重新扫描磁盘并刷新画廊',
-          onClick: onRefreshGallery
-        }, h(Icon, { name: 'refresh', size: 12 }))
+          onClick: () => setSelectedPaths([])
+        }, '清空选择'),
+        h('input', {
+          type: 'text',
+          className: 'nai-input-mini',
+          style: { width: '140px' },
+          placeholder: '目标角色目录名...',
+          value: batchTargetChar,
+          onChange: e => setBatchTargetChar(e.target.value)
+        }),
+        h('button', {
+          type: 'button',
+          className: 'nai5-btn primary xs',
+          disabled: selectedPaths.length === 0 || !batchTargetChar.trim(),
+          onClick: async () => {
+            const res = await onBatchMove(selectedPaths, batchTargetChar.trim());
+            if (res?.ok) setSelectedPaths([]);
+          }
+        }, '批量归类移动'),
+        h('button', {
+          type: 'button',
+          className: 'nai5-btn danger xs',
+          disabled: selectedPaths.length === 0,
+          onClick: async () => {
+            if (!window.confirm(`确认永久删除选中的 ${selectedPaths.length} 张图像吗？此操作不可撤销！`)) return;
+            const res = await onBatchDelete(selectedPaths);
+            if (res?.ok) setSelectedPaths([]);
+          }
+        }, '批量物理删除')
       )
     ),
 
+    // Virtualized Natural-Aspect Masonry Mode
     galleryLayout === 'masonry' && masonryLayout
       ? h('div', {
           ref: hostRef,
@@ -319,6 +451,7 @@ function GalleryView({
             );
           })
         )
+      // Uniform 2:3 Grid Mode
       : h('div', { ref: hostRef, className: `nai5-gallery-grid density-${gridDensity}` },
           history.map((item, idx) => renderCard(item, idx, null, false))
         ),
@@ -335,7 +468,7 @@ function GalleryView({
       }
     },
       h(Icon, { name: 'sparkles', size: 14 }),
-      '正在加载更多历史画卷...'
+      '正在极速加载更多历史画卷...'
     ),
     !hasMore && history.length > 0 && h('div', {
       style: {
@@ -345,6 +478,6 @@ function GalleryView({
         fontSize: '11px',
         opacity: 0.75
       }
-    }, '已展示全部典藏画作')
+    }, '🍁 已展示全部典藏画作')
   );
 }

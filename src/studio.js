@@ -5,9 +5,23 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
 
   const { toast, showToast } = useToast();
   const { themePref, isLightTheme, themeClass, cycleThemePref } = useHostTheme(showToast);
+  const scene = useStudioScene(isLightTheme, Boolean(studioConfig?.hasWallpaper), showToast);
+  const [sceneMenuOpen, setSceneMenuOpen] = useState(false);
+  const sceneMenuRef = useRef(null);
   const geo = useWindowGeometry(setActiveTab);
   const accounts = useAccounts(showToast);
   const chars = useCharacterBoxes(showToast);
+
+  useEffect(() => {
+    if (!sceneMenuOpen) return;
+    const onDown = (e) => {
+      if (sceneMenuRef.current && !sceneMenuRef.current.contains(e.target)) {
+        setSceneMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onDown);
+    return () => document.removeEventListener('mousedown', onDown);
+  }, [sceneMenuOpen]);
 
   // Optional Artist & OC Presets (loaded from user config/localStorage, empty by default)
   const [serverArtistPresets, setServerArtistPresets] = useState(DEFAULT_ARTIST_PRESETS);
@@ -38,6 +52,32 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
   const [cfgScale, setCfgScale] = useState(5.5);
   const [sampler, setSampler] = useState('k_euler_ancestral');
   const [cfgRescale, setCfgRescale] = useState(0);
+  const [model, setModel] = useState('nai-diffusion-5-full');
+  const [effort, setEffort] = useState('high');
+  const [noiseSchedule, setNoiseSchedule] = useState('karras');
+  const [variety, setVariety] = useState(false);
+  const [transparentBackground, setTransparentBackground] = useState(false);
+  const [batchCount, setBatchCount] = useState(1);
+
+  const [genMode, setGenMode] = useState('txt2img'); // 'txt2img' | 'img2img' | 'inpaint'
+  const [sourceImage, setSourceImage] = useState('');
+  const [sourceImagePreviewUrl, setSourceImagePreviewUrl] = useState('');
+  const [i2iStrength, setI2iStrength] = useState(0.55);
+  const [i2iNoise, setI2iNoise] = useState(0);
+  const [inpaintMask, setInpaintMask] = useState('');
+  const [inpaintStrength, setInpaintStrength] = useState(0.7);
+  const [colorCorrect, setColorCorrect] = useState(true);
+
+  const [refTab, setRefTab] = useState('vibe');
+  const [vibeReferences, setVibeReferences] = useState([]);
+  const [preciseReferences, setPreciseReferences] = useState([]);
+  const [showRefPanel, setShowRefPanel] = useState(false);
+  const [showChunksDrawer, setShowChunksDrawer] = useState(false);
+
+  const [compareBeforeItem, setCompareBeforeItem] = useState(null);
+  const [compareActive, setCompareActive] = useState(false);
+  const [busyPostAction, setBusyPostAction] = useState('');
+
   const [isGenerating, setIsGenerating] = useState(false);
   const [latestImage, setLatestImage] = useState(null);
 
@@ -66,10 +106,8 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
           const srvOcs = Array.isArray(preData.ocPresets) ? preData.ocPresets : [];
           setServerArtistPresets(srvArtists);
           setServerOcPresets(srvOcs);
-          const mergedArtists = mergePresetsWithBuiltins('dsh_nai5_artist_presets_v1', srvArtists);
-          const mergedOcs = mergePresetsWithBuiltins('dsh_nai5_oc_presets_v1', srvOcs);
-          setArtistPresets(mergedArtists);
-          setOcPresets(mergedOcs);
+          setArtistPresets(mergePresetsWithBuiltins('dsh_nai5_artist_presets_v1', srvArtists));
+          setOcPresets(mergePresetsWithBuiltins('dsh_nai5_oc_presets_v1', srvOcs));
         }
       }
     } catch (err) {
@@ -168,7 +206,23 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
 
   const handleGenerate = async () => {
     if (isGenerating) return;
+    if (genMode === 'img2img' && !sourceImage) {
+      showToast('请先选择或从成图送入一张底图后再运行图生图');
+      return;
+    }
+    if (genMode === 'inpaint') {
+      if (!sourceImage) {
+        showToast('请先选择底图后再进行局部重绘');
+        return;
+      }
+      if (!inpaintMask) {
+        showToast('请先用画笔涂抹需要重绘的区域');
+        return;
+      }
+    }
+
     setIsGenerating(true);
+    const prevSnapshot = latestImage;
     try {
       const activeCharBoxes = chars.characterPrompts
         .filter(c => c && c.prompt && c.prompt.trim().length > 0)
@@ -186,38 +240,70 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
         stylePrompt,
         width: Number(width),
         height: Number(height),
-        steps: Number(steps),
+        steps: effort === 'medium' ? 14 : Number(steps),
         cfgScale: Number(cfgScale),
         cfgRescale: Number(cfgRescale),
         sampler,
+        model,
+        effort,
+        noiseSchedule,
+        variety,
+        transparentBackground,
+        count: genMode === 'txt2img' ? Number(batchCount) || 1 : 1,
+        vibeReferences: preciseReferences.length > 0 ? [] : vibeReferences,
+        preciseReferences,
         characterPrompts: activeCharBoxes,
         seed: (seedMode === 'fixed' && seed !== '') ? Number(seed) : undefined
       };
-      const res = await fetch('/api/novelai/generate', {
+
+      let endpoint = '/api/novelai/generate';
+      if (genMode === 'img2img') {
+        endpoint = '/api/novelai/img2img';
+        payload.image = sourceImage;
+        payload.strength = Number(i2iStrength);
+        payload.noise = Number(i2iNoise);
+      } else if (genMode === 'inpaint') {
+        endpoint = '/api/novelai/inpaint';
+        payload.image = sourceImage;
+        payload.mask = inpaintMask;
+        payload.strength = Number(inpaintStrength);
+        payload.colorCorrect = Boolean(colorCorrect);
+      }
+
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
       const data = await res.json();
       if (data.ok) {
-        const enriched = {
-          ...data,
-          source_path: data.filePath,
-          prompt: positivePrompt,
-          uc: negativePrompt,
-          stylePrompt,
-          cfg: cfgScale,
-          cfgRescale,
-          sampler,
+        const items = Array.isArray(data.results) && data.results.length > 0 ? data.results : [data];
+        const enrichedList = items.map(it => ({
+          ...it,
+          source_path: it.filePath,
+          prompt: it.prompt || positivePrompt,
+          uc: it.uc !== undefined ? it.uc : negativePrompt,
+          stylePrompt: it.stylePrompt !== undefined ? it.stylePrompt : stylePrompt,
+          cfg: it.cfg || cfgScale,
+          cfgRescale: it.cfgRescale !== undefined ? it.cfgRescale : cfgRescale,
+          sampler: it.sampler || sampler,
           characterPrompts: activeCharBoxes,
           _metaHydrated: true
-        };
-        setLatestImage(enriched);
+        }));
+        const primary = enrichedList[0];
+        if (genMode !== 'txt2img' && prevSnapshot) {
+          setCompareBeforeItem(prevSnapshot);
+        }
+        setLatestImage(primary);
+        setCompareActive(false);
         gallery.setHistory(prev => {
-          const p = enriched.source_path;
-          return prev.some(x => (x.source_path || x.filePath) === p) ? prev : [enriched, ...prev];
+          const seen = new Set(prev.map(x => x.source_path || x.filePath));
+          const fresh = enrichedList.filter(e => !seen.has(e.source_path));
+          return [...fresh, ...prev];
         });
-        showToast(`生成完成 · Seed: ${data.seed}`);
+        showToast(enrichedList.length > 1
+          ? `批量生成完成 (${enrichedList.length} 张) · 首图 Seed: ${primary.seed}`
+          : `生成完成 · Seed: ${primary.seed}`);
         accounts.fetchBalance();
         gallery.fetchGalleryMeta();
       } else {
@@ -344,6 +430,26 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
     }
   }, [geo.winMode, gallery.history.length, gallery.fetchGalleryMeta, gallery.fetchHistoryWithParams]);
 
+  const applyCodexToWorkbench = useCallback((c) => {
+    const posGlobal = String(c.globalPrompt !== undefined ? c.globalPrompt : (c.prompt || '')).trim();
+    setPositivePrompt(posGlobal);
+    if (c.negative) setNegativePrompt(c.negative.trim());
+    if (Array.isArray(c.characterPrompts) && c.characterPrompts.length > 0) {
+      chars.setCharacterPrompts(c.characterPrompts.map((cp, i) => ({
+        id: 'codex_' + Date.now() + '_' + i,
+        prompt: cp.prompt || cp.char_caption || '',
+        negativePrompt: cp.negative || cp.uc || '',
+        x: typeof cp.x === 'number' ? cp.x : 0.5,
+        y: typeof cp.y === 'number' ? cp.y : 0.5,
+        useCoords: cp.useCoords !== false
+      })));
+      chars.setShowCharBoxes(true);
+    } else {
+      chars.setCharacterPrompts([]);
+    }
+    return posGlobal;
+  }, [chars.setCharacterPrompts, chars.setShowCharBoxes]);
+
   const sendToChatComposer = useCallback(async (rawItem = null, isCodex = false) => {
     let target = rawItem || latestImage || {};
     if (!isCodex && target && !target.codex && !target.codexKey && !target._metaHydrated && (target.source_path || target.filePath)) {
@@ -352,11 +458,10 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
 
     let chatText = '';
     if (isCodex || target.codex || target.codexKey) {
-      const pos = (target.prompt || '').trim();
+      const fullText = formatCodexFullText(target);
       const neg = target.negative ? `\n负向排他：${target.negative.trim()}` : '';
-      chatText = `请以《${target.codex || '词库配方'}》【${target.name || '参考条目'}】为基准出图：\n${pos}${neg}\n请以此配方为骨架进行组装，并调用 generate_image 出图：`;
-      setPositivePrompt(pos);
-      if (target.negative) setNegativePrompt(target.negative.trim());
+      chatText = `请以《${target.codex || '权威法典'}》【${target.name || '经典配方'}】为基准出图：\n${fullText}${neg}\n👉 请以此法典配方为骨架进行精修组装，并直接调用 generate_image 出图：`;
+      applyCodexToWorkbench(target);
     } else {
       const targetSeed = target.seed || (seedMode === 'fixed' && seed ? seed : '随机');
       const targetW = target.width || width || 832;
@@ -392,8 +497,8 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
       const charCoordsInfo = Array.isArray(target.characterPrompts) && target.characterPrompts.length > 0
         ? `\n分框站位：${target.characterPrompts.map((c, idx) => `角色${String.fromCharCode(65 + idx)}(${c.x ?? 0.5},${c.y ?? 0.5}): ${c.prompt || ''}`).join(' | ')}`
         : '';
-      const pathLine = imgPath ? `\n参考路径：${imgPath}` : '';
-      chatText = `[NAI5 Studio 续写底模 · 角色: ${target.character || '当前角色'} | Seed: ${targetSeed} | 画幅: ${targetW}×${targetH} (已锁定同画风/同画幅)]${pathLine}\n基底提示词：${cleanPos}${charCoordsInfo}\n请保持上述角色外观与画风一致，在此基础上继续演进下一幕并调用 generate_image 出图：`;
+      const pathLine = imgPath ? `\n底模路径：${imgPath}` : '';
+      chatText = `[NAI5 Studio 续写底模 · 角色: ${target.character || '当前角色'} | Seed: ${targetSeed} | 画幅: ${targetW}×${targetH} (已锁定同画风/同画幅)]${pathLine}\n基底提示词：${cleanPos}${charCoordsInfo}\n👉 请保持上述角色外貌与画风一致，在此画面基础上继续演进下一幕并直接调用 generate_image 出图：`;
     }
 
     geo.updateWinMode('minimized');
@@ -402,8 +507,8 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
     lightbox.setPreviewCustomItem(null);
 
     showToast(dshComposerBridge.injectIntoChat(chatText)
-      ? '已推送至 DSH 对话输入框（已同步画风/画幅硬锁），输入下一幕即可回车生图'
-      : '续写指令已复制到剪贴板，在对话框 Ctrl+V 粘贴即可继续生图');
+      ? '💬 已推送至 DSH 对话输入框（已同步画风/画幅硬锁），输入下一幕剧情即可回车生图！'
+      : '💬 续写指令已复制到剪贴板，在对话框 Ctrl+V 粘贴即可继续生图');
   }, [latestImage, ensureRecordMetadata, seedMode, seed, width, height, positivePrompt, stylePrompt, negativePrompt, chars.characterPrompts, bridge.bridgeLocks, bridge.setBridgeLocks, bridge.setShowOrbHud, handleForkToWorkbench, geo.updateWinMode, lightbox.setPreviewIndex, lightbox.setPreviewCustomItem, showToast]);
 
   useEffect(() => {
@@ -482,19 +587,249 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
   }, [showToast]);
 
   const handleOverwriteStudio = useCallback((c) => {
-    setPositivePrompt((c.prompt || '').trim());
-    if (c.negative) setNegativePrompt(c.negative.trim());
+    applyCodexToWorkbench(c);
     setActiveTab('studio');
     showToast(`已载入《${c.codex || '词库'}》配方至绘卷工坊`);
-  }, [showToast]);
+  }, [applyCodexToWorkbench, showToast]);
 
-  const costInfo = estimateAnlasCost(width, height, steps);
-  const winStyleBase = geo.isMaximized
+  const handleUpscale = useCallback(async (targetItem, scale = 2) => {
+    const item = targetItem || latestImage;
+    const imgPath = item?.source_path || item?.filePath;
+    if (!imgPath || busyPostAction) return;
+    setBusyPostAction(`upscale${scale}`);
+    showToast(`正在执行 NovelAI ${scale}× 无损超分...`);
+    try {
+      const res = await fetch('/api/novelai/upscale', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: imgPath, scale, character: item.character, topic: item.topic })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        const enriched = { ...data, source_path: data.filePath, _metaHydrated: true };
+        setCompareBeforeItem(item);
+        setLatestImage(enriched);
+        setCompareActive(true);
+        gallery.setHistory(prev => [enriched, ...prev.filter(x => (x.source_path || x.filePath) !== enriched.source_path)]);
+        gallery.fetchGalleryMeta();
+        accounts.fetchBalance();
+        showToast(`✨ ${scale}× 超分完成 (${data.width}×${data.height})`);
+      } else {
+        showToast(`超分失败: ${data.error || '未知错误'}`);
+      }
+    } catch (err) {
+      showToast(`超分异常: ${err.message}`);
+    } finally {
+      setBusyPostAction('');
+    }
+  }, [latestImage, busyPostAction, gallery, accounts, showToast]);
+
+  const handleDirector = useCallback(async (targetItem, opts = {}) => {
+    const item = targetItem || latestImage;
+    const imgPath = item?.source_path || item?.filePath;
+    if (!imgPath || busyPostAction) return;
+    const tool = opts.tool || 'bg-removal';
+    setBusyPostAction(`director:${tool}`);
+    showToast(`正在运行导演工具 [${tool}]...`);
+    try {
+      const res = await fetch('/api/novelai/director', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          image: imgPath,
+          tool,
+          defry: opts.defry ?? 0,
+          prompt: opts.prompt || '',
+          emotion: opts.emotion || 'neutral',
+          emotionLevel: opts.emotionLevel || 'normal',
+          character: item.character,
+          topic: item.topic
+        })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        const enriched = { ...data, source_path: data.filePath, _metaHydrated: true };
+        setCompareBeforeItem(item);
+        setLatestImage(enriched);
+        setCompareActive(true);
+        gallery.setHistory(prev => [enriched, ...prev.filter(x => (x.source_path || x.filePath) !== enriched.source_path)]);
+        gallery.fetchGalleryMeta();
+        accounts.fetchBalance();
+        showToast(`🎨 导演工具 [${tool}] 处理完成`);
+      } else {
+        showToast(`导演处理失败: ${data.error || '未知错误'}`);
+      }
+    } catch (err) {
+      showToast(`导演处理异常: ${err.message}`);
+    } finally {
+      setBusyPostAction('');
+    }
+  }, [latestImage, busyPostAction, gallery, accounts, showToast]);
+
+  const handleSendToImg2Img = useCallback(async (rawItem) => {
+    const item = rawItem && !rawItem._metaHydrated ? await ensureRecordMetadata(rawItem) : (rawItem || latestImage);
+    const imgPath = item?.source_path || item?.filePath;
+    if (!imgPath) return;
+    setSourceImage(imgPath);
+    setSourceImagePreviewUrl(getImageUrl(imgPath, false));
+    setGenMode('img2img');
+    setCompareActive(false);
+    if (rawItem) await handleForkToWorkbench(item, true);
+    geo.updateWinMode('open');
+    setActiveTab('studio');
+    lightbox.setPreviewIndex(null);
+    lightbox.setPreviewCustomItem(null);
+    showToast('已将图像送入图生图 (Img2Img) 模式');
+  }, [latestImage, ensureRecordMetadata, handleForkToWorkbench, geo.updateWinMode, lightbox.setPreviewIndex, lightbox.setPreviewCustomItem, showToast]);
+
+  const handleSendToInpaint = useCallback(async (rawItem) => {
+    const item = rawItem && !rawItem._metaHydrated ? await ensureRecordMetadata(rawItem) : (rawItem || latestImage);
+    const imgPath = item?.source_path || item?.filePath;
+    if (!imgPath) return;
+    setSourceImage(imgPath);
+    setSourceImagePreviewUrl(getImageUrl(imgPath, false));
+    setInpaintMask('');
+    setGenMode('inpaint');
+    setCompareActive(false);
+    if (rawItem) await handleForkToWorkbench(item, true);
+    geo.updateWinMode('open');
+    setActiveTab('studio');
+    lightbox.setPreviewIndex(null);
+    lightbox.setPreviewCustomItem(null);
+    showToast('已进入局部重绘 (Inpaint)，请用画笔涂抹待重绘区域');
+  }, [latestImage, ensureRecordMetadata, handleForkToWorkbench, geo.updateWinMode, lightbox.setPreviewIndex, lightbox.setPreviewCustomItem, showToast]);
+
+  const handleUploadSourceImage = useCallback((dataUrl) => {
+    setSourceImage(dataUrl);
+    setSourceImagePreviewUrl(dataUrl);
+    setInpaintMask('');
+    const img = new Image();
+    img.onload = () => {
+      if (img.naturalWidth && img.naturalHeight) {
+        setWidth(Math.max(64, Math.min(2048, Math.round(img.naturalWidth / 64) * 64)));
+        setHeight(Math.max(64, Math.min(2048, Math.round(img.naturalHeight / 64) * 64)));
+        setPixelTier('custom');
+      }
+    };
+    img.src = dataUrl;
+  }, []);
+
+  const handleRepairPrompt = useCallback(async () => {
+    try {
+      const res = await fetch('/api/novelai/repair-prompt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: positivePrompt })
+      });
+      const data = await res.json();
+      if (data.ok && typeof data.repaired === 'string') {
+        setPositivePrompt(data.repaired);
+        showToast('✨ V5 权重语法与标点已一键修复');
+      }
+    } catch (err) {
+      showToast(`语法修复失败: ${err.message}`);
+    }
+  }, [positivePrompt, showToast]);
+
+  const handleInspectDroppedFile = useCallback((file) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const dataUrl = reader.result;
+      if (typeof dataUrl !== 'string') return;
+      try {
+        const res = await fetch('/api/novelai/inspect-upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: dataUrl })
+        });
+        const data = await res.json();
+        if (data.ok && data.meta && (data.meta.prompt || data.meta.positivePrompt)) {
+          const m = data.meta;
+          let cleanPos = m.prompt || m.positivePrompt || '';
+          if (m.stylePrompt && cleanPos.startsWith(m.stylePrompt)) {
+            cleanPos = cleanPos.slice(m.stylePrompt.length).replace(/^,\s*/, '');
+          }
+          if (cleanPos) setPositivePrompt(cleanPos);
+          if (m.uc) setNegativePrompt(m.uc);
+          if (m.stylePrompt) setStylePrompt(m.stylePrompt);
+          if (data.width) setWidth(Math.round(Number(data.width) / 64) * 64);
+          if (data.height) setHeight(Math.round(Number(data.height) / 64) * 64);
+          if (m.steps) setSteps(Number(m.steps));
+          if (m.cfg || m.scale) setCfgScale(Number(m.cfg || m.scale));
+          if (m.sampler) setSampler(m.sampler);
+          if (m.seed !== undefined) { setSeedMode('fixed'); setSeed(m.seed); }
+          if (Array.isArray(m.characterPrompts) && m.characterPrompts.length > 0) {
+            chars.setCharacterPrompts(m.characterPrompts.map((cp, i) => ({
+              id: 'drop_' + Date.now() + '_' + i,
+              prompt: cp.prompt || cp.char_caption || '',
+              negativePrompt: cp.negativePrompt || cp.uc || '',
+              x: typeof cp.x === 'number' ? cp.x : 0.5,
+              y: typeof cp.y === 'number' ? cp.y : 0.5,
+              useCoords: cp.useCoords !== false
+            })));
+            chars.setShowCharBoxes(true);
+          }
+          showToast('📥 已解析拖入 PNG 元数据并回灌完整参数');
+        } else {
+          handleUploadSourceImage(dataUrl);
+          if (genMode === 'txt2img') setGenMode('img2img');
+          showToast('已载入图片至底图槽位（未检测到 NAI 元数据）');
+        }
+      } catch (err) {
+        showToast(`拖入解析失败: ${err.message}`);
+      }
+    };
+    reader.readAsDataURL(file);
+  }, [chars.setCharacterPrompts, chars.setShowCharBoxes, genMode, handleUploadSourceImage, showToast]);
+
+  const handleUseCurrentCanvasAsRef = useCallback(async (kind = 'vibe') => {
+    const imgPath = latestImage?.source_path || latestImage?.filePath;
+    if (!imgPath) {
+      showToast('当前画布暂无成品图可抓取');
+      return;
+    }
+    try {
+      const resp = await fetch(getImageUrl(imgPath, false));
+      const blob = await resp.blob();
+      const dataUrl = await new Promise((resolve) => {
+        const r = new FileReader();
+        r.onload = () => resolve(r.result);
+        r.readAsDataURL(blob);
+      });
+      if (typeof dataUrl !== 'string') return;
+      if (kind === 'precise') {
+        setPreciseReferences(prev => [...prev, { image: dataUrl, name: 'canvas_ref.png', type: 'character&style', strength: 1.0, fidelity: 1.0 }].slice(0, 4));
+      } else {
+        setVibeReferences(prev => [...prev, { image: dataUrl, name: 'canvas_vibe.png', strength: 0.6, infoExtracted: 1.0 }].slice(0, 6));
+      }
+      showToast('已将当前预览图加入参考槽位');
+    } catch (err) {
+      showToast(`抓取失败: ${err.message}`);
+    }
+  }, [latestImage, showToast]);
+
+  const handleToggleFavorite = useCallback(async (imgPath) => {
+    const nextFav = await gallery.toggleFavorite(imgPath);
+    if (nextFav !== null) {
+      lightbox.setPreviewCustomItem(prev => (prev && (prev.source_path || prev.filePath) === imgPath ? { ...prev, isFavorite: nextFav } : prev));
+    }
+  }, [gallery, lightbox]);
+
+  const handleSetBackdrop = useCallback((item) => {
+    const p = item?.source_path || item?.filePath;
+    if (p) scene.setCustomBackdrop(p, item.character || '典藏画卷');
+  }, [scene.setCustomBackdrop]);
+
+  const effStepsForCost = effort === 'medium' ? 14 : steps;
+  const costInfoRaw = estimateAnlasCost(width, height, effStepsForCost);
+  const costCount = genMode === 'txt2img' ? (Number(batchCount) || 1) : 1;
+  const costInfo = costCount > 1 && costInfoRaw.cost > 0
+    ? { ...costInfoRaw, cost: costInfoRaw.cost * costCount, label: `约 ${costInfoRaw.cost * costCount} Anlas (${costCount}张)` }
+    : costInfoRaw;
+  const winStyle = geo.isMaximized
     ? { top: 'calc(var(--dsh-frame-chrome-top, var(--dsh-windows-titlebar-height, 36px)) + 8px)', left: '12px', right: '12px', bottom: '12px' }
     : { left: `${geo.winRect.x}px`, top: `${geo.winRect.y}px`, width: `${geo.winRect.w}px`, height: `${geo.winRect.h}px` };
-  const winStyle = studioConfig?.hasWallpaper
-    ? { ...winStyleBase, '--nai5-wallpaper': 'url("/api/novelai/wallpaper")' }
-    : winStyleBase;
 
   const isBusyGenerating = isGenerating || bridge.agentGenStatus === 'generating';
   const latestThumbUrl = latestImage ? getImageUrl(latestImage.source_path || latestImage.filePath || '', true) : null;
@@ -544,9 +879,10 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
 
     geo.winMode === 'open' && h('div', {
       className: `nai5-floating-window ${themeClass} ${geo.isMaximized ? 'maximized' : ''} ${peekArt ? 'peek-art' : ''}`,
+      'data-bg-intensity': scene.bgIntensity,
       style: winStyle
     },
-      h(StudioBackdrop),
+      h(StudioBackdrop, { bgUrl: scene.activeBgUrl, bgPos: scene.activeBgPos, bgGradient: scene.activeBgGradient }),
 
       !geo.isMaximized && h(React.Fragment, null,
         ['e', 'w', 's', 'se', 'sw'].map(dir =>
@@ -560,12 +896,18 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
         onDoubleClick: () => geo.setIsMaximized(m => !m)
       },
         h('div', { className: 'nai5-win-brand' },
-          h('div', { className: 'nai5-hanko-seal', title: 'NAI5 Studio' }, 'N5'),
+          h('div', { className: 'nai5-hanko-seal', title: 'NAI5 Studio · Frost & Maple Atelier' }, 'N5'),
           h('span', { className: 'nai5-brand-title' }, 'NAI5 Studio'),
           h('span', { className: 'nai5-brand-sub' },
-            h(Icon, { name: 'sakura', size: 11, style: { marginRight: '3px', verticalAlign: '-1px' } }),
-            '绘卷工坊'
-          )
+            h(Icon, { name: 'maple', size: 11, style: { marginRight: '3px', verticalAlign: '-1px' } }),
+            '枫霜画室'
+          ),
+          bridge.bridgeLocks.enabled && h('span', {
+            className: 'nai5-lock-chip active',
+            style: { marginLeft: '4px', cursor: 'pointer' },
+            title: 'DSH 对话硬件锁已开启，点击关闭或前往 参数与协同 标签管理',
+            onClick: () => bridge.toggleBridgeLock('enabled')
+          }, '🔗 协同锁')
         ),
 
         h('div', { className: 'nai5-seg-nav' },
@@ -573,7 +915,7 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
             type: 'button',
             className: `nai5-seg-btn ${activeTab === 'studio' ? 'active' : ''}`,
             onClick: () => setActiveTab('studio')
-          }, h(Icon, { name: 'sakura', size: 13 }), '绘卷工坊'),
+          }, h(Icon, { name: 'maple', size: 13 }), '绘卷工坊'),
           h('button', {
             type: 'button',
             className: `nai5-seg-btn ${activeTab === 'gallery' ? 'active' : ''}`,
@@ -590,36 +932,129 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
         ),
 
         h('div', { className: 'nai5-win-actions' },
-          studioConfig?.hasWallpaper && h('button', {
+          h('div', {
+            ref: sceneMenuRef,
+            className: 'nai5-scene-wrap',
+            onMouseDown: e => e.stopPropagation()
+          },
+            h('button', {
+              type: 'button',
+              className: `nai5-btn xs ${sceneMenuOpen ? 'primary' : ''}`,
+              title: `切换工坊背景画卷 · 当前：《${scene.activeTitle}》`,
+              onClick: () => setSceneMenuOpen(v => !v)
+            }, h(Icon, { name: 'image', size: 12 }), h('span', null, '景致 ▾')),
+            sceneMenuOpen && h('div', {
+              className: 'nai5-scene-popover',
+              onClick: e => e.stopPropagation()
+            },
+              h('div', { className: 'nai5-scene-pop-head' },
+                h('span', { className: 'nai5-scene-pop-title' },
+                  h(Icon, { name: 'maple', size: 12, style: { color: 'var(--fx-crimson-soft)' } }),
+                  '画卷景致 · 精选收藏'
+                ),
+                h('button', {
+                  type: 'button',
+                  className: `nai5-btn xs ${scene.scenePref === 'auto' ? 'primary' : ''}`,
+                  onClick: () => { scene.selectScene('auto'); setSceneMenuOpen(false); }
+                }, '随明暗自动')
+              ),
+              h('div', { className: 'nai5-scene-intensity-row' },
+                h('span', { className: 'nai5-scene-intensity-label' }, '画卷通透'),
+                h('div', { className: 'nai-seg-mini' },
+                  [
+                    { id: 'soft', label: '静谧' },
+                    { id: 'balanced', label: '平衡' },
+                    { id: 'vivid', label: '浓映' }
+                  ].map(lv =>
+                    h('button', {
+                      key: lv.id,
+                      type: 'button',
+                      className: `nai-seg-mini-btn ${scene.bgIntensity === lv.id ? 'active' : ''}`,
+                      onClick: () => scene.updateBgIntensity(lv.id)
+                    }, lv.label)
+                  )
+                )
+              ),
+              scene.customBgPath && h('div', { className: 'nai5-scene-custom-bar' },
+                h('img', {
+                  src: getImageUrl(scene.customBgPath, true),
+                  className: 'nai5-scene-custom-thumb'
+                }),
+                h('div', { style: { flex: 1, minWidth: 0 } },
+                  h('div', { style: { fontSize: '11px', fontWeight: 700, color: 'var(--fx-text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } },
+                    `自选：${scene.customBgLabel || '典藏画卷'}`
+                  ),
+                  h('div', { style: { fontSize: '9.5px', color: 'var(--fx-text-muted)' } }, '从画廊或暗房设为工坊背景')
+                ),
+                scene.scenePref !== 'custom' && h('button', {
+                  type: 'button',
+                  className: 'nai5-btn xs primary',
+                  onClick: () => { scene.selectScene('custom'); setSceneMenuOpen(false); }
+                }, '启用'),
+                h('button', {
+                  type: 'button',
+                  className: 'nai5-btn xs',
+                  title: '移除自定义画卷',
+                  onClick: () => scene.clearCustomBackdrop()
+                }, '清除')
+              ),
+              h('div', { className: 'nai5-scene-grid' },
+                STUDIO_SCENES.map(sc => {
+                  const isActive = scene.scenePref === sc.id || (scene.scenePref === 'auto' && scene.activeScene.id === sc.id);
+                  return h('button', {
+                    key: sc.id,
+                    type: 'button',
+                    className: `nai5-scene-card ${isActive ? 'is-active' : ''}`,
+                    onClick: () => { scene.selectScene(sc.id); setSceneMenuOpen(false); }
+                  },
+                    h('div', { className: 'nai5-scene-thumb-wrap' },
+                      h('div', {
+                        className: 'nai5-scene-thumb',
+                        style: {
+                          backgroundImage: sc.gradient,
+                          backgroundPosition: sc.pos,
+                          backgroundSize: 'cover'
+                        }
+                      }),
+                      isActive && h('span', { className: 'nai5-scene-badge' }, scene.scenePref === 'auto' ? '自动' : '当前')
+                    ),
+                    h('div', { className: 'nai5-scene-meta' },
+                      h('strong', null, sc.title),
+                      h('span', null, sc.subtitle)
+                    )
+                  );
+                })
+              )
+            )
+          ),
+          h('button', {
             type: 'button',
             className: `nai5-btn xs ${peekArt ? 'primary' : ''}`,
-            title: '透视欣赏自定义背景原画',
+            title: '透视隐藏工作区界面，全身欣赏工坊精选景致画卷（支持 ◀ ▶ 切景 · 点击画布随时返回）',
             onClick: () => setPeekArt(p => !p)
-          }, h(Icon, { name: 'sakura', size: 12 }), h('span', null, '赏画')),
+          }, h(Icon, { name: 'eye', size: 12 }), h('span', null, peekArt ? '退出赏画' : '赏画')),
           h('button', {
             type: 'button',
             className: 'nai5-btn xs',
-            title: `当前色调模式: ${themePref === 'auto' ? '跟随系统' : themePref === 'light' ? '雪昼浅色' : '绯夜深色'}（点击切换）`,
+            title: `当前色调模式: ${themePref === 'auto' ? '跟随系统' : themePref === 'light' ? '霜晓浅色' : '玄月深色'}（点击切换）`,
             onClick: cycleThemePref
           },
             h(Icon, { name: isLightTheme ? 'sun' : 'moon', size: 12 }),
-            h('span', null, themePref === 'auto' ? '随系统' : (isLightTheme ? '雪昼' : '绯夜'))
+            h('span', null, themePref === 'auto' ? '随系统' : (isLightTheme ? '霜晓' : '玄月'))
           ),
           h(AccountPopover, accounts),
           h('button', {
             type: 'button',
             className: 'nai5-btn xs',
-            title: accounts.accountInfo.endpoint ? `点击刷新账户状态 (${accounts.accountInfo.endpoint})` : '点击刷新账户状态',
+            title: accounts.accountInfo.endpoint ? `点击刷新账户状态 (${accounts.accountInfo.endpoint})` : '点击刷新账户 Anlas 余额',
             onClick: accounts.fetchBalance
           },
-            h(Icon, { name: 'zap', size: 12, style: { color: '#e0284f' } }),
+            h(Icon, { name: 'zap', size: 12, style: { color: 'var(--fx-gold)' } }),
             h('span', null, accounts.loadingBalance
               ? '...'
-              : (accounts.accountInfo.configured === false
-                ? '未配置'
-                : (accounts.accountInfo.balanceSupported === false
-                  ? (accounts.accountInfo.tier || '中转已连')
-                  : (accounts.balance !== null ? `${accounts.balance} Anlas` : 'Anlas'))))
+              : (accounts.accountInfo.balanceSupported === false
+                ? (accounts.accountInfo.tier || '中转已连')
+                : (accounts.balance !== null ? `${accounts.balance} Anlas` : 'Anlas')))
           ),
           h('button', { type: 'button', className: 'nai5-win-ctrl', title: '收起为悬浮球 (Alt+N)', onClick: () => geo.updateWinMode('minimized') }, h(Icon, { name: 'minus', size: 14 })),
           h('button', { type: 'button', className: 'nai5-win-ctrl', title: geo.isMaximized ? '还原窗口尺寸' : '最大化窗口', onClick: () => geo.setIsMaximized(m => !m) }, h(Icon, { name: geo.isMaximized ? 'minimize' : 'maximize', size: 13 })),
@@ -645,6 +1080,31 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
         seedMode, setSeedMode, seed, setSeed,
         steps, setSteps, cfgScale, setCfgScale,
         sampler, setSampler, cfgRescale, setCfgRescale,
+        model, setModel, effort, setEffort,
+        noiseSchedule, setNoiseSchedule,
+        variety, setVariety,
+        transparentBackground, setTransparentBackground,
+        batchCount, setBatchCount,
+        genMode, setGenMode,
+        sourceImage, setSourceImage,
+        sourceImagePreviewUrl, setSourceImagePreviewUrl,
+        i2iStrength, setI2iStrength,
+        i2iNoise, setI2iNoise,
+        inpaintMask, setInpaintMask,
+        inpaintStrength, setInpaintStrength,
+        colorCorrect, setColorCorrect,
+        refTab, setRefTab,
+        vibeReferences, setVibeReferences,
+        preciseReferences, setPreciseReferences,
+        showRefPanel, setShowRefPanel,
+        showChunksDrawer, setShowChunksDrawer,
+        compareBeforeItem, compareActive, setCompareActive,
+        busyPostAction,
+        handleUpscale, handleDirector,
+        handleSendToImg2Img, handleSendToInpaint,
+        handleUploadSourceImage, handleRepairPrompt,
+        handleInspectDroppedFile, handleUseCurrentCanvasAsRef,
+        onToggleFavorite: handleToggleFavorite,
         latestImage, latestFullUrl, setLatestImage,
         artistPresets, serverArtistPresets, setArtistPresets, selectedArtistId, setSelectedArtistId,
         ocPresets, serverOcPresets, setOcPresets, selectedOcId, setSelectedOcId,
@@ -678,6 +1138,7 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
         filterMonth: gallery.filterMonth,
         filterRating: gallery.filterRating,
         filterTopic: gallery.filterTopic,
+        filterFavorites: gallery.filterFavorites,
         gallerySearch: gallery.gallerySearch,
         setGallerySearch: gallery.setGallerySearch,
         galleryMeta: gallery.galleryMeta,
@@ -685,13 +1146,20 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
         onRefreshGallery: gallery.handleRefreshGallery,
         onBackfillMetadata: gallery.handleBackfillMetadata,
         onLoadMore: gallery.handleLoadMore,
+        onToggleFavorite: handleToggleFavorite,
+        onBatchMove: gallery.batchMove,
+        onBatchDelete: gallery.batchDelete,
+        onSendToImg2Img: handleSendToImg2Img,
+        onSendToInpaint: handleSendToInpaint,
         onOpenPreview: lightbox.handleOpenPreview,
         onDragStart: handleDragStart,
         onCopyImage: copyImageToClipboard,
         onRevealInExplorer: handleRevealInExplorer,
         onForkToWorkbench: handleForkToWorkbench,
         onSendToChat: sendToChatComposer,
-        onCopyText: copyToClipboard
+        onSetAsBackdrop: handleSetBackdrop,
+        onCopyText: copyToClipboard,
+        showToast
       }),
 
       activeTab === 'codex' && h(CodexView, {
@@ -701,7 +1169,30 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
         onOverwriteStudio: handleOverwriteStudio,
         onCopyText: copyToClipboard,
         onSendToChat: sendToChatComposer
-      })
+      }),
+
+      peekArt && h('div', {
+        className: 'nai5-peek-overlay',
+        onClick: () => setPeekArt(false),
+        title: '点击任意区域退出赏画模式'
+      },
+        h('div', { className: 'nai5-peek-pill' },
+          h('button', {
+            type: 'button',
+            className: 'nai5-peek-nav-btn',
+            title: '上一幅精选景致',
+            onClick: (e) => { e.stopPropagation(); scene.cycleCuratedScene(-1); }
+          }, h(Icon, { name: 'chevronLeft', size: 13 })),
+          h(Icon, { name: 'maple', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
+          h('span', null, `赏画 · 《${scene.activeTitle}》 · 点击画布返回`),
+          h('button', {
+            type: 'button',
+            className: 'nai5-peek-nav-btn',
+            title: '下一幅精选景致',
+            onClick: (e) => { e.stopPropagation(); scene.cycleCuratedScene(1); }
+          }, h(Icon, { name: 'chevronRight', size: 13 }))
+        )
+      )
     ),
 
     lightbox.activeItem && h(LightboxOverlay, {
@@ -710,25 +1201,21 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
       handleDragStart,
       sendToChatComposer,
       handleForkToWorkbench,
+      onToggleFavorite: handleToggleFavorite,
+      onSetAsBackdrop: handleSetBackdrop,
+      onUpscale: handleUpscale,
+      onDirector: handleDirector,
+      onSendToImg2Img: handleSendToImg2Img,
+      onSendToInpaint: handleSendToInpaint,
       copyFullParams,
       copyImageToClipboard,
       handleRevealInExplorer,
       handleDeleteImage
     }),
 
-    toast && h('div', {
-      style: {
-        position: 'fixed', bottom: '24px', right: '24px',
-        background: 'rgba(15, 18, 26, 0.96)', color: '#f8fafc',
-        padding: '9px 15px', borderRadius: '9px',
-        border: '1px solid rgba(99, 102, 241, 0.45)',
-        boxShadow: '0 16px 36px -8px rgba(0, 0, 0, 0.85)',
-        fontSize: '12px', zIndex: 1000000,
-        display: 'flex', alignItems: 'center', gap: '8px'
-      }
-    },
-      h(Icon, { name: 'sparkles', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
-      toast
+    toast && h('div', { className: `nai5-toast-pill ${themeClass}` },
+      h(Icon, { name: 'maple', size: 13, style: { color: 'var(--fx-crimson-soft)' } }),
+      h('span', null, toast)
     )
   );
 }

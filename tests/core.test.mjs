@@ -15,13 +15,15 @@ import {
   getWallpaperFile,
   resolvePythonCommand
 } from '../lib/paths.js';
-import { sanitizeParams } from '../lib/linter.js';
+import { repairV5Prompt, sanitizeParams } from '../lib/linter.js';
 import { resolveImageNaming } from '../lib/naming.js';
 import { injectPngMetadata, readPngMetadata, readPngMetadataFromFile } from '../lib/png.js';
 import { extractPngFromZip } from '../lib/zip.js';
+import { archiveManager } from '../lib/archive.js';
 import { isWithinOutputDir, isAllowedOrigin, createApiHandler } from '../lib/api.js';
 import {
   NovelAIClient,
+  buildMultipartFormBuffer,
   resolveStylePreset,
   loadArtistPresetsList,
   saveExternalPresets,
@@ -156,6 +158,25 @@ test('linter preserves 1girl, 1boy, strips solo, clamps 3MP / 22 chars, fixes ar
   assert.equal(clamped.width % 64, 0);
   assert.equal(clamped.height % 64, 0);
   assert.equal(clamped.characterPrompts.length, 22);
+
+  const repaired = repairV5Prompt('1girl，solo，(long hair:1.25)，1.2::blue eyes：：');
+  assert.doesNotMatch(repaired, /[，：]/);
+  assert.match(repaired, /1\.25::long hair ::/);
+  assert.match(repaired, /1\.2::blue eyes ::/);
+
+  const v2Params = sanitizeParams({
+    positivePrompt: '1girl, winter coat',
+    effort: 'medium',
+    noiseSchedule: 'exponential',
+    variety: true,
+    transparentBackground: true,
+    count: 12
+  });
+  assert.equal(v2Params.effort, 'medium');
+  assert.equal(v2Params.noiseSchedule, 'exponential');
+  assert.equal(v2Params.variety, true);
+  assert.equal(v2Params.transparentBackground, true);
+  assert.equal(v2Params.count, 8);
 });
 
 test('naming supports neutral defaults, optional character_rules.json, characterPrompts, and path sanitization', () => {
@@ -308,6 +329,30 @@ test('api boundary guards and HTTP endpoints handle unconfigured state, presets 
     const preJson = await preRes.json();
     assert.equal(preJson.artistPresets.length, 1);
     assert.equal(preJson.artistPresets[0].prompt, '<style> pastel, soft </style>');
+
+    const repRes = await fetch(`${baseUrl}/api/novelai/repair-prompt`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: '1girl，(long hair:1.2)' })
+    });
+    assert.equal(repRes.status, 200);
+    const repJson = await repRes.json();
+    assert.equal(repJson.ok, true);
+    assert.match(repJson.repaired, /1girl, 1\.2::long hair ::/);
+
+    const samplePng = path.join(outDir, 'sample.png');
+    fs.writeFileSync(samplePng, makeMinimalPng([], 64, 64));
+    archiveManager.setOutputDir(outDir);
+    const favRes = await fetch(`${baseUrl}/api/novelai/favorites/toggle`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: samplePng })
+    });
+    assert.equal(favRes.status, 200);
+    const favJson = await favRes.json();
+    assert.equal(favJson.ok, true);
+    assert.equal(favJson.isFavorite, true);
+    assert.equal(favJson.count, 1);
   } finally {
     await new Promise(resolve => server.close(resolve));
     fs.rmSync(tmpDir, { recursive: true, force: true });
@@ -453,7 +498,7 @@ test('built client.js loads in mocked __ModuleLoader__ with dsh-nai5-studio id a
   }
 });
 
-test('mcp_server.mjs handles initialize, tools/list (12 tools), and list_accounts with isolated NAI5_DATA_DIR', async () => {
+test('mcp_server.mjs handles initialize, tools/list (16 tools), and list_accounts with isolated NAI5_DATA_DIR', async () => {
   const tmpData = fs.mkdtempSync(path.join(os.tmpdir(), 'nai5-mcp-'));
   const serverPath = path.resolve(import.meta.dirname, '../mcp_server.mjs');
   const child = spawn(process.execPath, [serverPath], {
@@ -499,9 +544,14 @@ test('mcp_server.mjs handles initialize, tools/list (12 tools), and list_account
   try {
     const initRes = await rpc(1, 'initialize', { protocolVersion: '2024-11-05' });
     assert.equal(initRes.result.serverInfo.name, 'dsh-nai5-studio');
+    assert.equal(initRes.result.serverInfo.version, '2.0.0');
 
     const listRes = await rpc(2, 'tools/list');
-    assert.equal(listRes.result.tools.length, 12);
+    assert.equal(listRes.result.tools.length, 16);
+    const toolNames = new Set(listRes.result.tools.map((tool) => tool.name));
+    for (const expected of ['generate_image', 'img2img', 'inpaint', 'upscale', 'director_tool']) {
+      assert.ok(toolNames.has(expected), `Missing MCP tool: ${expected}`);
+    }
 
     const accRes = await rpc(3, 'tools/call', { name: 'list_accounts', arguments: {} });
     assert.equal(accRes.result.isError, false);
@@ -564,8 +614,79 @@ test('Python workers process thumbnails and 4koma comic pages when Pillow is ins
     });
     assert.equal(stitchProc.status, 0, stitchProc.stderr);
     assert.ok(fs.existsSync(comicOut) && fs.statSync(comicOut).size > 0);
+
+    const imageHelper = path.resolve(import.meta.dirname, '../workers/image_helper.py');
+    const prepProc = spawnSync(pythonCmd, ['-B', imageHelper, 'prepare-ref'], {
+      input: pngBuf,
+      encoding: 'utf8',
+      timeout: 15000,
+      windowsHide: true
+    });
+    assert.equal(prepProc.status, 0, prepProc.stderr);
+    const prepJson = JSON.parse(prepProc.stdout.trim());
+    assert.equal(prepJson.ok, true);
+    assert.ok([1024, 1472, 1536].includes(prepJson.width));
+    assert.ok([1024, 1472, 1536].includes(prepJson.height));
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test('v2.0 payload builder, multipart serializer, and ArchiveManager favorites/batchMove work cleanly', async () => {
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nai5-v2-'));
+  const outDir = path.join(tmpRoot, 'outputs');
+  const charA = path.join(outDir, '2026-11-24', 'CharA');
+  fs.mkdirSync(charA, { recursive: true });
+
+  const samplePath = path.join(charA, '120000_CharA_test_Safe_01_s42.png');
+  const pngBuf = makeMinimalPng([], 64, 64);
+  fs.writeFileSync(samplePath, pngBuf);
+
+  try {
+    const client = new NovelAIClient({ dataDir: tmpRoot, outputDir: outDir });
+    const builtMedium = await client._buildGenerationPayload(sanitizeParams({
+      positivePrompt: '1girl, snow, maple leaves',
+      negativePrompt: 'lowres',
+      effort: 'medium',
+      transparentBackground: true
+    }));
+    assert.equal(builtMedium.model, 'nai-diffusion-5-full-medium');
+    assert.equal(builtMedium.effectiveSteps, 14);
+    assert.equal(builtMedium.effectiveNegative, '');
+    assert.match(builtMedium.fullPrompt, /transparent background/);
+
+    const dataUri = `data:image/png;base64,${pngBuf.toString('base64')}`;
+    const builtVibe = await client._buildGenerationPayload(sanitizeParams({
+      positivePrompt: '1girl, portrait'
+    }), {
+      vibeReferences: [{ image: dataUri, strength: 0.7, infoExtracted: 0.9 }]
+    });
+    assert.equal(builtVibe.model, 'nai-diffusion-4-5-full');
+    assert.equal(builtVibe.payload.parameters.reference_image_multiple.length, 1);
+
+    const mp = buildMultipartFormBuffer(
+      { action: 'generate', model: 'nai-diffusion-4-5-full', parameters: {} },
+      { refBuffers: [pngBuf] }
+    );
+    assert.match(mp.contentType, /^multipart\/form-data; boundary=----DshNaiBoundary/);
+    assert.equal(mp.contentLength, mp.body.length);
+    assert.ok(mp.body.toString('latin1').includes('director_ref_0'));
+
+    archiveManager.setOutputDir(outDir);
+    const t1 = archiveManager.toggleFavorite(samplePath);
+    assert.equal(t1.ok, true);
+    assert.equal(t1.isFavorite, true);
+    assert.equal(archiveManager.listFavorites().length, 1);
+    const favPage = archiveManager.queryGallery({ favorites: true });
+    assert.equal(favPage.records.length, 1);
+
+    const moveRes = archiveManager.batchMoveCharacter([samplePath], 'CharB');
+    assert.equal(moveRes.ok, true);
+    assert.equal(moveRes.movedCount, 1);
+    assert.ok(!fs.existsSync(samplePath));
+    assert.ok(fs.existsSync(moveRes.moved[0].to));
+  } finally {
+    fs.rmSync(tmpRoot, { recursive: true, force: true });
   }
 });
 
