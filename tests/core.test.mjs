@@ -19,7 +19,9 @@ import { repairV5Prompt, sanitizeParams } from '../lib/linter.js';
 import { resolveImageNaming } from '../lib/naming.js';
 import { injectPngMetadata, readPngMetadata, readPngMetadataFromFile } from '../lib/png.js';
 import { extractPngFromZip } from '../lib/zip.js';
+import * as pluginEntry from '../index.js';
 import { archiveManager } from '../lib/archive.js';
+import { thumbService } from '../lib/thumb.js';
 import { isWithinOutputDir, isAllowedOrigin, createApiHandler } from '../lib/api.js';
 import {
   NovelAIClient,
@@ -545,7 +547,7 @@ test('mcp_server.mjs handles initialize, tools/list (16 tools), and list_account
   try {
     const initRes = await rpc(1, 'initialize', { protocolVersion: '2024-11-05' });
     assert.equal(initRes.result.serverInfo.name, 'dsh-nai5-studio');
-    assert.equal(initRes.result.serverInfo.version, '2.0.0');
+    assert.equal(initRes.result.serverInfo.version, '2.0.1');
 
     const listRes = await rpc(2, 'tools/list');
     assert.equal(listRes.result.tools.length, 16);
@@ -690,6 +692,162 @@ test('v2.0 payload builder, multipart serializer, and ArchiveManager favorites/b
     assert.ok(fs.existsSync(moveRes.moved[0].to));
   } finally {
     archiveManager.dispose();
+    fs.rmSync(tmpRoot, { recursive: true, force: true });
+  }
+});
+
+test('index.js registers webServer routes on root context without tools, and wallpaper/codex import routes work cleanly', async () => {
+  assert.equal(pluginEntry.inject, undefined);
+
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nai5-root-ctx-'));
+  const dataDir = path.join(tmpRoot, 'data');
+  const outDir = path.join(tmpRoot, 'outputs');
+  fs.mkdirSync(dataDir, { recursive: true });
+  fs.mkdirSync(outDir, { recursive: true });
+
+  try {
+    // 1. Root context only has webServer (never provides tools)
+    const routes = new Map();
+    const disposers = [];
+    const mockWebServer = {
+      register(entry) {
+        routes.set(entry.path, entry.handler);
+        return () => routes.delete(entry.path);
+      }
+    };
+    const rootCtx = {
+      inject(deps, cb) {
+        if (deps.includes('webServer') && !deps.includes('tools')) {
+          cb({
+            webServer: mockWebServer,
+            effect(fn) {
+              const d = fn();
+              if (typeof d === 'function') disposers.push(d);
+            }
+          });
+        }
+      },
+      on() {}
+    };
+
+    pluginEntry.apply(rootCtx, { dataDir, outputDir: outDir });
+    assert.ok(routes.has('/api/novelai/accounts'));
+    assert.ok(routes.has('/api/novelai/wallpaper'));
+    assert.ok(routes.has('/api/novelai/codex/import'));
+
+    // Dispose and re-apply must cleanly re-register
+    while (disposers.length) disposers.pop()();
+    assert.equal(routes.size, 0);
+    pluginEntry.apply(rootCtx, { dataDir, outputDir: outDir });
+    assert.ok(routes.has('/api/novelai/accounts'));
+
+    // Also test tools registration when tools context is injected
+    const toolMap = new Map();
+    const toolsCtx = {
+      inject(deps, cb) {
+        if (deps.includes('tools')) {
+          cb({
+            tools: {
+              register(t) { toolMap.set(t.name, t); }
+            },
+            effect() {}
+          });
+        }
+      },
+      on() {}
+    };
+    pluginEntry.apply(toolsCtx, { dataDir, outputDir: outDir });
+    assert.equal(toolMap.size, 16);
+
+    // 2. Test wallpaper upload/get/delete + codex/import over HTTP
+    const client = new NovelAIClient({ dataDir, outputDir: outDir });
+    const server = http.createServer(createApiHandler(client));
+    await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+    const { port } = server.address();
+    const baseUrl = `http://127.0.0.1:${port}`;
+
+    try {
+      const badWp = await fetch(`${baseUrl}/api/novelai/wallpaper`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: 'data:image/png;base64,aGVsbG8=', filename: 'bad.png' })
+      });
+      assert.equal(badWp.status, 400);
+
+      const pngBuf = makeMinimalPng([], 64, 64);
+      const upWp = await fetch(`${baseUrl}/api/novelai/wallpaper`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: `data:image/png;base64,${pngBuf.toString('base64')}`, filename: 'bg.png' })
+      });
+      assert.equal(upWp.status, 200);
+      const upJson = await upWp.json();
+      assert.equal(upJson.ok, true);
+      assert.equal(upJson.hasWallpaper, true);
+
+      const getWp = await fetch(`${baseUrl}/api/novelai/wallpaper`);
+      assert.equal(getWp.status, 200);
+      assert.equal(getWp.headers.get('content-type'), 'image/png');
+      const fetchedBytes = Buffer.from(await getWp.arrayBuffer());
+      assert.deepEqual(fetchedBytes, pngBuf);
+
+      const cfgAfterUp = await (await fetch(`${baseUrl}/api/novelai/config`)).json();
+      assert.equal(cfgAfterUp.hasWallpaper, true);
+
+      const delWp = await fetch(`${baseUrl}/api/novelai/wallpaper`, { method: 'DELETE' });
+      assert.equal(delWp.status, 200);
+      assert.equal((await fetch(`${baseUrl}/api/novelai/wallpaper`)).status, 404);
+
+      // Import gzipped all-in-one bundle (.nai5pack.gz)
+      const bundle = {
+        format: 'dsh-nai5-codex-bundle',
+        version: '1.0',
+        danbooruCsv: 'tag,cn_name,wiki,post_count,category,nsfw\nsnowfall,落雪,,9000,0,0\n',
+        synonyms: { categories: { lighting: [['rim light', '逆光']] } },
+        codexTitles: { test_pack: '测试导入法典' },
+        codexes: [
+          {
+            key: 'test_pack',
+            title: '测试导入法典',
+            entries: [
+              {
+                title: '双人雪夜站位',
+                tags: 'night, snowfall',
+                characterPrompts: [
+                  { label: 'char1', prompt: '1girl, winter coat' },
+                  { label: 'char2', prompt: '1girl, scarf' }
+                ],
+                negative: 'lowres'
+              }
+            ]
+          }
+        ]
+      };
+      const gzBundle = zlib.gzipSync(Buffer.from(JSON.stringify(bundle), 'utf8'));
+      const impRes = await fetch(`${baseUrl}/api/novelai/codex/import?filename=all.nai5pack.gz`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/octet-stream' },
+        body: gzBundle
+      });
+      assert.equal(impRes.status, 200);
+      const impJson = await impRes.json();
+      assert.equal(impJson.ok, true);
+      assert.equal(impJson.mode, 'codex_bundle');
+      assert.equal(impJson.totalEntries, 1);
+      assert.equal(impJson.totalTags, 1);
+      assert.equal(impJson.codexes[0].name, '测试导入法典');
+
+      const searchRes = await (await fetch(`${baseUrl}/api/novelai/search?q=${encodeURIComponent('落雪')}&codex=all`)).json();
+      assert.equal(searchRes.danbooru.results[0].tag, 'snowfall');
+      assert.equal(searchRes.codex.results.length, 1);
+      assert.equal(searchRes.codex.results[0].characterPrompts.length, 2);
+    } finally {
+      await new Promise(resolve => server.close(resolve));
+    }
+  } finally {
+    danbooruEngine.configure({});
+    archiveManager.dispose();
+    thumbService.dispose();
     fs.rmSync(tmpRoot, { recursive: true, force: true });
   }
 });

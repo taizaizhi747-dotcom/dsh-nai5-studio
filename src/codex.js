@@ -8,13 +8,16 @@ function CodexView({
   setSearchQuery,
   searchResults,
   searching,
+  importingCodex,
   runTagSearch,
+  importCodexFiles,
   onAppendPositive,
   onAppendNegative,
   onOverwriteStudio,
   onCopyText,
   onSendToChat
 }) {
+  const importInputRef = useRef(null);
   const dynamicCategories = React.useMemo(() => {
     const list = [{ key: 'all', name: '全部典籍', count: codexMeta?.totalEntries || 0, badge: null }];
     if (Array.isArray(codexMeta?.codexes)) {
@@ -77,6 +80,24 @@ function CodexView({
           className: 'nai5-btn primary',
           onClick: () => runTagSearch(searchQuery, false, codexCategory)
         }, h(Icon, { name: 'search', size: 13 }), searching ? '检索中...' : '搜索'),
+        importCodexFiles && h('input', {
+          ref: importInputRef,
+          type: 'file',
+          accept: '.gz,.nai5pack,.json,.csv',
+          multiple: true,
+          style: { display: 'none' },
+          onChange: (e) => {
+            if (e.target.files?.length) importCodexFiles(e.target.files);
+            e.target.value = '';
+          }
+        }),
+        importCodexFiles && h('button', {
+          type: 'button',
+          className: 'nai5-btn',
+          disabled: Boolean(importingCodex),
+          title: '一键导入整合包 (.nai5pack.gz)、单本法典 (.json) 或 Danbooru 词表 (.csv)',
+          onClick: () => importInputRef.current?.click()
+        }, h(Icon, { name: 'upload', size: 13 }), importingCodex ? '导入中...' : '导入词库/法典'),
         searchQuery && h('button', {
           type: 'button',
           className: 'nai5-btn',
@@ -254,13 +275,21 @@ function CodexView({
             : (codexConfiguredCount === 0 ? '可选词库与法典导入指南（当前未加载外置数据包）' : '未找到匹配的法典配方')
         ),
         codexConfiguredCount === 0
-          ? h('div', { style: { fontSize: '11.5px', color: 'var(--fx-text-secondary)', lineHeight: 1.7, maxWidth: '640px', textAlign: 'left' } },
-              h('div', null, '本插件公开版默认轻量化发布，不捆绑第三方法典或大型 CSV 词库。如需启用离线检索，可按以下目录自行导入：'),
-              h('div', { style: { fontFamily: 'monospace', marginTop: '6px', padding: '8px 10px', borderRadius: '8px', background: 'var(--fx-glass-input)', border: '1px solid var(--fx-border-card)' } },
+          ? h('div', { style: { fontSize: '11.5px', color: 'var(--fx-text-secondary)', lineHeight: 1.7, maxWidth: '640px', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '8px' } },
+              h('div', null, '本插件公开版默认轻量化发布，不捆绑第三方法典或大型 CSV 词库。支持直接在界面中一键导入 `.nai5pack.gz` 整合包、单本法典 `.json` 或 `danbooru-cn.csv`：'),
+              importCodexFiles && h('div', { style: { display: 'flex', justifyContent: 'center', margin: '4px 0' } },
+                h('button', {
+                  type: 'button',
+                  className: 'nai5-btn primary',
+                  disabled: Boolean(importingCodex),
+                  onClick: () => importInputRef.current?.click()
+                }, h(Icon, { name: 'upload', size: 13 }), importingCodex ? '正在解析并挂载词库...' : '一键导入词库/法典文件 (.nai5pack.gz / .json / .csv)')
+              ),
+              h('div', { style: { fontFamily: 'monospace', padding: '8px 10px', borderRadius: '8px', background: 'var(--fx-glass-input)', border: '1px solid var(--fx-border-card)' } },
                 h('div', null, `• 自定义法典 JSON 目录: ${cfgPaths.codexDir || '~/.dsh/nai5-studio/codexes'}`),
                 h('div', null, `• 双语 Danbooru CSV: ${cfgPaths.danbooruCsv || '~/.dsh/nai5-studio/danbooru-cn.csv'}`)
               ),
-              h('div', { style: { marginTop: '6px', color: 'var(--fx-text-muted)' } }, '格式示例可参考仓库内的 examples/codex_pack.example.json；环境变量 NAI5_CODEX_DIR 与 DANBOORU_CSV_PATH 也可随时指定自定义位置。')
+              h('div', { style: { color: 'var(--fx-text-muted)' } }, '也可手动复制至上述目录，或通过环境变量 NAI5_CODEX_DIR 与 DANBOORU_CSV_PATH 指定位置。')
             )
           : h('div', { style: { fontSize: '11px', color: 'var(--fx-text-secondary)' } },
               '尝试切换上方分类或输入更宽泛的中英文关键词'

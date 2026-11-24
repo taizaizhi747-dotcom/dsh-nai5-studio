@@ -5,9 +5,9 @@ import { archiveManager } from './lib/archive.js';
 import { thumbService } from './lib/thumb.js';
 
 export const name = 'dsh-nai5-studio';
-export const inject = ['tools'];
 
 const registeredWebServers = new WeakSet();
+const registeredToolRegistries = new WeakSet();
 let activeInstances = 0;
 
 export function apply(ctx, config) {
@@ -15,14 +15,34 @@ export function apply(ctx, config) {
   const client = getSharedClient(config || {});
   const tools = createNovelAITools(client);
 
-  for (const tool of tools) {
-    ctx.tools.register(tool);
-  }
+  ctx.inject(['tools'], (toolCtx) => {
+    const registry = toolCtx?.tools;
+    if (!registry || registeredToolRegistries.has(registry)) return;
+    registeredToolRegistries.add(registry);
+    for (const tool of tools) {
+      registry.register(tool);
+    }
+    const cleanupTools = () => registeredToolRegistries.delete(registry);
+    if (typeof toolCtx.effect === 'function') {
+      toolCtx.effect(() => cleanupTools, 'novelai:tools-cleanup');
+    }
+    if (typeof toolCtx.on === 'function') {
+      toolCtx.on('dispose', cleanupTools);
+    }
+  });
 
   ctx.inject(['webServer'], (webCtx) => {
-    if (!webCtx?.webServer || registeredWebServers.has(webCtx.webServer)) return;
-    registeredWebServers.add(webCtx.webServer);
+    const ws = webCtx?.webServer;
+    if (!ws || registeredWebServers.has(ws)) return;
+    registeredWebServers.add(ws);
     registerNovelAiRoutes(webCtx, client);
+    const cleanupServer = () => registeredWebServers.delete(ws);
+    if (typeof webCtx.effect === 'function') {
+      webCtx.effect(() => cleanupServer, 'novelai:webserver-cleanup');
+    }
+    if (typeof webCtx.on === 'function') {
+      webCtx.on('dispose', cleanupServer);
+    }
   });
 
   if (typeof ctx.on === 'function') {

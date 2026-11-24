@@ -2887,6 +2887,12 @@
   color: var(--fx-text-secondary);
 }
 
+.nai5-scene-upload-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .nai5-scene-custom-bar {
   display: flex;
   align-items: center;

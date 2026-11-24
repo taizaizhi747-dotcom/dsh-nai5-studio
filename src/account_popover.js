@@ -1,3 +1,16 @@
+async function parseApiJson(res) {
+  const raw = await res.text();
+  try {
+    return JSON.parse(raw);
+  } catch {
+    if (res.status === 404) {
+      throw new Error('后端接口 /api/novelai/* 未挂载 (HTTP 404)，请确认插件后端已启用并重启 DSH');
+    }
+    const snippet = String(raw || res.statusText || '非 JSON 响应').trim().slice(0, 80);
+    throw new Error(`HTTP ${res.status}: ${snippet}`);
+  }
+}
+
 function useAccounts(showToast) {
   const [balance, setBalance] = useState(null);
   const [loadingBalance, setLoadingBalance] = useState(false);
@@ -84,7 +97,7 @@ function useAccounts(showToast) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: accId })
       });
-      const data = await res.json();
+      const data = await parseApiJson(res);
       if (data.ok) {
         setAccountsData({
           activeAccountId: data.activeAccountId || '',
@@ -119,7 +132,7 @@ function useAccounts(showToast) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: nm, endpoint: ep, token: tk, activate: true })
       });
-      const data = await res.json();
+      const data = await parseApiJson(res);
       if (data.ok) {
         setAccountsData({
           activeAccountId: data.activeAccountId || '',
@@ -149,7 +162,7 @@ function useAccounts(showToast) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: accId })
       });
-      const data = await res.json();
+      const data = await parseApiJson(res);
       if (data.ok) {
         setAccountsData({
           activeAccountId: data.activeAccountId || '',
@@ -176,7 +189,7 @@ function useAccounts(showToast) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: accId })
       });
-      const data = await res.json();
+      const data = await parseApiJson(res);
       if (data.ok) {
         const label = data.balanceSupported !== false
           ? `${data.anlasBalance} Anlas · ${data.latencyMs || 0}ms`

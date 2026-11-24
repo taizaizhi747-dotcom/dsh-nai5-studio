@@ -2905,6 +2905,12 @@ window.__ModuleLoader__.load({
   color: var(--fx-text-secondary);
 }
 
+.nai5-scene-upload-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .nai5-scene-custom-bar {
   display: flex;
   align-items: center;
@@ -3889,7 +3895,7 @@ window.__ModuleLoader__.load({
       return { themePref, isLightTheme, themeClass, cycleThemePref };
     }
 
-    function useStudioScene(isLightTheme, hasWallpaper, showToast) {
+    function useStudioScene(isLightTheme, hasWallpaper, showToast, onWallpaperStateChange) {
       const [scenePref, setScenePref] = useState(() => {
         try {
           return localStorage.getItem('dsh_nai5_scene_pref_v1') || 'auto';
@@ -3914,6 +3920,20 @@ window.__ModuleLoader__.load({
           return '';
         }
       });
+      const [hasUploadedWallpaper, setHasUploadedWallpaper] = useState(() => Boolean(hasWallpaper));
+      const [wallpaperRev, setWallpaperRev] = useState(() => Date.now());
+      const [uploadingBg, setUploadingBg] = useState(false);
+      const [uploadedBgLabel, setUploadedBgLabel] = useState(() => {
+        try {
+          return localStorage.getItem('dsh_nai5_uploaded_bg_label_v1') || '';
+        } catch {
+          return '';
+        }
+      });
+      useEffect(() => {
+        setHasUploadedWallpaper(Boolean(hasWallpaper));
+      }, [hasWallpaper]);
+
       const [bgIntensity, setBgIntensity] = useState(() => {
         try {
           const val = localStorage.getItem('dsh_nai5_bg_intensity_v1');
@@ -3935,6 +3955,8 @@ window.__ModuleLoader__.load({
         if (showToast) {
           if (nextId === 'auto') {
             showToast('画卷景致：已设为随明暗主题自动匹配');
+          } else if (nextId === 'wallpaper') {
+            showToast('已启用本地上传背景画卷');
           } else {
             const hit = STUDIO_SCENES.find(s => s.id === nextId);
             if (hit) showToast(`画卷已切换：《${hit.title}》`);
@@ -3971,6 +3993,77 @@ window.__ModuleLoader__.load({
         if (showToast) showToast('已恢复工坊内置精选画卷');
       }, [showToast]);
 
+      const uploadBackdropFile = useCallback((file) => {
+        if (!file) return;
+        const fname = String(file.name || 'wallpaper.png');
+        if (!String(file.type || '').startsWith('image/') && !/\.(png|jpe?g|webp|gif)$/i.test(fname)) {
+          if (showToast) showToast('请选择 PNG / JPG / WebP / GIF 格式的图片');
+          return;
+        }
+        if (file.size > 15 * 1024 * 1024) {
+          if (showToast) showToast('背景图片请控制在 15MB 以内');
+          return;
+        }
+        setUploadingBg(true);
+        const reader = new FileReader();
+        reader.onload = async () => {
+          try {
+            const res = await fetch('/api/novelai/wallpaper', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ image: reader.result, filename: fname })
+            });
+            const data = await parseApiJson(res);
+            if (!data.ok) throw new Error(data.error || '上传失败');
+            setHasUploadedWallpaper(true);
+            if (onWallpaperStateChange) onWallpaperStateChange(true);
+            setWallpaperRev(Date.now());
+            setUploadedBgLabel(fname);
+            setScenePref('wallpaper');
+            try {
+              localStorage.setItem('dsh_nai5_uploaded_bg_label_v1', fname);
+              localStorage.setItem('dsh_nai5_scene_pref_v1', 'wallpaper');
+            } catch (err) {
+              warnSilent('scene.saveUploaded', err);
+            }
+            if (showToast) showToast(`已上传并设为工坊背景：${fname}`);
+          } catch (err) {
+            if (showToast) showToast(`上传背景失败：${err.message}`);
+          } finally {
+            setUploadingBg(false);
+          }
+        };
+        reader.onerror = () => {
+          setUploadingBg(false);
+          if (showToast) showToast('读取本地图片失败');
+        };
+        reader.readAsDataURL(file);
+      }, [showToast, onWallpaperStateChange]);
+
+      const clearUploadedBackdrop = useCallback(async () => {
+        try {
+          const res = await fetch('/api/novelai/wallpaper', { method: 'DELETE' });
+          const data = await parseApiJson(res);
+          if (!data.ok) throw new Error(data.error || '清除失败');
+          setHasUploadedWallpaper(false);
+          if (onWallpaperStateChange) onWallpaperStateChange(false);
+          setUploadedBgLabel('');
+          try {
+            localStorage.removeItem('dsh_nai5_uploaded_bg_label_v1');
+          } catch {}
+          setScenePref(prev => {
+            if (prev === 'wallpaper') {
+              try { localStorage.setItem('dsh_nai5_scene_pref_v1', 'auto'); } catch {}
+              return 'auto';
+            }
+            return prev;
+          });
+          if (showToast) showToast('已清除本地上传背景图');
+        } catch (err) {
+          if (showToast) showToast(`清除背景失败：${err.message}`);
+        }
+      }, [showToast, onWallpaperStateChange]);
+
       const updateBgIntensity = useCallback((level) => {
         if (!['soft', 'balanced', 'vivid'].includes(level)) return;
         setBgIntensity(level);
@@ -3982,8 +4075,9 @@ window.__ModuleLoader__.load({
       }, []);
 
       const isCustomActive = scenePref === 'custom' && Boolean(customBgPath);
-      const useConfigWallpaper = scenePref === 'auto' && Boolean(hasWallpaper);
-      const resolvedCurated = isCustomActive
+      const isUploadedActive = scenePref === 'wallpaper' && hasUploadedWallpaper;
+      const useConfigWallpaper = scenePref === 'auto' && Boolean(hasUploadedWallpaper);
+      const resolvedCurated = (isCustomActive || isUploadedActive || useConfigWallpaper)
         ? null
         : (scenePref === 'auto'
           ? STUDIO_SCENES.find(s => s.id === (isLightTheme ? 'dawn-snow' : 'moonblade'))
@@ -3992,10 +4086,12 @@ window.__ModuleLoader__.load({
       const activeScene = resolvedCurated || STUDIO_SCENES[0];
       const activeBgUrl = isCustomActive
         ? getImageUrl(customBgPath, false)
-        : (useConfigWallpaper ? '/api/novelai/wallpaper' : '');
-      const activeBgGradient = (isCustomActive || useConfigWallpaper) ? '' : (activeScene.gradient || '');
-      const activeBgPos = (isCustomActive || useConfigWallpaper) ? 'center 24%' : activeScene.pos;
-      const activeTitle = isCustomActive ? (customBgLabel || '典藏画卷') : (useConfigWallpaper ? '自定义壁纸' : activeScene.title);
+        : ((isUploadedActive || useConfigWallpaper) ? `/api/novelai/wallpaper?v=${wallpaperRev}` : '');
+      const activeBgGradient = (isCustomActive || isUploadedActive || useConfigWallpaper) ? '' : (activeScene.gradient || '');
+      const activeBgPos = (isCustomActive || isUploadedActive || useConfigWallpaper) ? 'center 24%' : activeScene.pos;
+      const activeTitle = isCustomActive
+        ? (customBgLabel || '典藏画卷')
+        : ((isUploadedActive || useConfigWallpaper) ? (uploadedBgLabel || '自定义壁纸') : activeScene.title);
 
       const cycleCuratedScene = useCallback((delta = 1) => {
         const idx = STUDIO_SCENES.findIndex(s => s.id === activeScene.id);
@@ -4013,6 +4109,10 @@ window.__ModuleLoader__.load({
         scenePref,
         customBgPath,
         customBgLabel,
+        hasUploadedWallpaper,
+        wallpaperRev,
+        uploadingBg,
+        uploadedBgLabel,
         bgIntensity,
         activeScene,
         activeBgUrl,
@@ -4022,6 +4122,8 @@ window.__ModuleLoader__.load({
         selectScene,
         setCustomBackdrop,
         clearCustomBackdrop,
+        uploadBackdropFile,
+        clearUploadedBackdrop,
         cycleCuratedScene,
         updateBgIntensity
       };
@@ -5066,7 +5168,7 @@ window.__ModuleLoader__.load({
       };
     }
 
-    function useCodexSearch(activeTab) {
+    function useCodexSearch(activeTab, showToast) {
       const [showInlineSearch, setShowInlineSearch] = useState(false);
       const [inlineQuery, setInlineQuery] = useState('');
       const [inlineResults, setInlineResults] = useState(null);
@@ -5075,6 +5177,7 @@ window.__ModuleLoader__.load({
       const [searchQuery, setSearchQuery] = useState('');
       const [searchResults, setSearchResults] = useState(null);
       const [searching, setSearching] = useState(false);
+      const [importingCodex, setImportingCodex] = useState(false);
       const [codexCategory, setCodexCategory] = useState('all');
       const [codexMeta, setCodexMeta] = useState(null);
 
@@ -5107,6 +5210,40 @@ window.__ModuleLoader__.load({
         }
       }, [codexCategory]);
 
+      const importCodexFiles = useCallback(async (fileList) => {
+        const files = Array.from(fileList || []).filter(Boolean);
+        if (files.length === 0 || importingCodex) return;
+        setImportingCodex(true);
+        let lastData = null;
+        let okCount = 0;
+        try {
+          for (const file of files) {
+            const fname = String(file.name || 'codex.json');
+            const res = await fetch(`/api/novelai/codex/import?filename=${encodeURIComponent(fname)}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/octet-stream' },
+              body: file
+            });
+            const data = await parseApiJson(res);
+            if (!data.ok) throw new Error(data.error || `导入 ${fname} 失败`);
+            lastData = data;
+            okCount++;
+          }
+          if (lastData) {
+            setCodexMeta(lastData);
+            setCodexCategory('all');
+            await runTagSearch(searchQuery, false, 'all');
+            if (showToast) {
+              showToast(`已导入 ${okCount} 份数据包：共 ${lastData.totalEntries || 0} 条法典配方 / ${lastData.totalTags || 0} 个词条`);
+            }
+          }
+        } catch (err) {
+          if (showToast) showToast(`导入词库/法典失败：${err.message}`);
+        } finally {
+          setImportingCodex(false);
+        }
+      }, [importingCodex, searchQuery, runTagSearch, showToast]);
+
       useEffect(() => {
         if (activeTab === 'codex') {
           if (!codexMeta) fetchCodexMeta();
@@ -5125,10 +5262,12 @@ window.__ModuleLoader__.load({
         setSearchQuery,
         searchResults,
         searching,
+        importingCodex,
         codexCategory,
         setCodexCategory,
         codexMeta,
-        runTagSearch
+        runTagSearch,
+        importCodexFiles
       };
     }
 
@@ -5535,6 +5674,19 @@ window.__ModuleLoader__.load({
     }
 
     // --- src/account_popover.js ---
+    async function parseApiJson(res) {
+      const raw = await res.text();
+      try {
+        return JSON.parse(raw);
+      } catch {
+        if (res.status === 404) {
+          throw new Error('后端接口 /api/novelai/* 未挂载 (HTTP 404)，请确认插件后端已启用并重启 DSH');
+        }
+        const snippet = String(raw || res.statusText || '非 JSON 响应').trim().slice(0, 80);
+        throw new Error(`HTTP ${res.status}: ${snippet}`);
+      }
+    }
+
     function useAccounts(showToast) {
       const [balance, setBalance] = useState(null);
       const [loadingBalance, setLoadingBalance] = useState(false);
@@ -5621,7 +5773,7 @@ window.__ModuleLoader__.load({
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: accId })
           });
-          const data = await res.json();
+          const data = await parseApiJson(res);
           if (data.ok) {
             setAccountsData({
               activeAccountId: data.activeAccountId || '',
@@ -5656,7 +5808,7 @@ window.__ModuleLoader__.load({
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: nm, endpoint: ep, token: tk, activate: true })
           });
-          const data = await res.json();
+          const data = await parseApiJson(res);
           if (data.ok) {
             setAccountsData({
               activeAccountId: data.activeAccountId || '',
@@ -5686,7 +5838,7 @@ window.__ModuleLoader__.load({
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: accId })
           });
-          const data = await res.json();
+          const data = await parseApiJson(res);
           if (data.ok) {
             setAccountsData({
               activeAccountId: data.activeAccountId || '',
@@ -5713,7 +5865,7 @@ window.__ModuleLoader__.load({
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: accId })
           });
-          const data = await res.json();
+          const data = await parseApiJson(res);
           if (data.ok) {
             const label = data.balanceSupported !== false
               ? `${data.anlasBalance} Anlas · ${data.latencyMs || 0}ms`
@@ -8784,13 +8936,16 @@ window.__ModuleLoader__.load({
       setSearchQuery,
       searchResults,
       searching,
+      importingCodex,
       runTagSearch,
+      importCodexFiles,
       onAppendPositive,
       onAppendNegative,
       onOverwriteStudio,
       onCopyText,
       onSendToChat
     }) {
+      const importInputRef = useRef(null);
       const dynamicCategories = React.useMemo(() => {
         const list = [{ key: 'all', name: '全部典籍', count: codexMeta?.totalEntries || 0, badge: null }];
         if (Array.isArray(codexMeta?.codexes)) {
@@ -8853,6 +9008,24 @@ window.__ModuleLoader__.load({
               className: 'nai5-btn primary',
               onClick: () => runTagSearch(searchQuery, false, codexCategory)
             }, h(Icon, { name: 'search', size: 13 }), searching ? '检索中...' : '搜索'),
+            importCodexFiles && h('input', {
+              ref: importInputRef,
+              type: 'file',
+              accept: '.gz,.nai5pack,.json,.csv',
+              multiple: true,
+              style: { display: 'none' },
+              onChange: (e) => {
+                if (e.target.files?.length) importCodexFiles(e.target.files);
+                e.target.value = '';
+              }
+            }),
+            importCodexFiles && h('button', {
+              type: 'button',
+              className: 'nai5-btn',
+              disabled: Boolean(importingCodex),
+              title: '一键导入整合包 (.nai5pack.gz)、单本法典 (.json) 或 Danbooru 词表 (.csv)',
+              onClick: () => importInputRef.current?.click()
+            }, h(Icon, { name: 'upload', size: 13 }), importingCodex ? '导入中...' : '导入词库/法典'),
             searchQuery && h('button', {
               type: 'button',
               className: 'nai5-btn',
@@ -9030,13 +9203,21 @@ window.__ModuleLoader__.load({
                 : (codexConfiguredCount === 0 ? '可选词库与法典导入指南（当前未加载外置数据包）' : '未找到匹配的法典配方')
             ),
             codexConfiguredCount === 0
-              ? h('div', { style: { fontSize: '11.5px', color: 'var(--fx-text-secondary)', lineHeight: 1.7, maxWidth: '640px', textAlign: 'left' } },
-                  h('div', null, '本插件公开版默认轻量化发布，不捆绑第三方法典或大型 CSV 词库。如需启用离线检索，可按以下目录自行导入：'),
-                  h('div', { style: { fontFamily: 'monospace', marginTop: '6px', padding: '8px 10px', borderRadius: '8px', background: 'var(--fx-glass-input)', border: '1px solid var(--fx-border-card)' } },
+              ? h('div', { style: { fontSize: '11.5px', color: 'var(--fx-text-secondary)', lineHeight: 1.7, maxWidth: '640px', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '8px' } },
+                  h('div', null, '本插件公开版默认轻量化发布，不捆绑第三方法典或大型 CSV 词库。支持直接在界面中一键导入 `.nai5pack.gz` 整合包、单本法典 `.json` 或 `danbooru-cn.csv`：'),
+                  importCodexFiles && h('div', { style: { display: 'flex', justifyContent: 'center', margin: '4px 0' } },
+                    h('button', {
+                      type: 'button',
+                      className: 'nai5-btn primary',
+                      disabled: Boolean(importingCodex),
+                      onClick: () => importInputRef.current?.click()
+                    }, h(Icon, { name: 'upload', size: 13 }), importingCodex ? '正在解析并挂载词库...' : '一键导入词库/法典文件 (.nai5pack.gz / .json / .csv)')
+                  ),
+                  h('div', { style: { fontFamily: 'monospace', padding: '8px 10px', borderRadius: '8px', background: 'var(--fx-glass-input)', border: '1px solid var(--fx-border-card)' } },
                     h('div', null, `• 自定义法典 JSON 目录: ${cfgPaths.codexDir || '~/.dsh/nai5-studio/codexes'}`),
                     h('div', null, `• 双语 Danbooru CSV: ${cfgPaths.danbooruCsv || '~/.dsh/nai5-studio/danbooru-cn.csv'}`)
                   ),
-                  h('div', { style: { marginTop: '6px', color: 'var(--fx-text-muted)' } }, '格式示例可参考仓库内的 examples/codex_pack.example.json；环境变量 NAI5_CODEX_DIR 与 DANBOORU_CSV_PATH 也可随时指定自定义位置。')
+                  h('div', { style: { color: 'var(--fx-text-muted)' } }, '也可手动复制至上述目录，或通过环境变量 NAI5_CODEX_DIR 与 DANBOORU_CSV_PATH 指定位置。')
                 )
               : h('div', { style: { fontSize: '11px', color: 'var(--fx-text-secondary)' } },
                   '尝试切换上方分类或输入更宽泛的中英文关键词'
@@ -9412,9 +9593,13 @@ window.__ModuleLoader__.load({
 
       const { toast, showToast } = useToast();
       const { themePref, isLightTheme, themeClass, cycleThemePref } = useHostTheme(showToast);
-      const scene = useStudioScene(isLightTheme, Boolean(studioConfig?.hasWallpaper), showToast);
+      const handleWallpaperStateChange = useCallback((has) => {
+        setStudioConfig(prev => (prev ? { ...prev, hasWallpaper: has } : { hasWallpaper: has }));
+      }, []);
+      const scene = useStudioScene(isLightTheme, Boolean(studioConfig?.hasWallpaper), showToast, handleWallpaperStateChange);
       const [sceneMenuOpen, setSceneMenuOpen] = useState(false);
       const sceneMenuRef = useRef(null);
+      const sceneUploadInputRef = useRef(null);
       const geo = useWindowGeometry(setActiveTab);
       const accounts = useAccounts(showToast);
       const chars = useCharacterBoxes(showToast);
@@ -9494,7 +9679,7 @@ window.__ModuleLoader__.load({
       // Gallery, Lightbox & Codex Search
       const gallery = useGalleryState(showToast, setLatestImage);
       const lightbox = useLightboxState(gallery.history);
-      const codex = useCodexSearch(activeTab);
+      const codex = useCodexSearch(activeTab, showToast);
 
       const fetchStudioMetaAndPresets = useCallback(async () => {
         try {
@@ -10381,6 +10566,50 @@ window.__ModuleLoader__.load({
                         }, lv.label)
                       )
                     )
+                  ),
+                  h('input', {
+                    ref: sceneUploadInputRef,
+                    type: 'file',
+                    accept: 'image/png,image/jpeg,image/webp,image/gif',
+                    style: { display: 'none' },
+                    onChange: (e) => {
+                      const f = e.target.files?.[0];
+                      e.target.value = '';
+                      if (f) scene.uploadBackdropFile(f);
+                    }
+                  }),
+                  h('div', { className: 'nai5-scene-upload-row' },
+                    h('button', {
+                      type: 'button',
+                      className: 'nai5-btn xs',
+                      style: { flex: 1, justifyContent: 'center' },
+                      disabled: scene.uploadingBg,
+                      onClick: () => sceneUploadInputRef.current?.click()
+                    }, h(Icon, { name: 'upload', size: 11 }), scene.uploadingBg ? '上传中...' : (scene.hasUploadedWallpaper ? '更换本地背景图' : '上传本地图片作背景')),
+                    h('span', { style: { fontSize: '9.5px', color: 'var(--fx-text-muted)', flex: 'none' } }, '≤15MB')
+                  ),
+                  scene.hasUploadedWallpaper && h('div', { className: 'nai5-scene-custom-bar' },
+                    h('img', {
+                      src: `/api/novelai/wallpaper?v=${scene.wallpaperRev}`,
+                      className: 'nai5-scene-custom-thumb'
+                    }),
+                    h('div', { style: { flex: 1, minWidth: 0 } },
+                      h('div', { style: { fontSize: '11px', fontWeight: 700, color: 'var(--fx-text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } },
+                        `本地背景：${scene.uploadedBgLabel || '自定义壁纸'}`
+                      ),
+                      h('div', { style: { fontSize: '9.5px', color: 'var(--fx-text-muted)' } }, '持久化保存在本机配置目录')
+                    ),
+                    scene.scenePref !== 'wallpaper' && h('button', {
+                      type: 'button',
+                      className: 'nai5-btn xs primary',
+                      onClick: () => { scene.selectScene('wallpaper'); setSceneMenuOpen(false); }
+                    }, '启用'),
+                    h('button', {
+                      type: 'button',
+                      className: 'nai5-btn xs',
+                      title: '移除本地上传背景图',
+                      onClick: () => scene.clearUploadedBackdrop()
+                    }, '清除')
                   ),
                   scene.customBgPath && h('div', { className: 'nai5-scene-custom-bar' },
                     h('img', {

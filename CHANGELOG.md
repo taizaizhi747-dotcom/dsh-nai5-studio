@@ -2,6 +2,16 @@
 
 All notable changes to `dsh-nai5-studio` will be documented in this file.
 
+## [2.0.1] - 2026-11-24
+
+### Fixed
+- **Root-Context Route Registration (`index.js`)**: Removed blocking module-level `export const inject = ['tools']` and moved `tools` and `webServer` injection into independent `ctx.inject(...)` blocks with proper scope cleanup. Fixes `HTTP 404 "not found"` when adding accounts or accessing `/api/novelai/*` before opening the NAI5 Studio agent preset.
+- **Friendly API JSON Parsing (`src/account_popover.js`)**: Added `parseApiJson` so non-JSON 404/proxy errors report an actionable Chinese diagnostic instead of `Unexpected token 'o', "not found" is not valid JSON`.
+
+### Added
+- **In-UI Custom Backdrop Upload (`景致 ▾` -> `上传本地图片作背景`)**: Extended `/api/novelai/wallpaper` (`GET`/`HEAD`/`POST`/`DELETE`) with magic-byte validation (`PNG`/`JPG`/`WebP`/`GIF`) saved into `<dataDir>/wallpaper.<ext>`, plus live upload/switch/clear controls in the Scene Popover.
+- **In-UI One-Click Codex & Vocabulary Importer**: Added `POST /api/novelai/codex/import` and `DanbooruEngine.importPackageBuffer` supporting `.nai5pack.gz` gzipped all-in-one bundles, single codex `.json` files (including multi-character `characterPrompts` and `strings`/`examples`), `tag_zh/core.json`, `synonyms.json`, and UTF-8/GBK `.csv` tables directly from the Codex tab UI.
+
 ## [2.0.0] - 2026-11-24
 
 ### Added

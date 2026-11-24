@@ -18,7 +18,7 @@ import { createNovelAITools } from './lib/tools.js';
 
 const SERVER_INFO = {
   name: 'dsh-nai5-studio',
-  version: '2.0.0'
+  version: '2.0.1'
 };
 
 function sendMessage(payload) {

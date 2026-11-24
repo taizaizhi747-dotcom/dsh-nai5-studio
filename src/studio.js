@@ -5,9 +5,13 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
 
   const { toast, showToast } = useToast();
   const { themePref, isLightTheme, themeClass, cycleThemePref } = useHostTheme(showToast);
-  const scene = useStudioScene(isLightTheme, Boolean(studioConfig?.hasWallpaper), showToast);
+  const handleWallpaperStateChange = useCallback((has) => {
+    setStudioConfig(prev => (prev ? { ...prev, hasWallpaper: has } : { hasWallpaper: has }));
+  }, []);
+  const scene = useStudioScene(isLightTheme, Boolean(studioConfig?.hasWallpaper), showToast, handleWallpaperStateChange);
   const [sceneMenuOpen, setSceneMenuOpen] = useState(false);
   const sceneMenuRef = useRef(null);
+  const sceneUploadInputRef = useRef(null);
   const geo = useWindowGeometry(setActiveTab);
   const accounts = useAccounts(showToast);
   const chars = useCharacterBoxes(showToast);
@@ -87,7 +91,7 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
   // Gallery, Lightbox & Codex Search
   const gallery = useGalleryState(showToast, setLatestImage);
   const lightbox = useLightboxState(gallery.history);
-  const codex = useCodexSearch(activeTab);
+  const codex = useCodexSearch(activeTab, showToast);
 
   const fetchStudioMetaAndPresets = useCallback(async () => {
     try {
@@ -974,6 +978,50 @@ function NovelAiFloatingStudio({ CSS_STYLES }) {
                     }, lv.label)
                   )
                 )
+              ),
+              h('input', {
+                ref: sceneUploadInputRef,
+                type: 'file',
+                accept: 'image/png,image/jpeg,image/webp,image/gif',
+                style: { display: 'none' },
+                onChange: (e) => {
+                  const f = e.target.files?.[0];
+                  e.target.value = '';
+                  if (f) scene.uploadBackdropFile(f);
+                }
+              }),
+              h('div', { className: 'nai5-scene-upload-row' },
+                h('button', {
+                  type: 'button',
+                  className: 'nai5-btn xs',
+                  style: { flex: 1, justifyContent: 'center' },
+                  disabled: scene.uploadingBg,
+                  onClick: () => sceneUploadInputRef.current?.click()
+                }, h(Icon, { name: 'upload', size: 11 }), scene.uploadingBg ? '上传中...' : (scene.hasUploadedWallpaper ? '更换本地背景图' : '上传本地图片作背景')),
+                h('span', { style: { fontSize: '9.5px', color: 'var(--fx-text-muted)', flex: 'none' } }, '≤15MB')
+              ),
+              scene.hasUploadedWallpaper && h('div', { className: 'nai5-scene-custom-bar' },
+                h('img', {
+                  src: `/api/novelai/wallpaper?v=${scene.wallpaperRev}`,
+                  className: 'nai5-scene-custom-thumb'
+                }),
+                h('div', { style: { flex: 1, minWidth: 0 } },
+                  h('div', { style: { fontSize: '11px', fontWeight: 700, color: 'var(--fx-text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } },
+                    `本地背景：${scene.uploadedBgLabel || '自定义壁纸'}`
+                  ),
+                  h('div', { style: { fontSize: '9.5px', color: 'var(--fx-text-muted)' } }, '持久化保存在本机配置目录')
+                ),
+                scene.scenePref !== 'wallpaper' && h('button', {
+                  type: 'button',
+                  className: 'nai5-btn xs primary',
+                  onClick: () => { scene.selectScene('wallpaper'); setSceneMenuOpen(false); }
+                }, '启用'),
+                h('button', {
+                  type: 'button',
+                  className: 'nai5-btn xs',
+                  title: '移除本地上传背景图',
+                  onClick: () => scene.clearUploadedBackdrop()
+                }, '清除')
               ),
               scene.customBgPath && h('div', { className: 'nai5-scene-custom-bar' },
                 h('img', {

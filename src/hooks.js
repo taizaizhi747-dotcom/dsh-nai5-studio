@@ -66,7 +66,7 @@ function useHostTheme(showToast) {
   return { themePref, isLightTheme, themeClass, cycleThemePref };
 }
 
-function useStudioScene(isLightTheme, hasWallpaper, showToast) {
+function useStudioScene(isLightTheme, hasWallpaper, showToast, onWallpaperStateChange) {
   const [scenePref, setScenePref] = useState(() => {
     try {
       return localStorage.getItem('dsh_nai5_scene_pref_v1') || 'auto';
@@ -91,6 +91,20 @@ function useStudioScene(isLightTheme, hasWallpaper, showToast) {
       return '';
     }
   });
+  const [hasUploadedWallpaper, setHasUploadedWallpaper] = useState(() => Boolean(hasWallpaper));
+  const [wallpaperRev, setWallpaperRev] = useState(() => Date.now());
+  const [uploadingBg, setUploadingBg] = useState(false);
+  const [uploadedBgLabel, setUploadedBgLabel] = useState(() => {
+    try {
+      return localStorage.getItem('dsh_nai5_uploaded_bg_label_v1') || '';
+    } catch {
+      return '';
+    }
+  });
+  useEffect(() => {
+    setHasUploadedWallpaper(Boolean(hasWallpaper));
+  }, [hasWallpaper]);
+
   const [bgIntensity, setBgIntensity] = useState(() => {
     try {
       const val = localStorage.getItem('dsh_nai5_bg_intensity_v1');
@@ -112,6 +126,8 @@ function useStudioScene(isLightTheme, hasWallpaper, showToast) {
     if (showToast) {
       if (nextId === 'auto') {
         showToast('画卷景致：已设为随明暗主题自动匹配');
+      } else if (nextId === 'wallpaper') {
+        showToast('已启用本地上传背景画卷');
       } else {
         const hit = STUDIO_SCENES.find(s => s.id === nextId);
         if (hit) showToast(`画卷已切换：《${hit.title}》`);
@@ -148,6 +164,77 @@ function useStudioScene(isLightTheme, hasWallpaper, showToast) {
     if (showToast) showToast('已恢复工坊内置精选画卷');
   }, [showToast]);
 
+  const uploadBackdropFile = useCallback((file) => {
+    if (!file) return;
+    const fname = String(file.name || 'wallpaper.png');
+    if (!String(file.type || '').startsWith('image/') && !/\.(png|jpe?g|webp|gif)$/i.test(fname)) {
+      if (showToast) showToast('请选择 PNG / JPG / WebP / GIF 格式的图片');
+      return;
+    }
+    if (file.size > 15 * 1024 * 1024) {
+      if (showToast) showToast('背景图片请控制在 15MB 以内');
+      return;
+    }
+    setUploadingBg(true);
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        const res = await fetch('/api/novelai/wallpaper', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: reader.result, filename: fname })
+        });
+        const data = await parseApiJson(res);
+        if (!data.ok) throw new Error(data.error || '上传失败');
+        setHasUploadedWallpaper(true);
+        if (onWallpaperStateChange) onWallpaperStateChange(true);
+        setWallpaperRev(Date.now());
+        setUploadedBgLabel(fname);
+        setScenePref('wallpaper');
+        try {
+          localStorage.setItem('dsh_nai5_uploaded_bg_label_v1', fname);
+          localStorage.setItem('dsh_nai5_scene_pref_v1', 'wallpaper');
+        } catch (err) {
+          warnSilent('scene.saveUploaded', err);
+        }
+        if (showToast) showToast(`已上传并设为工坊背景：${fname}`);
+      } catch (err) {
+        if (showToast) showToast(`上传背景失败：${err.message}`);
+      } finally {
+        setUploadingBg(false);
+      }
+    };
+    reader.onerror = () => {
+      setUploadingBg(false);
+      if (showToast) showToast('读取本地图片失败');
+    };
+    reader.readAsDataURL(file);
+  }, [showToast, onWallpaperStateChange]);
+
+  const clearUploadedBackdrop = useCallback(async () => {
+    try {
+      const res = await fetch('/api/novelai/wallpaper', { method: 'DELETE' });
+      const data = await parseApiJson(res);
+      if (!data.ok) throw new Error(data.error || '清除失败');
+      setHasUploadedWallpaper(false);
+      if (onWallpaperStateChange) onWallpaperStateChange(false);
+      setUploadedBgLabel('');
+      try {
+        localStorage.removeItem('dsh_nai5_uploaded_bg_label_v1');
+      } catch {}
+      setScenePref(prev => {
+        if (prev === 'wallpaper') {
+          try { localStorage.setItem('dsh_nai5_scene_pref_v1', 'auto'); } catch {}
+          return 'auto';
+        }
+        return prev;
+      });
+      if (showToast) showToast('已清除本地上传背景图');
+    } catch (err) {
+      if (showToast) showToast(`清除背景失败：${err.message}`);
+    }
+  }, [showToast, onWallpaperStateChange]);
+
   const updateBgIntensity = useCallback((level) => {
     if (!['soft', 'balanced', 'vivid'].includes(level)) return;
     setBgIntensity(level);
@@ -159,8 +246,9 @@ function useStudioScene(isLightTheme, hasWallpaper, showToast) {
   }, []);
 
   const isCustomActive = scenePref === 'custom' && Boolean(customBgPath);
-  const useConfigWallpaper = scenePref === 'auto' && Boolean(hasWallpaper);
-  const resolvedCurated = isCustomActive
+  const isUploadedActive = scenePref === 'wallpaper' && hasUploadedWallpaper;
+  const useConfigWallpaper = scenePref === 'auto' && Boolean(hasUploadedWallpaper);
+  const resolvedCurated = (isCustomActive || isUploadedActive || useConfigWallpaper)
     ? null
     : (scenePref === 'auto'
       ? STUDIO_SCENES.find(s => s.id === (isLightTheme ? 'dawn-snow' : 'moonblade'))
@@ -169,10 +257,12 @@ function useStudioScene(isLightTheme, hasWallpaper, showToast) {
   const activeScene = resolvedCurated || STUDIO_SCENES[0];
   const activeBgUrl = isCustomActive
     ? getImageUrl(customBgPath, false)
-    : (useConfigWallpaper ? '/api/novelai/wallpaper' : '');
-  const activeBgGradient = (isCustomActive || useConfigWallpaper) ? '' : (activeScene.gradient || '');
-  const activeBgPos = (isCustomActive || useConfigWallpaper) ? 'center 24%' : activeScene.pos;
-  const activeTitle = isCustomActive ? (customBgLabel || '典藏画卷') : (useConfigWallpaper ? '自定义壁纸' : activeScene.title);
+    : ((isUploadedActive || useConfigWallpaper) ? `/api/novelai/wallpaper?v=${wallpaperRev}` : '');
+  const activeBgGradient = (isCustomActive || isUploadedActive || useConfigWallpaper) ? '' : (activeScene.gradient || '');
+  const activeBgPos = (isCustomActive || isUploadedActive || useConfigWallpaper) ? 'center 24%' : activeScene.pos;
+  const activeTitle = isCustomActive
+    ? (customBgLabel || '典藏画卷')
+    : ((isUploadedActive || useConfigWallpaper) ? (uploadedBgLabel || '自定义壁纸') : activeScene.title);
 
   const cycleCuratedScene = useCallback((delta = 1) => {
     const idx = STUDIO_SCENES.findIndex(s => s.id === activeScene.id);
@@ -190,6 +280,10 @@ function useStudioScene(isLightTheme, hasWallpaper, showToast) {
     scenePref,
     customBgPath,
     customBgLabel,
+    hasUploadedWallpaper,
+    wallpaperRev,
+    uploadingBg,
+    uploadedBgLabel,
     bgIntensity,
     activeScene,
     activeBgUrl,
@@ -199,6 +293,8 @@ function useStudioScene(isLightTheme, hasWallpaper, showToast) {
     selectScene,
     setCustomBackdrop,
     clearCustomBackdrop,
+    uploadBackdropFile,
+    clearUploadedBackdrop,
     cycleCuratedScene,
     updateBgIntensity
   };
@@ -1243,7 +1339,7 @@ function useBridgeSync({
   };
 }
 
-function useCodexSearch(activeTab) {
+function useCodexSearch(activeTab, showToast) {
   const [showInlineSearch, setShowInlineSearch] = useState(false);
   const [inlineQuery, setInlineQuery] = useState('');
   const [inlineResults, setInlineResults] = useState(null);
@@ -1252,6 +1348,7 @@ function useCodexSearch(activeTab) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState(null);
   const [searching, setSearching] = useState(false);
+  const [importingCodex, setImportingCodex] = useState(false);
   const [codexCategory, setCodexCategory] = useState('all');
   const [codexMeta, setCodexMeta] = useState(null);
 
@@ -1284,6 +1381,40 @@ function useCodexSearch(activeTab) {
     }
   }, [codexCategory]);
 
+  const importCodexFiles = useCallback(async (fileList) => {
+    const files = Array.from(fileList || []).filter(Boolean);
+    if (files.length === 0 || importingCodex) return;
+    setImportingCodex(true);
+    let lastData = null;
+    let okCount = 0;
+    try {
+      for (const file of files) {
+        const fname = String(file.name || 'codex.json');
+        const res = await fetch(`/api/novelai/codex/import?filename=${encodeURIComponent(fname)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/octet-stream' },
+          body: file
+        });
+        const data = await parseApiJson(res);
+        if (!data.ok) throw new Error(data.error || `导入 ${fname} 失败`);
+        lastData = data;
+        okCount++;
+      }
+      if (lastData) {
+        setCodexMeta(lastData);
+        setCodexCategory('all');
+        await runTagSearch(searchQuery, false, 'all');
+        if (showToast) {
+          showToast(`已导入 ${okCount} 份数据包：共 ${lastData.totalEntries || 0} 条法典配方 / ${lastData.totalTags || 0} 个词条`);
+        }
+      }
+    } catch (err) {
+      if (showToast) showToast(`导入词库/法典失败：${err.message}`);
+    } finally {
+      setImportingCodex(false);
+    }
+  }, [importingCodex, searchQuery, runTagSearch, showToast]);
+
   useEffect(() => {
     if (activeTab === 'codex') {
       if (!codexMeta) fetchCodexMeta();
@@ -1302,9 +1433,11 @@ function useCodexSearch(activeTab) {
     setSearchQuery,
     searchResults,
     searching,
+    importingCodex,
     codexCategory,
     setCodexCategory,
     codexMeta,
-    runTagSearch
+    runTagSearch,
+    importCodexFiles
   };
 }
