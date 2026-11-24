@@ -470,6 +470,91 @@ test('danbooru engine supports graceful empty state, UTF-8/GBK CSVs, optional co
   }
 });
 
+test('danbooru engine supports 9-col 4-lang CSV, base-CN, alias/meta/nsfw filtering, core.json space dedup, and 12-col/4-col imports', () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'nai5-danbooru-4lang-'));
+  try {
+    const csvPath = path.join(tmpDir, 'danbooru-cn.csv');
+    const codexDir = path.join(tmpDir, 'codexes');
+    const zhDir = path.join(codexDir, 'tag_zh');
+    fs.mkdirSync(zhDir, { recursive: true });
+
+    fs.writeFileSync(
+      csvPath,
+      'name,cn_name,wiki,post_count,category,nsfw,langs,aliases,group\n' +
+      'highres,高分辨率,High resolution image,8452416,5,0,高解析度 | 高解像度(highres) | 고해상도,high_res / hires,画风构图与元标签/画质版权与元信息\n' +
+      'long_hair,长发,Long hair description,6396295,0,0,長髮 | ロングヘアー | 긴 머리(장발),longhair,人物外貌/发型与发色\n' +
+      'skindentation,皮肤勒痕,Skin indentation,166950,0,0,皮膚勒痕 | 食い込み | 피부 압박 자국,勒肉,人物外貌/身材部位与肤色体型\n' +
+      'paizuri,乳交,Between breasts,61392,0,1,パイズリ | 파이즈리,titfuck / titjob,动作与姿态/身体状态与生理反应\n' +
+      'ahegao,阿黑颜（失神表情）,Ahegao expression,29449,0,1,阿黑顏 | アヘ顔 | 아헤가오,rolling_eyes,表情与视线/面部表情与情绪\n' +
+      'hoshimi_miyabi,星见雅（绝区零）,Section 6 chief,8219,4,0,星見雅 | 雅,HoshimiMiyabi,角色人物/热门与常见角色\n',
+      'utf8'
+    );
+
+    fs.writeFileSync(
+      path.join(zhDir, 'core.json'),
+      JSON.stringify({
+        d: {
+          'long hair': '长头发',
+          'moonlight glow': '月光微芒',
+          '//_comment_pollution': '无效注释',
+          '测试中文tag': '跳过非ASCII'
+        },
+        a: {
+          'artist alpha': '画师甲'
+        }
+      }),
+      'utf8'
+    );
+
+    danbooruEngine.configure({ dataDir: tmpDir, codexDir, danbooruCsv: csvPath });
+    danbooruEngine.ensureLoaded();
+
+    // long hair (space) must dedupe onto long_hair (underscore), plus invalid entries skipped -> 6 + 2 = 8 tags
+    assert.equal(danbooruEngine.getCodexMeta().totalTags, 8);
+    assert.equal(danbooruEngine.searchDanbooru('long_hair', { limit: 10 }).results.filter(r => r.tag === 'long_hair').length, 1);
+
+    // 4-language Japanese token search, base CN without parens, alias search, meta category, NSFW filter
+    assert.equal(danbooruEngine.searchDanbooru('食い込み', { compact: true }).results[0].tag, 'skindentation');
+    assert.equal(danbooruEngine.searchDanbooru('アヘ顔', { compact: true }).results[0].tag, 'ahegao');
+    assert.equal(danbooruEngine.searchDanbooru('星见雅', { compact: true }).results[0].tag, 'hoshimi_miyabi');
+    assert.equal(danbooruEngine.searchDanbooru('titfuck', { compact: true }).results[0].tag, 'paizuri');
+
+    const metaRes = danbooruEngine.searchDanbooru('highres', { category: 'meta', compact: true });
+    assert.equal(metaRes.results[0].tag, 'highres');
+    assert.equal(metaRes.results[0].category, 'meta');
+
+    const safeOnly = danbooruEngine.searchDanbooru('titfuck', { show_nsfw: false, compact: true });
+    assert.equal(safeOnly.results.length, 0);
+
+    // Multi-keyword query across cn_name + aliases/langs
+    const multiRes = danbooruEngine.searchDanbooru('绝区零 星见雅', { compact: true });
+    assert.equal(multiRes.results[0].tag, 'hoshimi_miyabi');
+
+    // Import 12-col Chinese-header CSV via importPackageBuffer
+    const cn12Csv =
+      '全站使用量排名,D站英文标签,使用量(作品数_截至2026-11-15),使用量分级,一级分类,细分用途,简体中文,繁體中文,日语(日本語),韩语(한국어),含义与用法说明,常用英文别名\n' +
+      '1,1girl,8648795,100万次以上,人物外貌,人数特征,一个女孩,一個女孩,女の子1人,소녀 1명,一名女性角色,sole_female\n' +
+      '2,ellen_joe,9952,1万次,角色人物,热门角色,艾莲·乔,艾蓮·喬,エレン・ジョー,엘렌 조,绝区零鲨鱼女仆,EllenJoe\n';
+    const impCn12 = danbooruEngine.importPackageBuffer(Buffer.from(cn12Csv, 'utf8'), 'export_51w.csv');
+    assert.equal(impCn12.mode, 'danbooru_csv');
+    assert.equal(danbooruEngine.searchDanbooru('エレン・喬'.replace('喬', 'ジョー'), { compact: true }).results[0].tag, 'ellen_joe');
+    assert.equal(danbooruEngine.searchDanbooru('ellen_joe', { category: 'character', compact: true }).results[0].category, 'character');
+
+    // Import 4-col SD tagcomplete CSV via importPackageBuffer
+    const sd4Csv =
+      'white_thighhighs,0,361853,"白色过膝袜 | 白色過膝襪 | 白ニーソ,thighhighs"\n' +
+      'rating:sensitive,5,5270447,"评级：擦边/敏感,rating:s"\n';
+    const impSd4 = danbooruEngine.importPackageBuffer(Buffer.from(sd4Csv, 'utf8'), 'sd_zh.csv');
+    assert.equal(impSd4.mode, 'danbooru_csv');
+    assert.equal(danbooruEngine.searchDanbooru('白ニーソ', { compact: true }).results[0].tag, 'white_thighhighs');
+    assert.equal(danbooruEngine.searchDanbooru('rating:sensitive', { category: 'meta', compact: true }).results[0].category, 'meta');
+  } finally {
+    danbooruEngine.reset();
+    danbooruEngine.configure({});
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
 test('built client.js loads in mocked __ModuleLoader__ with dsh-nai5-studio id and zero hardcoded presets', () => {
   const clientPath = path.resolve(import.meta.dirname, '../client.js');
   const code = fs.readFileSync(clientPath, 'utf8');
@@ -545,9 +630,10 @@ test('mcp_server.mjs handles initialize, tools/list (16 tools), and list_account
   }
 
   try {
+    const pkgVersion = JSON.parse(fs.readFileSync(path.resolve(import.meta.dirname, '../package.json'), 'utf8')).version;
     const initRes = await rpc(1, 'initialize', { protocolVersion: '2024-11-05' });
     assert.equal(initRes.result.serverInfo.name, 'dsh-nai5-studio');
-    assert.equal(initRes.result.serverInfo.version, '2.0.1');
+    assert.equal(initRes.result.serverInfo.version, pkgVersion);
 
     const listRes = await rpc(2, 'tools/list');
     assert.equal(listRes.result.tools.length, 16);

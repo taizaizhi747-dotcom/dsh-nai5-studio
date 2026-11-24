@@ -1,6 +1,6 @@
 {
   "name": "dsh-nai5-studio",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "license": "MIT",
   "type": "module",
   "description": "NovelAI Diffusion V5 direct generation studio, floating workbench, masonry gallery, and MCP server for DeepSeek Harness (DSH).",

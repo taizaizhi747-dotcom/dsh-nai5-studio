@@ -27,7 +27,12 @@
       ["女仆", "女仆装", "maid", "maid headdress", "apron"],
       ["礼服", "连衣裙", "晚礼服", "dress", "evening gown", "frills", "lace"],
       ["机能风", "赛博朋克", "未来感", "cyberpunk", "techwear", "scifi"],
-      ["薄纱", "丝绸", "质感", "silk", "satin", "sheer", "chiffon", "ribbon"]
+      ["薄纱", "丝绸", "质感", "silk", "satin", "sheer", "chiffon", "ribbon"],
+      ["白丝", "white_thighhighs", "white_pantyhose", "white_stockings"],
+      ["黑丝", "black_thighhighs", "black_pantyhose", "black_stockings"],
+      ["丝袜", "thighhighs", "pantyhose", "stockings"],
+      ["勒肉", "skindentation", "thigh_high_squeeze", "thigh_muffintop"],
+      ["裸足", "barefoot", "bare_feet", "soles", "toes"]
     ],
     "画风与质感": [
       ["赛璐珞", "平涂", "清晰线稿", "cel shading", "clean lineart", "anime coloring"],

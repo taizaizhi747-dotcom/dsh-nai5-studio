@@ -2,6 +2,18 @@
 
 All notable changes to `dsh-nai5-studio` will be documented in this file.
 
+## [2.0.2] - 2026-11-24
+
+### Improved
+- **Structure-of-Arrays (SoA) `DanbooruEngine` & Buffer-Line Reader (`lib/danbooru.js`)**: Rebuilt tag storage using flat typed/parallel arrays (`Uint32Array`, `Uint8Array`, `Uint16Array`, interned groups) and streaming Buffer line decoding (UTF-8 with GBK fallback) to eliminate V8 SlicedString parent retention and support **500k+ Danbooru tags** smoothly at low steady-state heap.
+- **4-Format CSV Auto-Detection**: Added automatic format detection on both startup load and one-click UI import (`importPackageBuffer`) for:
+  1. 9-column extended 4-language CSV (`name,cn_name,wiki,post_count,category,nsfw,langs,aliases,group`)
+  2. 6-column legacy CSV (`name,cn_name,wiki,post_count,category,nsfw`)
+  3. 12-column Chinese-header full Danbooru export tables
+  4. 4-column SD / ComfyUI tagcomplete CSVs (`tag,cat,count,langs/aliases`)
+- **Multilingual & Alias Search Accuracy**: Added exact-token matching across 简体中文 / 繁體中文 / 日语 / 韩语 / official aliases, parenthetical base-CN matching, O(1) synonym index resolution, faster multi-keyword lookup, `meta` category support, and `tag_zh/core.json` space-vs-underscore deduplication & malformed key filtering.
+- **Large Bundle Upload & UI Polish (`lib/api.js`, `src/codex.js`, `data/synonyms.json`)**: Raised `/api/novelai/codex/import` upload limit to `140 MB` (`256 MB` gunzip), updated Codex search placeholder for 4-language & alias lookup, enriched Danbooru chip tooltips with formatted `post_count` / `group` / `wiki`, and expanded neutral fashion synonym clusters.
+
 ## [2.0.1] - 2026-11-24
 
 ### Fixed

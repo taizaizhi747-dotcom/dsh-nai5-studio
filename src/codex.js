@@ -66,7 +66,7 @@ function CodexView({
             type: 'text',
             className: 'nai5-input',
             style: { width: '100%', paddingLeft: '32px', fontSize: '12px' },
-            placeholder: '搜索内置同义词、可选 Danbooru CSV 词表或外部法典 JSON（如：逆光、旗袍、仰视、景深）...',
+            placeholder: '搜索 Danbooru 词库与法典（支持英文 / 简繁中文 / 日语 / 韩语 / D站别名，如：勒肉、白丝、食い込み、逆光）...',
             value: searchQuery,
             onChange: e => setSearchQuery(e.target.value),
             onKeyDown: e => e.key === 'Enter' && runTagSearch(searchQuery, false, codexCategory)
@@ -119,19 +119,24 @@ function CodexView({
         h('span', { style: { fontSize: '11px', color: 'var(--fx-text-secondary)' } }, '点击「+」快速追加至正向提示词')
       ),
       h('div', { style: { display: 'flex', flexWrap: 'wrap', gap: '6px' } },
-        searchResults.danbooru.results.map(r =>
-          h('button', {
+        searchResults.danbooru.results.map(r => {
+          const cnt = Number(r.post_count) || 0;
+          const cntLabel = cnt >= 1000000 ? `${(cnt / 1000000).toFixed(1)}M` : (cnt >= 1000 ? `${Math.round(cnt / 1000)}k` : String(cnt));
+          const tipParts = [`点击追加: ${r.tag}${r.cn_name ? ` (${r.cn_name})` : ''}`, `使用量: ${cntLabel}`];
+          if (r.group) tipParts.push(`分类: ${r.group}`);
+          if (r.wiki) tipParts.push(r.wiki);
+          return h('button', {
             key: r.tag,
             type: 'button',
             className: 'nai5-btn xs nai5-danbooru-chip',
-            title: `点击追加: ${r.tag} (${r.cn_name || ''})`,
+            title: tipParts.join(' ｜ '),
             onClick: () => onAppendPositive(r.tag, `标签: ${r.tag}`)
           },
             h('strong', { className: 'nai5-danbooru-tag' }, r.tag),
             r.cn_name && h('span', { style: { color: 'var(--fx-text-secondary)', fontSize: '10px' } }, r.cn_name),
             h(Icon, { name: 'plus', size: 10, style: { opacity: 0.75 } })
-          )
-        )
+          );
+        })
       )
     ),
 

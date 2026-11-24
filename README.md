@@ -22,8 +22,8 @@
   - 按 `YYYY-MM-DD/<character>/<HHMMSS>_<character>_<topic>_<rating>_<style>_s<seed>.png` 自动归档，支持收藏夹标星筛选 (`favorites`) 与批量归类移动 / 物理删除。
   - 并发 Python/Pillow WebP 缩略图与 `workers/image_helper.py` 图像处理（未安装 Python 或 Pillow 时自动无感降级返回原图或使用纯 JS 后备解析），配合 SSE 实时推送刷新。
 - **可选画风预设 / OC 库 / 一键导入词库与法典** (`lib/danbooru.js`, `data/synonyms.json`)
-  - 内置干净的中英文构图/光影/服饰/画风同义词映射。
-  - 支持在「词库与法典」标签页点击 **「导入词库/法典」** 直接上传 `.nai5pack.gz` 一体包、单本法典 `.json` 或 `danbooru-cn.csv`（自动兼容 UTF-8 与 GBK）；也可在工作台弹窗一键导入 JSON 预设，或放置外部配置文件到 `<dataDir>`。
+  - 高性能 Structure-of-Arrays (SoA) 检索内核，内置干净的中英文构图/光影/服饰/画风同义词映射，支持 **50 万+ 词条**跨 简体/繁體/日语/韩语 与 D站官方别名毫秒级检索。
+  - 支持在「词库与法典」标签页点击 **「导入词库/法典」** 直接上传 `.nai5pack.gz` 一体包、单本法典 `.json` 或 4 种常见格式的 `.csv` 词表（9 列扩展四语表 / 6 列标准表 / 12 列中文全量总表 / 4 列 SD 自动补全表，自动兼容 UTF-8 与 GBK）；也可在工作台弹窗一键导入 JSON 预设，或放置外部配置文件到 `<dataDir>`。
 - **多账号管理与分格漫画拼版**
   - 支持 NovelAI 官方 (`https://image.novelai.net`) 与兼容 `/v1/models` 的自定义中转端点，内置连通性测试与一键切换。
   - 独立 `workers/stitch_comic.py` 支持 `4koma`、`grid-2x2`、`manga-classic`、`vertical-3` 四种排版与跨平台中文字体矢量气泡渲染。
@@ -99,7 +99,7 @@ cd dsh-nai5-studio
 | `ocPresetsFile` | `NAI5_OC_PRESETS_FILE` | `<dataDir>/oc_presets.json` | 可选 OC 角色库（也可在 UI 内点击「导入」直接载入） |
 | `characterRulesFile` | `NAI5_CHARACTER_RULES_FILE` | `<dataDir>/character_rules.json` | 可选角色自动归档正则规则 |
 | `codexDir` | `NAI5_CODEX_DIR` | `<dataDir>/codexes` | 可选外置提示词法典 JSON 文件夹 |
-| `danbooruCsv` | `DANBOORU_CSV_PATH` | `<dataDir>/danbooru-cn.csv` | 可选双语 Danbooru CSV 词表（支持 UTF-8 / GBK） |
+| `danbooruCsv` | `DANBOORU_CSV_PATH` | `<dataDir>/danbooru-cn.csv` | 可选多语 Danbooru CSV 词表（自动识别 9 列四语/6 列标准/12 列中文总表/4 列 SD 补全表及 UTF-8/GBK） |
 | `wallpaperFile` | `NAI5_WALLPAPER_FILE` | `<dataDir>/wallpaper.{webp,png,jpg,jpeg}` | 可选工作台自定义背景原画 |
 
 所有 JSON 文件结构均已在 [`examples/`](file:///examples) 目录提供标准示例。
